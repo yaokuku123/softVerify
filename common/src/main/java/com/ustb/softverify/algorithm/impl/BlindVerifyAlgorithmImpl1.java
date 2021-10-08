@@ -1,8 +1,9 @@
-package com.ustb.softverify.algorithm;
+package com.ustb.softverify.algorithm.impl;
 
 import com.ustb.softverify.BlindVerify.Check;
 import com.ustb.softverify.BlindVerify.Sign;
 import com.ustb.softverify.BlindVerify.Verify;
+import com.ustb.softverify.algorithm.BlindAlgorithm;
 import com.ustb.softverify.domain.PublicKey;
 import com.ustb.softverify.domain.QueryParam;
 import com.ustb.softverify.utils.FileUtil;
@@ -49,7 +50,7 @@ public class BlindVerifyAlgorithmImpl1 implements BlindAlgorithm {
             uLists.add(pairing.getG1().newRandomElement().getImmutable().getElementPowPreProcessing());
         }
         Map<String,Object> map = new HashMap<>();
-        map.put(PUBLIC_KEY, new PublicKey(pairing, g, v, uLists));
+        map.put(PUBLIC_KEY, new PublicKey(typeAParams, g, v, uLists));
         map.put(PRIVATE_KEY,x);
         return map;
     }
@@ -65,7 +66,9 @@ public class BlindVerifyAlgorithmImpl1 implements BlindAlgorithm {
     }
 
     @Override
-    public QueryParam check(String filePath, Pairing pairing, ArrayList<Element> signList) {
+    public QueryParam check(String filePath, PairingParameters typeAParams, ArrayList<Element> signList) {
+        //获取生成源
+        Pairing pairing = PairingFactory.getPairing(typeAParams);
         //查询阶段
         Check check = new Check();
         //求viLists
@@ -77,7 +80,7 @@ public class BlindVerifyAlgorithmImpl1 implements BlindAlgorithm {
         ArrayList<Element> miuLists;
         FileUtil fileUtil = new FileUtil();
         miuLists = check.getMiuList(fileUtil, filePath, viLists, blockFileSize, pieceFileSize);
-        QueryParam queryParam = new QueryParam(pairing,sigmasValues,viLists,signList,miuLists);
+        QueryParam queryParam = new QueryParam(typeAParams,sigmasValues,viLists,signList,miuLists);
         return queryParam;
     }
 

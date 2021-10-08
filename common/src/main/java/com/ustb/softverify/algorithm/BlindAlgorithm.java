@@ -4,6 +4,7 @@ import com.ustb.softverify.domain.PublicKey;
 import com.ustb.softverify.domain.QueryParam;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
+import it.unisa.dia.gas.jpbc.PairingParameters;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -28,11 +29,11 @@ public interface BlindAlgorithm {
     /**
      * 查询阶段
      * @param filePath 文件路径
-     * @param pairing 生成源
+     * @param typeAParams 生成源
      * @param signList 签名列表
      * @return 查询参数
      */
-    QueryParam check(String filePath, Pairing pairing, ArrayList<Element> signList);
+    QueryParam check(String filePath, PairingParameters typeAParams, ArrayList<Element> signList);
 
     /**
      * 验证阶段
