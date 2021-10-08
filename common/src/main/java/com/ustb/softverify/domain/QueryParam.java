@@ -2,6 +2,8 @@ package com.ustb.softverify.domain;
 
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
+import it.unisa.dia.gas.jpbc.PairingParameters;
+import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,9 +21,8 @@ import java.util.List;
  * Date: 2021/6/25 8:52
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class QueryParam implements Serializable {
+    private PairingParameters typeAParams;
     private Pairing pairing;
     private Element sigmasValues;
     private ArrayList<Element> viLists;
@@ -30,8 +31,13 @@ public class QueryParam implements Serializable {
     private final Base64.Encoder encoder = Base64.getEncoder();
     private final Base64.Decoder decoder = Base64.getDecoder();
 
-    public QueryParam(Pairing pairing) {
-        this.pairing = pairing;
+    public QueryParam(PairingParameters typeAParams, Element sigmasValues, ArrayList<Element> viLists, ArrayList<Element> signLists, ArrayList<Element> miuLists) {
+        this.typeAParams = typeAParams;
+        this.sigmasValues = sigmasValues;
+        this.viLists = viLists;
+        this.signLists = signLists;
+        this.miuLists = miuLists;
+        this.pairing = PairingFactory.getPairing(typeAParams);
     }
 
     /**
