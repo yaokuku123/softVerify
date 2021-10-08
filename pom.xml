@@ -13,6 +13,7 @@
         <module>soft-scanner</module>
         <module>common</module>
         <module>soft-gateway</module>
+        <module>eureka-server</module>
     </modules>
 
     <parent>
