@@ -1,12 +1,16 @@
 package com.ustb.softverify.domain;
 
+import com.ustb.softverify.utils.SerializeUtil;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.ElementPowPreProcessing;
 import it.unisa.dia.gas.jpbc.Pairing;
+import it.unisa.dia.gas.jpbc.PairingParameters;
+import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -19,9 +23,8 @@ import java.util.List;
  * Date: 2021/6/24 15:48
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class PublicKey {
+    private PairingParameters typeAParams;
     private Pairing pairing;
     private Element g;
     private Element v;
@@ -29,10 +32,23 @@ public class PublicKey {
     private final Base64.Encoder encoder = Base64.getEncoder();
     private final Base64.Decoder decoder = Base64.getDecoder();
 
-    public PublicKey(Pairing pairing){
-        this.pairing = pairing;
+    public PublicKey(PairingParameters typeAParams, Element g, Element v, ArrayList<ElementPowPreProcessing> uLists) {
+        this.typeAParams = typeAParams;
+        this.g = g;
+        this.v = v;
+        this.uLists = uLists;
+        this.pairing = PairingFactory.getPairing(typeAParams);
     }
 
+    /**
+     * 使用Base64编码的方式将PairingParameters类型的typeAParams转换为String类型
+     *
+     * @return
+     */
+    public String encodeTypeAParams() throws IOException {
+        return new String(Base64.getEncoder().encode(SerializeUtil.serialize(typeAParams)
+                .getBytes("UTF-8")),"UTF-8");
+    }
 
     /**
      * 使用Base64编码的方式将Element类型的G转换为String类型
@@ -69,6 +85,16 @@ public class PublicKey {
             uStringList.add(elmString);
         }
         return uStringList;
+    }
+
+    /**
+     * 使用Base64编码的方式将String类型的typeAParams转换为PairingParameters类型
+     *
+     * @return
+     */
+    public PairingParameters decodeTypeAParams(String typeAParamsString) throws IOException, ClassNotFoundException {
+        typeAParams = (PairingParameters) SerializeUtil.serializeToObject(new String(Base64.getDecoder().decode(typeAParamsString.getBytes("UTF-8")),"UTF-8"));
+        return typeAParams;
     }
 
     /**
