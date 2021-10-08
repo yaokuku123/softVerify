@@ -6,7 +6,7 @@ spring:
     name: soft-test-center
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.179.89:3306/zerotrust?characterEncoding=utf8
+    url: jdbc:mysql://192.168.179.89:3306/softverify?characterEncoding=utf8
     username: root
     password: kingsoft
   redis:

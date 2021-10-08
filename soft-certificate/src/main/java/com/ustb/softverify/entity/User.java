@@ -3,6 +3,7 @@ package com.ustb.softverify.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,6 +26,6 @@ public class User implements Serializable {
     private String phone;
 
     private ArrayList<UploadInfo> uploadInfos = new ArrayList<>();
-    private ArrayList<Soft> softs = new ArrayList<>();
+    private ArrayList<SoftInfo> softInfos = new ArrayList<>();
 
 }
