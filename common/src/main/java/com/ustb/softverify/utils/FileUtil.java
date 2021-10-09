@@ -4,6 +4,8 @@ package com.ustb.softverify.utils;
  * Created by admin on 2020/6/2.
  */
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -559,6 +561,27 @@ public class FileUtil {
             bw.write(data);
             bw.newLine();
             bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //保存文件
+    public static void saveFiles(MultipartFile[] files,String filePath){
+
+        String soft = files[0].getOriginalFilename();
+        String doc = files[1].getOriginalFilename();
+        String softDestPath = filePath + soft;
+        String docDestPath = filePath + doc;
+        File fileDir = new File(filePath);
+
+        fileDir.mkdirs();
+
+        File softDestFile = new File(softDestPath);
+        File docDestFile = new File(docDestPath);
+        try {
+            files[0].transferTo(softDestFile);
+            files[1].transferTo(docDestFile);
         } catch (IOException e) {
             e.printStackTrace();
         }

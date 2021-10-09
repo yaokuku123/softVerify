@@ -23,10 +23,10 @@ public class SoftInfo implements Serializable {
     private Integer sid;
 
     /* 软件名称 */
-    private String name;
+    private String softName;
 
     /* 软件描述信息 */
-    private String desc;
+    private String softDesc;
 
     /* 软件存放路径 */
     private String softPath;
