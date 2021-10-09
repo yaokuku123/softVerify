@@ -1,7 +1,7 @@
 package com.ustb.softverify.utils;
 
 import com.ustb.softverify.domain.PublicKey;
-import com.ustb.softverify.domain.PublicKeyStr;
+import com.ustb.softverify.domain.vo.PublicKeyStr;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.ElementPowPreProcessing;
 import it.unisa.dia.gas.jpbc.Pairing;
