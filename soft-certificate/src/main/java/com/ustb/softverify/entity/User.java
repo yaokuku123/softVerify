@@ -24,6 +24,7 @@ public class User implements Serializable {
     private String uname;
     private String company;
     private String phone;
+    private Integer govUserId;
 
     private ArrayList<UploadInfo> uploadInfos = new ArrayList<>();
     private ArrayList<SoftInfo> softInfos = new ArrayList<>();

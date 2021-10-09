@@ -1,4 +1,4 @@
-package com.ustb.softverify.entity.vo;
+package com.ustb.softverify.entity.VO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserUploadInfo implements Serializable {
+public class UserUploadInfoVo implements Serializable {
 
     private Integer uid;
     private String uname;
