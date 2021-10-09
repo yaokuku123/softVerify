@@ -2,7 +2,7 @@
 
 
 <mapper namespace="com.ustb.softverify.mapper.UserDAO">
-    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="uid">
         insert into t_user (uname,company,phone) values (#{uname},#{company},#{phone})
     </insert>
 

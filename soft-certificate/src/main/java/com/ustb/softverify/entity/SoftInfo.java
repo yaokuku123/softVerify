@@ -19,15 +19,29 @@ public class SoftInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /* 主键 */
     private Integer sid;
+
+    /* 软件名称 */
     private String name;
+
+    /* 软件描述信息 */
     private String desc;
+
+    /* 软件存放路径 */
     private String softPath;
+
+    /* 说明文档存放路径 */
     private String docPath;
+
+    /* 软件包hash */
     private String hash;
+
+    /* 审核状态 */
     private Integer status;
 
-    private Integer uid;
+    /* 外键 */
+    private User user;
 
 
 

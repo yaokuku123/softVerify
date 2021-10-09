@@ -17,10 +17,16 @@ public class SignFile implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /* 主键 */
     private Integer fid;
+
+    /* 签名存放路径 */
     private String path;
+
+    /* 签名交易ID */
     private String txid;
 
-    private Integer sid;
+    /* 外键 */
+    private User user;
 
 }

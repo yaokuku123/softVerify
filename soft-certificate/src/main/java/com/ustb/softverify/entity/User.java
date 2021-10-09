@@ -20,13 +20,25 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /* 用户标识 */
     private Integer uid;
+
+    /* 用户名称 */
     private String uname;
+
+    /* 用户所属公司信息 */
     private String company;
+
+    /* 用户联系方式 */
     private String phone;
+
+    /* 评审平台用户标识 */
     private Integer govUserId;
 
+    /* 一对多 */
     private ArrayList<UploadInfo> uploadInfos = new ArrayList<>();
+
+    /* 一对多 */
     private ArrayList<SoftInfo> softInfos = new ArrayList<>();
 
 }

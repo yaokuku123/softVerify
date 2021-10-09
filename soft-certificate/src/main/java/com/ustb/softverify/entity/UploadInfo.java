@@ -17,9 +17,14 @@ public class UploadInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /* 主键 */
     private Integer tid;
+
+    /* 交易ID */
     private String txid;
-    private Integer uid;
+
+    /* 关联外键 */
+    private User user;
 
 
 }
