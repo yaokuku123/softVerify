@@ -1,4 +1,4 @@
-package com.ustb.softverify.domain.vo;
+package com.ustb.softverify.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,8 @@ import java.util.ArrayList;
 
 @Data
 @AllArgsConstructor
-public class QueryParamString implements Serializable {
+public class QueryParamStr implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     private String typeAParams;
