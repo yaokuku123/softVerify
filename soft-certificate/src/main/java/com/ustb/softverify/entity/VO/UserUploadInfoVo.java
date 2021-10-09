@@ -15,10 +15,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class UserUploadInfoVo implements Serializable {
 
-    private Integer uid;
+    private Integer govUserId;
     private String uname;
     private String company;
     private String phone;
     private String softName;
     private String softDesc;
+    private String docName;
 }

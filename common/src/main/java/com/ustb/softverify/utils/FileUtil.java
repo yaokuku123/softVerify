@@ -567,24 +567,24 @@ public class FileUtil {
     }
 
     //保存文件
-    public static void saveFiles(MultipartFile[] files,String filePath){
-
-        String soft = files[0].getOriginalFilename();
-        String doc = files[1].getOriginalFilename();
-        String softDestPath = filePath + soft;
-        String docDestPath = filePath + doc;
-        File fileDir = new File(filePath);
-
-        fileDir.mkdirs();
-
-        File softDestFile = new File(softDestPath);
-        File docDestFile = new File(docDestPath);
-        try {
-            files[0].transferTo(softDestFile);
-            files[1].transferTo(docDestFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void saveFiles(MultipartFile[] files,String filePath){
+//
+//        String soft = files[0].getOriginalFilename();
+//        String doc = files[1].getOriginalFilename();
+//        String softDestPath = filePath + soft;
+//        String docDestPath = filePath + doc;
+//        File fileDir = new File(filePath);
+//
+//        fileDir.mkdirs();
+//
+//        File softDestFile = new File(softDestPath);
+//        File docDestFile = new File(docDestPath);
+//        try {
+//            files[0].transferTo(softDestFile);
+//            files[1].transferTo(docDestFile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
 

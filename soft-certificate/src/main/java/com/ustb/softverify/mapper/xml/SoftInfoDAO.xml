@@ -7,5 +7,4 @@
         insert into t_soft (soft_name,soft_desc,soft_path,doc_path,hash,status,uid) values (#{softName},#{softDesc},#{softPath},#{docPath},#{hash},#{status},#{user.uid})
     </insert>
 
-
 </mapper>

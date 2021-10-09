@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+
 
 /**
  * @author WYP
@@ -31,11 +34,12 @@ public class FileUploadController {
     public ResponseResult upload(@RequestPart("files") MultipartFile[] files,@RequestPart("userUploadInfoVO") UserUploadInfoVo userUploadInfo){
         if (files.length != 2){
             return ResponseResult.error().message("文件个数错误");
-    }
-        String soft = files[0].getOriginalFilename();
-        String doc = files[1].getOriginalFilename();
-        String softSuffix = soft.substring(soft.lastIndexOf("."), soft.length());
-        String docSuffix = doc.substring(doc.lastIndexOf("."), doc.length());
+        }
+        String soft = userUploadInfo.getSoftName();
+        String doc = userUploadInfo.getSoftName();
+        String softSuffix = soft.substring(soft.lastIndexOf("."));
+        String docSuffix = doc.substring(doc.lastIndexOf("."));
+
         if (!".rar".equals(softSuffix) && !".zip".equals(softSuffix) ||!".xlsx".equals(docSuffix)){
             return ResponseResult.error().message("上传文件类型错误");
         }
@@ -43,11 +47,22 @@ public class FileUploadController {
         User user = new User();
         SoftInfo softInfo = new SoftInfo();
         BeanUtils.copyProperties(userUploadInfo,user);
-        softInfo.setSoftName(userUploadInfo.getSoftName()).setSoftDesc(userUploadInfo.getSoftDesc());
         userService.insertUser(user);
         //保存文件
         String filePath = System.getProperty("user.dir") + "/data/" + user.getUname() + "/" + softInfo.getSoftName() + "/";
-        FileUtil.saveFiles(files,filePath);
+        //FileUtil.saveFiles(userUploadInfo,filePath);
+        String softDestPath = filePath + user.getUname() + "/" + softInfo.getSoftName() + "/" + softSuffix;
+        String docDestPath = filePath + user.getUname() + "/" + softInfo.getSoftName() + "/" + docSuffix;
+        File fileDir = new File(filePath);
+        fileDir.mkdirs();
+        File softDestFile = new File(softDestPath);
+        File docDestFile = new File(docDestPath);
+        try {
+            files[0].transferTo(softDestFile);
+            files[1].transferTo(docDestFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //存储软件相关信息
         BeanUtils.copyProperties(userUploadInfo,softInfo);
