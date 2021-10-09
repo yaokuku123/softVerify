@@ -2,7 +2,7 @@ package com.ustb.softverify.utils;
 
 
 import com.ustb.softverify.domain.QueryParam;
-import com.ustb.softverify.domain.QueryParamStr;
+import com.ustb.softverify.domain.vo.QueryParamStr;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.jpbc.PairingParameters;
