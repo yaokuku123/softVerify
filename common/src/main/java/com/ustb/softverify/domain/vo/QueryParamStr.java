@@ -2,14 +2,17 @@ package com.ustb.softverify.domain.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class QueryParamString {
+public class QueryParamStr implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private String typeAParams;
     private String sigmasValues;
     private ArrayList<String> viLists;
     private ArrayList<String> signLists;
