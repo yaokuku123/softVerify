@@ -9,11 +9,9 @@
 
 
     <resultMap id="softInfoResult" type="com.ustb.softverify.entity.SoftInfo">
-        <id property="sid" column="sid"/>
         <result property="softName" column="softname"/>
         <result property="softDesc" column="softdesc"/>
         <association property="user" javaType="com.ustb.softverify.entity.User">
-            <id property="uid" column="uid"/>
             <result property="uname" column="uname"/>
             <result property="company" column="ucompany"/>
             <result property="phone" column="uphone"/>
@@ -23,8 +21,8 @@
 
     <select id="findByPager" resultMap="softInfoResult" >
         SELECT
-            s.sid sid, s.soft_name softname, s.soft_desc softdesc,
-            u.uid uid, u.uname uname, u.company ucompany, u.phone uphone, u.gov_user_id ugovuserid
+            s.soft_name softname, s.soft_desc softdesc,
+            u.uname uname, u.company ucompany, u.phone uphone, u.gov_user_id ugovuserid
         FROM
             t_soft s
         LEFT JOIN
@@ -34,11 +32,26 @@
         WHERE
             s.status = 0
         LIMIT
-            ${page},${size}
+            #{page},#{size}
     </select>
 
     <select id="countUnVerifiedSoft" resultType="long">
         SELECT COUNT(1) FROM t_soft WHERE status = 0;
+    </select>
+
+    <select id="getSoftPath" resultType="string">
+        select
+            s.soft_path
+        from
+            t_soft s
+        LEFT JOIN
+            t_user u
+        ON
+            s.uid = u.uid
+        WHERE
+            u.uid = (SELECT uid FROM t_user WHERE gov_user_id = #{govUserId})
+        AND
+            s.soft_name = #{softName};
     </select>
 
 </mapper>

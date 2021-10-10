@@ -26,4 +26,12 @@ public interface SoftInfoDAO {
      * @return 未审核的软件数量
      */
     Long countUnVerifiedSoft();
+
+    /**
+     * 根据用户标识和软件名称获取软件路径信息
+     * @param govUserId 用户标识
+     * @param softName 软件名称
+     * @return 软件路径信息
+     */
+    String getSoftPath(@Param("govUserId") Integer govUserId, @Param("softName") String softName);
 }
