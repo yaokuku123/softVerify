@@ -7,15 +7,23 @@ import com.ustb.softverify.algorithm.BlindAlgorithm;
 import com.ustb.softverify.domain.PublicKey;
 import com.ustb.softverify.domain.QueryParam;
 import com.ustb.softverify.utils.FileUtil;
+import com.ustb.softverify.utils.HashBasicOperaterSetUtil;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.ElementPowPreProcessing;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.jpbc.PairingParameters;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
+import org.bouncycastle.crypto.digests.SM3Digest;
+import org.bouncycastle.crypto.macs.HMac;
+import org.bouncycastle.crypto.params.KeyParameter;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,5 +104,80 @@ public class BlindVerifyAlgorithmImpl1 implements BlindAlgorithm {
         Element v = publicKey.getV();
         ArrayList<ElementPowPreProcessing> uLists = publicKey.getULists();
         return verify.verifyResult(pairing, g, uLists, v, sigmasValues, viLists, signLists, miuLists);
+    }
+
+    public byte[] SM3Encrypt(String filePath) throws FileNotFoundException {
+        FileInputStream fis = new FileInputStream(filePath);
+        String resultHexString = "";
+        byte[] sm3Bytes = null;
+        try {
+            SM3Digest sm3Digest = new SM3Digest();
+            byte[] buffer = new byte[1024];
+            int length = 1;
+            while ((length = fis.read(buffer, 0, 1024)) != -1) {
+                sm3Digest.update(buffer, 0, length);
+            }
+            fis.close();
+            sm3Bytes = new byte[sm3Digest.getDigestSize()];
+            sm3Digest.doFinal(sm3Bytes, 0);
+            return sm3Bytes;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return sm3Bytes;
+    }
+
+    public byte[] hmac(byte[] key, String filePath) throws IOException {
+        FileInputStream fis = new FileInputStream(filePath);
+        KeyParameter keyParameter = new KeyParameter(key);
+        SM3Digest digest = new SM3Digest();
+        HMac mac = new HMac(digest);
+        mac.init(keyParameter);
+        byte[] buffer = new byte[1024];
+        int length = 1;
+        while ((length = fis.read(buffer, 0, 1024)) != -1) {
+            mac.update(buffer, 0, length);
+        }
+        fis.close();
+        byte[] result = new byte[mac.getMacSize()];
+        mac.doFinal(result, 0);
+        return result;
+    }
+
+    public boolean verify(String filePath, String sm3HexString) {
+        boolean flag = false;
+        try {
+            // byte[] srcData = Util.hexToByte(srcStr);
+            byte[] sm3Hash = HashBasicOperaterSetUtil.hexToByte(sm3HexString);
+            byte[] newHash = SM3Encrypt(filePath);
+            if (Arrays.equals(newHash, sm3Hash)) {
+                flag = true;
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return flag;
+    }
+
+    public boolean verify(String filePath, String sm3HexString, byte[] key) {
+        boolean flag = false;
+        try {
+            // byte[] srcData = Util.hexToByte(srcStr);
+            byte[] sm3Hash = HashBasicOperaterSetUtil.hexToByte(sm3HexString);
+            byte[] newHash = hmac(key, filePath);
+            if (Arrays.equals(newHash, sm3Hash)) {
+                flag = true;
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return flag;
     }
 }

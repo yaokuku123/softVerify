@@ -6,6 +6,8 @@ import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.jpbc.PairingParameters;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -43,4 +45,27 @@ public interface BlindAlgorithm {
      */
     Boolean verify(PublicKey publicKey, QueryParam queryParam);
 
+    /**
+     *
+     * @param filePath 文件路径
+     * @return 哈希结果
+     * @throws FileNotFoundException
+     */
+    byte[] SM3Encrypt(String filePath) throws FileNotFoundException;
+
+    /**
+     * 采用密钥加密
+     * @param key 密钥
+     * @param filePath 文件路径
+     * @return 哈希结果
+     */
+    byte[] hmac(byte[] key, String filePath) throws IOException;
+
+    /**
+     * 验证
+     * @param filePath 验证文件所在路径
+     * @param sm3HexString 原文件哈希值
+     * @return 验证结果
+     */
+    boolean verify(String filePath, String sm3HexString);
 }

@@ -27,4 +27,40 @@ public interface SoftVerifyService {
      */
     void updateSoftStatusToSuccess(Integer govUserId,String softName);
 
+    /**
+     * 修改软件状态为审核驳回 待审核：0，审核通过：1，审核驳回：2
+     * @param govUserId  用户标识
+     * @param softName 软件名称
+     */
+    void updateSoftStatusToFail(Integer govUserId,String softName);
+
+    /**
+     * 删除指定路径下的文件
+     * @param govUserId  用户标识
+     * @param softName 软件名称
+     */
+    void deleteSoftAndDoc(Integer govUserId, String softName);
+
+    /**
+     * 分页查询已审核通过的软件信息
+     * @param pageRequest 自定义，统一分页查询请求
+     * @return PageResult 自定义，统一分页查询结果
+     */
+    PageResult findPageSuccess(PageRequest pageRequest);
+
+    /**
+     * 分页查询审核驳回的软件信息
+     * @param pageRequest 自定义，统一分页查询请求
+     * @return PageResult 自定义，统一分页查询结果
+     */
+    PageResult findPageFail(PageRequest pageRequest);
+
+    /**
+     * 对指定程序文件进行签名并上链
+     * @param govUserId 用户标识
+     * @param softName 软件名称
+     * @return
+     */
+    void signAndUpChain(Integer govUserId,String softName);
+
 }

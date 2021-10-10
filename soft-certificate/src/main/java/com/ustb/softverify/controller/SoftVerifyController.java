@@ -75,9 +75,48 @@ public class SoftVerifyController {
     @GetMapping("/success")
     public ResponseResult verifySuccess(@RequestParam("govUserId") Integer govUserId,
                                         @RequestParam("softName") String softName) {
-        //修改数据的状态信息
+        //修改数据的状态信息(1-表示已审核)
         softVerifyService.updateSoftStatusToSuccess(govUserId,softName);
-
+        //签名和上链，采用队列异步处理
+        softVerifyService.signAndUpChain(govUserId,softName);
         return ResponseResult.success().message("审核通过");
+    }
+
+    /**
+     * 审核驳回
+     * @param govUserId 用户标识
+     * @param softName 软件名称
+     * @return
+     */
+    @GetMapping("fail")
+    public ResponseResult verifyFail(@RequestParam("govUserId") Integer govUserId,
+                                     @RequestParam("softName") String softName) {
+        //删除数据库中指向路径下的文件
+        softVerifyService.deleteSoftAndDoc(govUserId,softName);
+        //修改数据的状态信息并清除路径和hash信息(2-表示驳回)
+        softVerifyService.updateSoftStatusToFail(govUserId,softName);
+        return ResponseResult.success().message("审核驳回");
+    }
+
+    /**
+     * 获取已审核的软件列表信息
+     * @param pageQuery 分页查询对象参数
+     * @return 查询结果
+     */
+    @PostMapping("/list/success")
+    public ResponseResult listVerifySuccess(@RequestBody PageRequest pageQuery) {
+        PageResult page = softVerifyService.findPageSuccess(pageQuery);
+        return ResponseResult.success().data("page",page);
+    }
+
+    /**
+     * 获取审核驳回的软件列表信息
+     * @param pageQuery 分页查询对象参数
+     * @return 查询结果
+     */
+    @PostMapping("/list/fail")
+    public ResponseResult listVerifyFail(@RequestBody PageRequest pageQuery) {
+        PageResult page = softVerifyService.findPageFail(pageQuery);
+        return ResponseResult.success().data("page",page);
     }
 }
