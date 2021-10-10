@@ -14,6 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 
 
 /**
@@ -73,6 +77,9 @@ public class FileUploadController {
         }
 
         //存储软件相关信息
+        // TODO 本地 合法性验证后  NFS  到服务器   日志
+
+
         softInfo.setSoftName(soft).setSoftPath(softDestPath).setDocPath(docDestPath).setStatus(0).setUser(user);
         softInfoService.insertSoft(softInfo);
 

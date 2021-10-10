@@ -58,6 +58,15 @@
         </dependency>
 
         <!--自定义引入的jpbc-->
+
+        <dependency>
+            <groupId>com.ssh</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>build210</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/src/main/resources/lib/ganymed-ssh2-build210.jar</systemPath>
+        </dependency>
+
         <dependency>
             <groupId>com.jpbc</groupId>
             <artifactId>bcprov-jdk16</artifactId>

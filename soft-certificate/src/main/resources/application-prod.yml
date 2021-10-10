@@ -40,3 +40,6 @@ logging:
     com.ustb: debug
 
 chainobj.address: 1Wkg9jF48VeM16rUE9MSTu4dfyvJv4dAb5X1v
+hostname: 123.56.246.148
+name: root
+password: chainNode202
