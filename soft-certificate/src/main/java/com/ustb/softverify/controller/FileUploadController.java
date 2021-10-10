@@ -1,6 +1,7 @@
 package com.ustb.softverify.controller;
 
 import com.mysql.cj.jdbc.SuspendableXAConnection;
+import com.ustb.softverify.algorithm.impl.BlindVerifyAlgorithmImpl1;
 import com.ustb.softverify.domain.ResponseResult;
 import com.ustb.softverify.entity.SoftInfo;
 import com.ustb.softverify.entity.User;
@@ -10,6 +11,7 @@ import com.ustb.softverify.service.Impl.ZipCompressImpl;
 import com.ustb.softverify.service.SoftInfoService;
 import com.ustb.softverify.service.UserService;
 import com.ustb.softverify.utils.FileUtil;
+import com.ustb.softverify.utils.HashBasicOperaterSetUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -111,6 +113,12 @@ public class FileUploadController {
             }
             System.out.println(filePath+s);
         }
+
+        // 验证正确 放入NFS映射路径下  并将NFS存放路径 和hash存进数据库
+        BlindVerifyAlgorithmImpl1 bva = new BlindVerifyAlgorithmImpl1(softDestPath);
+        String hash = HashBasicOperaterSetUtil.byteToString(bva.SM3Encrypt(softDestPath));
+        boolean verify = bva.verify(softDestPath, hash);
+        System.out.println(verify);
 
 
         //存储软件相关信息
