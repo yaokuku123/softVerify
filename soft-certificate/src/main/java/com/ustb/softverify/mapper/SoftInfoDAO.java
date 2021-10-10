@@ -57,4 +57,33 @@ public interface SoftInfoDAO {
      * @return
      */
     Map<String,String> getSoftPathAndDocPath(@Param("govUserId") Integer govUserId, @Param("softName") String softName);
+
+    /**
+     * 分页查询已审核通过的软件信息
+     * @param page 起始页
+     * @param size 每页大小
+     * @return 分页查询的软件信息列表
+     */
+    List<SoftInfo> findByPagerSuccess(@Param("page") Integer page, @Param("size") Integer size);
+
+    /**
+     * 获取已审核的软件数量
+     * @return 未审核的软件数量
+     */
+    Long countVerifySuccess();
+
+    /**
+     * 分页查询审核驳回的软件信息
+     * @param page 起始页
+     * @param size 每页大小
+     * @return 分页查询的软件信息列表
+     */
+    List<SoftInfo> findByPagerFail(@Param("page") Integer page, @Param("size") Integer size);
+
+    /**
+     * 获取审核驳回的软件数量
+     * @return 未审核的软件数量
+     */
+    Long countVerifyFail();
+
 }

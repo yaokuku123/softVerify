@@ -129,4 +129,44 @@
             s.soft_name = #{softName};
     </select>
 
+    <select id="findByPagerSuccess" resultMap="softInfoResult" >
+        SELECT
+            s.sid sid, s.soft_name softname, s.soft_desc softdesc, s.status status,
+            u.uid uid, u.uname uname, u.company ucompany, u.phone uphone, u.gov_user_id ugovuserid
+        FROM
+            t_soft s
+        LEFT JOIN
+            t_user u
+        ON
+            s.uid = u.uid
+        WHERE
+            s.status = 1
+        LIMIT
+            #{page},#{size}
+    </select>
+
+    <select id="countVerifySuccess" resultType="long">
+        SELECT COUNT(1) FROM t_soft WHERE status = 1;
+    </select>
+
+    <select id="findByPagerFail" resultMap="softInfoResult" >
+        SELECT
+            s.sid sid, s.soft_name softname, s.soft_desc softdesc, s.status status,
+            u.uid uid, u.uname uname, u.company ucompany, u.phone uphone, u.gov_user_id ugovuserid
+        FROM
+            t_soft s
+        LEFT JOIN
+            t_user u
+        ON
+            s.uid = u.uid
+        WHERE
+            s.status = 2
+        LIMIT
+            #{page},#{size}
+    </select>
+
+    <select id="countVerifyFail" resultType="long">
+        SELECT COUNT(1) FROM t_soft WHERE status = 2;
+    </select>
+
 </mapper>

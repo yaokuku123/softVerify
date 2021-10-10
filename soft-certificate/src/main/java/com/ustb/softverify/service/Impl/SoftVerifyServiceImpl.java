@@ -63,4 +63,22 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
         }
     }
 
+    @Override
+    public PageResult findPageSuccess(PageRequest pageRequest) {
+        Integer pageNum = pageRequest.getPageNum();
+        Integer pageSize = pageRequest.getPageSize();
+        List<SoftInfo> softInfoList = softInfoDAO.findByPagerSuccess((pageNum - 1) * pageSize,pageSize);
+        Long total = softInfoDAO.countVerifySuccess();
+        return new PageResult<>(pageNum, pageSize, softInfoList, total);
+    }
+
+    @Override
+    public PageResult findPageFail(PageRequest pageRequest) {
+        Integer pageNum = pageRequest.getPageNum();
+        Integer pageSize = pageRequest.getPageSize();
+        List<SoftInfo> softInfoList = softInfoDAO.findByPagerFail((pageNum - 1) * pageSize,pageSize);
+        Long total = softInfoDAO.countVerifyFail();
+        return new PageResult<>(pageNum, pageSize, softInfoList, total);
+    }
+
 }

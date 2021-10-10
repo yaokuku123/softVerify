@@ -41,4 +41,18 @@ public interface SoftVerifyService {
      */
     void deleteSoftAndDoc(Integer govUserId, String softName);
 
+    /**
+     * 分页查询已审核通过的软件信息
+     * @param pageRequest 自定义，统一分页查询请求
+     * @return PageResult 自定义，统一分页查询结果
+     */
+    PageResult findPageSuccess(PageRequest pageRequest);
+
+    /**
+     * 分页查询审核驳回的软件信息
+     * @param pageRequest 自定义，统一分页查询请求
+     * @return PageResult 自定义，统一分页查询结果
+     */
+    PageResult findPageFail(PageRequest pageRequest);
+
 }

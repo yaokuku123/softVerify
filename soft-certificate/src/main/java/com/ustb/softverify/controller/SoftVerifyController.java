@@ -77,7 +77,7 @@ public class SoftVerifyController {
                                         @RequestParam("softName") String softName) {
         //修改数据的状态信息(1-表示已审核)
         softVerifyService.updateSoftStatusToSuccess(govUserId,softName);
-
+        //TODO 添加签名和上链功能，其中签名上链采用队列异步处理
         return ResponseResult.success().message("审核通过");
     }
 
@@ -95,5 +95,27 @@ public class SoftVerifyController {
         //修改数据的状态信息并清除路径和hash信息(2-表示驳回)
         softVerifyService.updateSoftStatusToFail(govUserId,softName);
         return ResponseResult.success().message("审核驳回");
+    }
+
+    /**
+     * 获取已审核的软件列表信息
+     * @param pageQuery 分页查询对象参数
+     * @return 查询结果
+     */
+    @PostMapping("/list/success")
+    public ResponseResult listVerifySuccess(@RequestBody PageRequest pageQuery) {
+        PageResult page = softVerifyService.findPageSuccess(pageQuery);
+        return ResponseResult.success().data("page",page);
+    }
+
+    /**
+     * 获取审核驳回的软件列表信息
+     * @param pageQuery 分页查询对象参数
+     * @return 查询结果
+     */
+    @PostMapping("/list/fail")
+    public ResponseResult listVerifyFail(@RequestBody PageRequest pageQuery) {
+        PageResult page = softVerifyService.findPageFail(pageQuery);
+        return ResponseResult.success().data("page",page);
     }
 }
