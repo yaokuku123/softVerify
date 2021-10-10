@@ -12,6 +12,13 @@ spring:
   redis:
     host: localhost
     port: 6379
+  rabbitmq:
+    host: 123.56.246.148
+    port: 5672
+    virtual-host: softVerify
+    username: guest
+    password: guest
+    my-queue-name: sign-queue
   servlet:
     multipart:
       enabled: true #是否启用http上传处理

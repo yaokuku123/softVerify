@@ -55,4 +55,12 @@ public interface SoftVerifyService {
      */
     PageResult findPageFail(PageRequest pageRequest);
 
+    /**
+     * 对指定程序文件进行签名并上链
+     * @param govUserId 用户标识
+     * @param softName 软件名称
+     * @return
+     */
+    void signAndUpChain(Integer govUserId,String softName);
+
 }

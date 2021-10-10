@@ -77,7 +77,8 @@ public class SoftVerifyController {
                                         @RequestParam("softName") String softName) {
         //修改数据的状态信息(1-表示已审核)
         softVerifyService.updateSoftStatusToSuccess(govUserId,softName);
-        //TODO 添加签名和上链功能，其中签名上链采用队列异步处理
+        //签名和上链，采用队列异步处理
+        softVerifyService.signAndUpChain(govUserId,softName);
         return ResponseResult.success().message("审核通过");
     }
 

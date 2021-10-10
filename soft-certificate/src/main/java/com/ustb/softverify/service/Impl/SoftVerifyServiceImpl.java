@@ -5,7 +5,9 @@ import com.ustb.softverify.entity.VO.PageRequest;
 import com.ustb.softverify.entity.VO.PageResult;
 import com.ustb.softverify.mapper.SoftInfoDAO;
 import com.ustb.softverify.service.SoftVerifyService;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,6 +25,12 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
 
     @Autowired
     private SoftInfoDAO softInfoDAO;
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;
+
+    @Value("${spring.rabbitmq.my-queue-name}")
+    private String queueName;
 
     @Override
     public PageResult findPage(PageRequest pageRequest) {
@@ -79,6 +87,13 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
         List<SoftInfo> softInfoList = softInfoDAO.findByPagerFail((pageNum - 1) * pageSize,pageSize);
         Long total = softInfoDAO.countVerifyFail();
         return new PageResult<>(pageNum, pageSize, softInfoList, total);
+    }
+
+    @Override
+    public void signAndUpChain(Integer govUserId, String softName) {
+        //TODO 完善传输对象格式
+        //RabbitMq工作模式
+        amqpTemplate.convertAndSend("",queueName,"msg-hello world!");
     }
 
 }
