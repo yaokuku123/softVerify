@@ -1,9 +1,12 @@
 package com.ustb.softverify.controller;
 
+import com.mysql.cj.jdbc.SuspendableXAConnection;
 import com.ustb.softverify.domain.ResponseResult;
 import com.ustb.softverify.entity.SoftInfo;
 import com.ustb.softverify.entity.User;
 import com.ustb.softverify.entity.VO.UserUploadInfoVo;
+import com.ustb.softverify.service.Impl.ControlExcelImpl;
+import com.ustb.softverify.service.Impl.ZipCompressImpl;
 import com.ustb.softverify.service.SoftInfoService;
 import com.ustb.softverify.service.UserService;
 import com.ustb.softverify.utils.FileUtil;
@@ -14,10 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,8 +37,14 @@ public class FileUploadController {
     @Autowired
     private SoftInfoService softInfoService;
 
+    @Autowired
+    private ZipCompressImpl zipCompress;
+
+    @Autowired
+    private ControlExcelImpl controlExcel;
+
     @PostMapping("/upload")
-    public ResponseResult upload(@RequestPart("files") MultipartFile[] files,@RequestPart("userUploadInfoVO") UserUploadInfoVo userUploadInfo){
+    public ResponseResult upload(@RequestPart("files") MultipartFile[] files,@RequestPart("userUploadInfoVO") UserUploadInfoVo userUploadInfo) throws Exception {
         if (files.length != 2){
             return ResponseResult.error().message("文件个数错误");
         }
@@ -76,14 +85,39 @@ public class FileUploadController {
             e.printStackTrace();
         }
 
-        //存储软件相关信息
         // TODO 本地 合法性验证后  NFS  到服务器   日志
+        String unzipName = zipCompress.unzip(softDestPath, filePath);
+        String unzipFilePath = filePath + unzipName;
+
+        // 修改文件为只读
+//        zipCompress.changeroot(unzipFilePath);
+
+        List<Map<String, String>> maps = controlExcel.redExcel(docDestPath);
+        List<String> excelPaths = new ArrayList<>();
+        for (Map<String, String> map : maps){
+            excelPaths.add(map.get("文件路径（相对路径）"));
+        }
+
+        ArrayList<File> allFiles = FileUtil.getAllFiles(unzipFilePath);
+        ArrayList<String> allFilesPath = new ArrayList<>();
+        for (File file : allFiles) {
+            allFilesPath.add(file.getAbsolutePath());
+        }
+
+        for (String s : excelPaths){
+            String s1 = filePath + s;
+            if (!allFilesPath.contains(s1.replace("/", "\\"))){
+                return ResponseResult.error().message("文件路径错误");
+            }
+            System.out.println(filePath+s);
+        }
 
 
+        //存储软件相关信息
         softInfo.setSoftName(soft).setSoftPath(softDestPath).setDocPath(docDestPath).setStatus(0).setUser(user);
         softInfoService.insertSoft(softInfo);
 
-        return ResponseResult.success().data("user",user).data("softInfo",softInfo);
+        return ResponseResult.success().data("paths",excelPaths).data("allFilesPath",allFilesPath);
     }
 
 }

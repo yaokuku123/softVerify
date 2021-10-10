@@ -566,25 +566,27 @@ public class FileUtil {
         }
     }
 
-    //保存文件
-//    public static void saveFiles(MultipartFile[] files,String filePath){
-//
-//        String soft = files[0].getOriginalFilename();
-//        String doc = files[1].getOriginalFilename();
-//        String softDestPath = filePath + soft;
-//        String docDestPath = filePath + doc;
-//        File fileDir = new File(filePath);
-//
-//        fileDir.mkdirs();
-//
-//        File softDestFile = new File(softDestPath);
-//        File docDestFile = new File(docDestPath);
-//        try {
-//            files[0].transferTo(softDestFile);
-//            files[1].transferTo(docDestFile);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    // 遍历文件夹获取文件路径
+    public static List<String> getFilesPath(String filePath) {
+        List<String> paths = new ArrayList<>();
+        File files = new File(filePath);
+        ArrayList<File> temp = new ArrayList<File>();
+        temp.add(files);
+        for (int i = 0; i < temp.size(); i++) {
+            if (temp.get(i).isDirectory()) {
+                File[] list = temp.get(i).listFiles();
+                for (File file2 : list) {
+                    temp.add(file2);
+                }
+            }
+        }
+        Iterator<File> iterator = temp.iterator();
+        while (iterator.hasNext()) {
+            File file = (File) iterator.next();
+            System.out.println(file);
+            paths.add(file.getAbsolutePath());
+        }
+        return paths;
+    }
 }
 

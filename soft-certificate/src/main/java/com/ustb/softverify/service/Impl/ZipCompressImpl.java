@@ -1,6 +1,6 @@
 package com.ustb.softverify.service.Impl;
 
-import com.ustb.softverify.service.zipcompress;
+import com.ustb.softverify.service.ZipCompress;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -8,10 +8,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 @Service
-public class zipcompresslmpl implements zipcompress {
+public class ZipCompressImpl implements ZipCompress {
 
     @Override
-    public void unzip(String zipFilePath, String desDirectory) throws Exception{
+    public String unzip(String zipFilePath, String desDirectory) throws Exception{
         File desDir = new File(desDirectory);
         if (!desDir.exists()) {
             boolean mkdirSuccess = desDir.mkdir();
@@ -23,6 +23,8 @@ public class zipcompresslmpl implements zipcompress {
         ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFilePath));
         // 遍历每一个文件
         ZipEntry zipEntry = zipInputStream.getNextEntry();
+        String unzipName = zipEntry.getName();
+
         while (zipEntry != null) {
             if (zipEntry.isDirectory()) { // 文件夹
                 String unzipFilePath = desDirectory + File.separator + zipEntry.getName();
@@ -47,6 +49,8 @@ public class zipcompresslmpl implements zipcompress {
             zipEntry = zipInputStream.getNextEntry();
         }
         zipInputStream.close();
+        unzipName= unzipName.substring(0, unzipName.length()-1);
+        return unzipName;
     }
 
     private void mkdir(File file) {

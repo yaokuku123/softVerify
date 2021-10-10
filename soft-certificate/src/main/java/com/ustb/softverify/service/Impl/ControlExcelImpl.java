@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ControlExcellmpl implements ControlExcel {
+public class ControlExcelImpl implements ControlExcel {
     @Override
     public List<Map<String, String>> redExcel(String filePath) throws Exception {
         File file = new File(filePath);
