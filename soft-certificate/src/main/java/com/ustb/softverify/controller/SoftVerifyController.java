@@ -65,4 +65,19 @@ public class SoftVerifyController {
         }
         return ResponseResult.error().message("下载失败");
     }
+
+    /**
+     * 审核通过
+     * @param govUserId 用户标识
+     * @param softName 软件名称
+     * @return
+     */
+    @GetMapping("/success")
+    public ResponseResult verifySuccess(@RequestParam("govUserId") Integer govUserId,
+                                        @RequestParam("softName") String softName) {
+        //修改数据的状态信息
+        softVerifyService.updateSoftStatusToSuccess(govUserId,softName);
+
+        return ResponseResult.success().message("审核通过");
+    }
 }

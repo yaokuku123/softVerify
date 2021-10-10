@@ -30,4 +30,9 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
         return softInfoDAO.getSoftPath(govUserId,softName);
     }
 
+    @Override
+    public void updateSoftStatusToSuccess(Integer govUserId, String softName) {
+        softInfoDAO.updateSoftStatusToSuccess(govUserId, softName);
+    }
+
 }

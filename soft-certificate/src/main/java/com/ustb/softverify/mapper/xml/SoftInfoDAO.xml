@@ -9,9 +9,12 @@
 
 
     <resultMap id="softInfoResult" type="com.ustb.softverify.entity.SoftInfo">
+        <id property="sid" column="sid"/>
         <result property="softName" column="softname"/>
         <result property="softDesc" column="softdesc"/>
+        <result property="status" column="status"/>
         <association property="user" javaType="com.ustb.softverify.entity.User">
+            <id property="uid" column="uid"/>
             <result property="uname" column="uname"/>
             <result property="company" column="ucompany"/>
             <result property="phone" column="uphone"/>
@@ -21,8 +24,8 @@
 
     <select id="findByPager" resultMap="softInfoResult" >
         SELECT
-            s.soft_name softname, s.soft_desc softdesc,
-            u.uname uname, u.company ucompany, u.phone uphone, u.gov_user_id ugovuserid
+            s.sid sid, s.soft_name softname, s.soft_desc softdesc, s.status status,
+            u.uid uid, u.uname uname, u.company ucompany, u.phone uphone, u.gov_user_id ugovuserid
         FROM
             t_soft s
         LEFT JOIN
@@ -30,13 +33,13 @@
         ON
             s.uid = u.uid
         WHERE
-            s.status = 0
+            s.status IN (0,2)
         LIMIT
             #{page},#{size}
     </select>
 
     <select id="countUnVerifiedSoft" resultType="long">
-        SELECT COUNT(1) FROM t_soft WHERE status = 0;
+        SELECT COUNT(1) FROM t_soft WHERE status IN (0,2);
     </select>
 
     <select id="getSoftPath" resultType="string">
@@ -53,5 +56,31 @@
         AND
             s.soft_name = #{softName};
     </select>
+
+    <update id="updateSoftStatusToSuccess" >
+        UPDATE
+            t_soft
+        SET
+            t_soft.`status` = 1
+        WHERE
+            t_soft.sid = (
+                SELECT
+                    tmp.id
+                FROM
+                    (SELECT
+                                t_soft.sid id
+                        FROM
+                                t_soft
+                        LEFT JOIN
+                                t_user
+                        ON
+                                t_soft.uid = t_user.uid
+                        WHERE
+                                t_user.uid = (SELECT uid FROM t_user WHERE gov_user_id = #{govUserId})
+                        AND
+                                t_soft.soft_name = #{softName}
+                    ) as tmp
+            );
+    </update>
 
 </mapper>
