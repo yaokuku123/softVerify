@@ -7,4 +7,38 @@
         insert into t_soft (soft_name,soft_desc,soft_path,doc_path,hash,status,uid) values (#{softName},#{softDesc},#{softPath},#{docPath},#{hash},#{status},#{user.uid})
     </insert>
 
+
+    <resultMap id="softInfoResult" type="com.ustb.softverify.entity.SoftInfo">
+        <id property="sid" column="sid"/>
+        <result property="softName" column="softname"/>
+        <result property="softDesc" column="softdesc"/>
+        <association property="user" javaType="com.ustb.softverify.entity.User">
+            <id property="uid" column="uid"/>
+            <result property="uname" column="uname"/>
+            <result property="company" column="ucompany"/>
+            <result property="phone" column="uphone"/>
+            <result property="govUserId" column="ugovuserid"/>
+        </association>
+    </resultMap>
+
+    <select id="findByPager" resultMap="softInfoResult" >
+        SELECT
+            s.sid sid, s.soft_name softname, s.soft_desc softdesc,
+            u.uid uid, u.uname uname, u.company ucompany, u.phone uphone, u.gov_user_id ugovuserid
+        FROM
+            t_soft s
+        LEFT JOIN
+            t_user u
+        ON
+            s.uid = u.uid
+        WHERE
+            s.status = 0
+        LIMIT
+            ${page},${size}
+    </select>
+
+    <select id="countUnVerifiedSoft" resultType="long">
+        SELECT COUNT(1) FROM t_soft WHERE status = 0;
+    </select>
+
 </mapper>
