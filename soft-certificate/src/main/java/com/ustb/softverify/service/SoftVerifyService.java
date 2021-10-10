@@ -12,4 +12,19 @@ public interface SoftVerifyService {
      */
     PageResult findPage(PageRequest pageRequest);
 
+    /**
+     * 根据用户标识和软件名称获取软件路径
+     * @param govUserId 用户标识
+     * @param softName 软件名称
+     * @return 软件路径信息
+     */
+    String getSoftPath(Integer govUserId,String softName);
+
+    /**
+     * 修改软件状态为审核通过 待审核：0，审核通过：1，审核驳回：2
+     * @param govUserId  用户标识
+     * @param softName 软件名称
+     */
+    void updateSoftStatusToSuccess(Integer govUserId,String softName);
+
 }
