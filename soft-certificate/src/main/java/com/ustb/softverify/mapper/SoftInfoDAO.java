@@ -4,6 +4,7 @@ import com.ustb.softverify.entity.SoftInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author WYP
@@ -41,4 +42,19 @@ public interface SoftInfoDAO {
      * @param softName 软件名称
      */
     void updateSoftStatusToSuccess(@Param("govUserId") Integer govUserId, @Param("softName") String softName);
+
+    /**
+     * 修改软件状态为审核驳回 待审核：0，审核通过：1，审核驳回：2
+     * @param govUserId  用户标识
+     * @param softName 软件名称
+     */
+    void updateSoftStatusToFail(@Param("govUserId") Integer govUserId, @Param("softName") String softName);
+
+    /**
+     * 查询软件和文档的路径信息
+     * @param govUserId 用户标识
+     * @param softName 软件名称
+     * @return
+     */
+    Map<String,String> getSoftPathAndDocPath(@Param("govUserId") Integer govUserId, @Param("softName") String softName);
 }

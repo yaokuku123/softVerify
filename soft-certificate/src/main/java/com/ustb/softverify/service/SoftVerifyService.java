@@ -27,4 +27,18 @@ public interface SoftVerifyService {
      */
     void updateSoftStatusToSuccess(Integer govUserId,String softName);
 
+    /**
+     * 修改软件状态为审核驳回 待审核：0，审核通过：1，审核驳回：2
+     * @param govUserId  用户标识
+     * @param softName 软件名称
+     */
+    void updateSoftStatusToFail(Integer govUserId,String softName);
+
+    /**
+     * 删除指定路径下的文件
+     * @param govUserId  用户标识
+     * @param softName 软件名称
+     */
+    void deleteSoftAndDoc(Integer govUserId, String softName);
+
 }

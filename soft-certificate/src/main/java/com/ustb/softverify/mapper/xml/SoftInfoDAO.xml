@@ -83,4 +83,50 @@
             );
     </update>
 
+    <update id="updateSoftStatusToFail" >
+        UPDATE
+            t_soft
+        SET
+            t_soft.`status` = 2, t_soft.soft_path = null, t_soft.doc_path = null, t_soft.hash = null
+        WHERE
+            t_soft.sid = (
+                SELECT
+                    tmp.id
+                FROM
+                    (SELECT
+                                t_soft.sid id
+                        FROM
+                                t_soft
+                        LEFT JOIN
+                                t_user
+                        ON
+                                t_soft.uid = t_user.uid
+                        WHERE
+                                t_user.uid = (SELECT uid FROM t_user WHERE gov_user_id = #{govUserId})
+                        AND
+                                t_soft.soft_name = #{softName}
+                    ) as tmp
+            );
+    </update>
+
+    <resultMap id="pathMap" type="java.util.HashMap" >
+        <result property="softPath" column="softpath"/>
+        <result property="docPath" column="docpath"/>
+    </resultMap>
+
+    <select id="getSoftPathAndDocPath" resultMap="pathMap">
+        SELECT
+            s.soft_path softpath, s.doc_path docpath
+        FROM
+            t_soft s
+        LEFT JOIN
+            t_user u
+        ON
+            s.uid = u.uid
+        WHERE
+            u.uid = (SELECT uid FROM t_user WHERE gov_user_id = #{govUserId})
+        AND
+            s.soft_name = #{softName};
+    </select>
+
 </mapper>
