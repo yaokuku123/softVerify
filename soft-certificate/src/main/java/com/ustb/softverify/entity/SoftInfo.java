@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author WYP
@@ -42,6 +43,8 @@ public class SoftInfo implements Serializable {
 
     /* 外键 */
     private User user;
+
+    private List<SignFile> signFiles;
 
 
 

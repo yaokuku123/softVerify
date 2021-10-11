@@ -27,6 +27,6 @@ public class SignFile implements Serializable {
     private String txid;
 
     /* 外键 */
-    private User user;
+    private SoftInfo softInfo;
 
 }

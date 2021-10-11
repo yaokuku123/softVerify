@@ -1,13 +1,16 @@
 package com.ustb.softverify.controller;
 
-import com.mysql.cj.jdbc.SuspendableXAConnection;
+
+
 import com.ustb.softverify.algorithm.impl.BlindVerifyAlgorithmImpl1;
 import com.ustb.softverify.domain.ResponseResult;
+import com.ustb.softverify.entity.SignFile;
 import com.ustb.softverify.entity.SoftInfo;
 import com.ustb.softverify.entity.User;
 import com.ustb.softverify.entity.VO.UserUploadInfoVo;
 import com.ustb.softverify.service.Impl.ControlExcelImpl;
 import com.ustb.softverify.service.Impl.ZipCompressImpl;
+import com.ustb.softverify.service.SignFileService;
 import com.ustb.softverify.service.SoftInfoService;
 import com.ustb.softverify.service.UserService;
 import com.ustb.softverify.utils.FileUtil;
@@ -45,6 +48,9 @@ public class FileUploadController {
     @Autowired
     private ControlExcelImpl controlExcel;
 
+    @Autowired
+    private SignFileService signFileService;
+
     @PostMapping("/upload")
     public ResponseResult upload(@RequestPart("files") MultipartFile[] files,@RequestPart("userUploadInfoVO") UserUploadInfoVo userUploadInfo) throws Exception {
         if (files.length != 2){
@@ -74,6 +80,13 @@ public class FileUploadController {
         String docName = user.getUname() + "-" + soft + docSuffix;
         String filePath = System.getProperty("user.dir") + "/data/" + user.getUname() + "/" + softInfo.getSoftName() + "/";
 
+        //判断当前文件下是否有文件
+        File currentFile = new File(filePath);
+        if (currentFile.list().length > 0 ){
+            FileUtil.deleteDir(filePath);
+        }
+
+
         String softDestPath = filePath + softName;
         String docDestPath = filePath + docName;
         File fileDir = new File(filePath);
@@ -87,7 +100,7 @@ public class FileUploadController {
             e.printStackTrace();
         }
 
-        // TODO 本地 合法性验证后  NFS  到服务器   日志
+        // TODO 本地 合法性验证后
         String unzipName = zipCompress.unzip(softDestPath, filePath);
         String unzipFilePath = filePath + unzipName;
 
@@ -111,19 +124,26 @@ public class FileUploadController {
             if (!allFilesPath.contains(s1.replace("/", "\\"))){
                 return ResponseResult.error().message("文件路径错误");
             }
-            System.out.println(filePath+s);
         }
 
-        // 验证正确 放入NFS映射路径下  并将NFS存放路径 和hash存进数据库
-        BlindVerifyAlgorithmImpl1 bva = new BlindVerifyAlgorithmImpl1(softDestPath);
-        String hash = HashBasicOperaterSetUtil.byteToString(bva.SM3Encrypt(softDestPath));
-        boolean verify = bva.verify(softDestPath, hash);
-        System.out.println(verify);
-
+//        // 验证正确   将 hash 和 excel路径 存进数据库
+//        BlindVerifyAlgorithmImpl1 bva = new BlindVerifyAlgorithmImpl1(softDestPath);
+//        String hash = HashBasicOperaterSetUtil.byteToString(bva.SM3Encrypt(softDestPath));
+//        boolean verify = bva.verify(softDestPath, hash);
+//        System.out.println(verify);
 
         //存储软件相关信息
         softInfo.setSoftName(soft).setSoftPath(softDestPath).setDocPath(docDestPath).setStatus(0).setUser(user);
         softInfoService.insertSoft(softInfo);
+
+        // 存放读取正确路径
+        SignFile signFile = new SignFile();
+        signFile.setSoftInfo(softInfo);
+        for (String s : excelPaths){
+            String s1 = filePath + s;
+            signFile.setPath(s1);
+            signFileService.insert(signFile);
+        }
 
         return ResponseResult.success().data("paths",excelPaths).data("allFilesPath",allFilesPath);
     }
