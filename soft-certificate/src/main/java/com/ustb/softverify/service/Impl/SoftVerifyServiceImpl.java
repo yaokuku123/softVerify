@@ -1,12 +1,14 @@
 package com.ustb.softverify.service.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ustb.softverify.entity.dto.PageInfo;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.PageRequest;
 import com.ustb.softverify.entity.vo.PageResult;
 import com.ustb.softverify.mapper.SoftInfoDAO;
 import com.ustb.softverify.service.SoftVerifyService;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +41,16 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
         Integer pageNum = pageRequest.getPageNum();
         Integer pageSize = pageRequest.getPageSize();
         List<SoftInfo> softInfoList = softInfoDAO.findByPager((pageNum - 1) * pageSize,pageSize);
+        //对象类型转换
+        List<PageInfo> pageInfoList = new ArrayList<>();
+        for (SoftInfo softInfo : softInfoList) {
+            PageInfo pageInfo = new PageInfo();
+            BeanUtils.copyProperties(softInfo,pageInfo);
+            BeanUtils.copyProperties(softInfo.getUser(),pageInfo);
+            pageInfoList.add(pageInfo);
+        }
         Long total = softInfoDAO.countUnVerifiedSoft();
-        return new PageResult<>(pageNum, pageSize, softInfoList, total);
+        return new PageResult<>(pageNum, pageSize, pageInfoList, total);
     }
 
     @Override
@@ -77,8 +88,16 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
         Integer pageNum = pageRequest.getPageNum();
         Integer pageSize = pageRequest.getPageSize();
         List<SoftInfo> softInfoList = softInfoDAO.findByPagerSuccess((pageNum - 1) * pageSize,pageSize);
+        //对象类型转换
+        List<PageInfo> pageInfoList = new ArrayList<>();
+        for (SoftInfo softInfo : softInfoList) {
+            PageInfo pageInfo = new PageInfo();
+            BeanUtils.copyProperties(softInfo,pageInfo);
+            BeanUtils.copyProperties(softInfo.getUser(),pageInfo);
+            pageInfoList.add(pageInfo);
+        }
         Long total = softInfoDAO.countVerifySuccess();
-        return new PageResult<>(pageNum, pageSize, softInfoList, total);
+        return new PageResult<>(pageNum, pageSize, pageInfoList, total);
     }
 
     @Override
@@ -86,8 +105,15 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
         Integer pageNum = pageRequest.getPageNum();
         Integer pageSize = pageRequest.getPageSize();
         List<SoftInfo> softInfoList = softInfoDAO.findByPagerFail((pageNum - 1) * pageSize,pageSize);
+        List<PageInfo> pageInfoList = new ArrayList<>();
+        for (SoftInfo softInfo : softInfoList) {
+            PageInfo pageInfo = new PageInfo();
+            BeanUtils.copyProperties(softInfo,pageInfo);
+            BeanUtils.copyProperties(softInfo.getUser(),pageInfo);
+            pageInfoList.add(pageInfo);
+        }
         Long total = softInfoDAO.countVerifyFail();
-        return new PageResult<>(pageNum, pageSize, softInfoList, total);
+        return new PageResult<>(pageNum, pageSize, pageInfoList, total);
     }
 
     @Override
