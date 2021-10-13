@@ -1,8 +1,9 @@
 package com.ustb.softverify.service.Impl;
 
-import com.ustb.softverify.entity.SoftInfo;
-import com.ustb.softverify.entity.VO.PageRequest;
-import com.ustb.softverify.entity.VO.PageResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ustb.softverify.entity.po.SoftInfo;
+import com.ustb.softverify.entity.vo.PageRequest;
+import com.ustb.softverify.entity.vo.PageResult;
 import com.ustb.softverify.mapper.SoftInfoDAO;
 import com.ustb.softverify.service.SoftVerifyService;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -92,6 +93,7 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
     @Override
     public void signAndUpChain(Integer govUserId, String softName) {
         //TODO 完善传输对象格式
+        ObjectMapper mapper = new ObjectMapper();
         //RabbitMq工作模式
         amqpTemplate.convertAndSend("",queueName,"msg-hello world!");
     }

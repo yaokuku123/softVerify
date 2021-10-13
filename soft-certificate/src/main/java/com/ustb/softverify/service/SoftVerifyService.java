@@ -1,7 +1,7 @@
 package com.ustb.softverify.service;
 
-import com.ustb.softverify.entity.VO.PageRequest;
-import com.ustb.softverify.entity.VO.PageResult;
+import com.ustb.softverify.entity.vo.PageRequest;
+import com.ustb.softverify.entity.vo.PageResult;
 
 public interface SoftVerifyService {
 

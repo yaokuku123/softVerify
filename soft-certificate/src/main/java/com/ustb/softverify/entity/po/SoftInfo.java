@@ -1,4 +1,4 @@
-package com.ustb.softverify.entity;
+package com.ustb.softverify.entity.po;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

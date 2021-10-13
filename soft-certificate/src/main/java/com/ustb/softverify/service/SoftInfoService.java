@@ -1,6 +1,6 @@
 package com.ustb.softverify.service;
 
-import com.ustb.softverify.entity.SoftInfo;
+import com.ustb.softverify.entity.po.SoftInfo;
 
 /**
  * @author WYP

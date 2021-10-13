@@ -8,12 +8,12 @@
     </insert>
 
 
-    <resultMap id="softInfoResult" type="com.ustb.softverify.entity.SoftInfo">
+    <resultMap id="softInfoResult" type="com.ustb.softverify.entity.po.SoftInfo">
         <id property="sid" column="sid"/>
         <result property="softName" column="softname"/>
         <result property="softDesc" column="softdesc"/>
         <result property="status" column="status"/>
-        <association property="user" javaType="com.ustb.softverify.entity.User">
+        <association property="user" javaType="com.ustb.softverify.entity.po.User">
             <id property="uid" column="uid"/>
             <result property="uname" column="uname"/>
             <result property="company" column="ucompany"/>

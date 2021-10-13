@@ -1,6 +1,6 @@
 package com.ustb.softverify.service.Impl;
 
-import com.ustb.softverify.entity.SoftInfo;
+import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.mapper.SoftInfoDAO;
 import com.ustb.softverify.service.SoftInfoService;
 import org.springframework.beans.factory.annotation.Autowired;

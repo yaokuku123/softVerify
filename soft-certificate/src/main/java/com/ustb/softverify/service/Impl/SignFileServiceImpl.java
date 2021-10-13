@@ -1,6 +1,6 @@
 package com.ustb.softverify.service.Impl;
 
-import com.ustb.softverify.entity.SignFile;
+import com.ustb.softverify.entity.po.SignFile;
 import com.ustb.softverify.mapper.SignFileDAO;
 import com.ustb.softverify.service.SignFileService;
 import org.springframework.beans.factory.annotation.Autowired;

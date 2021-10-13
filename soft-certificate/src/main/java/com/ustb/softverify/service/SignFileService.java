@@ -1,6 +1,6 @@
 package com.ustb.softverify.service;
 
-import com.ustb.softverify.entity.SignFile;
+import com.ustb.softverify.entity.po.SignFile;
 
 /**
  * @author WYP

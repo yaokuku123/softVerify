@@ -1,6 +1,6 @@
 package com.ustb.softverify.mapper;
 
-import com.ustb.softverify.entity.SoftInfo;
+import com.ustb.softverify.entity.po.SoftInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

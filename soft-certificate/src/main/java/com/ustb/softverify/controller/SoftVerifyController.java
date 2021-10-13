@@ -1,8 +1,8 @@
 package com.ustb.softverify.controller;
 
 import com.ustb.softverify.domain.ResponseResult;
-import com.ustb.softverify.entity.VO.PageRequest;
-import com.ustb.softverify.entity.VO.PageResult;
+import com.ustb.softverify.entity.vo.PageRequest;
+import com.ustb.softverify.entity.vo.PageResult;
 import com.ustb.softverify.service.SoftVerifyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
