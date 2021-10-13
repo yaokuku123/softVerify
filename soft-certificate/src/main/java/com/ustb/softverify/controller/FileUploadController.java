@@ -13,6 +13,7 @@ import com.ustb.softverify.service.Impl.ZipCompressImpl;
 import com.ustb.softverify.service.SignFileService;
 import com.ustb.softverify.service.SoftInfoService;
 import com.ustb.softverify.service.UserService;
+import com.ustb.softverify.utils.FileTransferUtil;
 import com.ustb.softverify.utils.FileUtil;
 import com.ustb.softverify.utils.HashBasicOperaterSetUtil;
 import org.springframework.beans.BeanUtils;
@@ -50,6 +51,9 @@ public class FileUploadController {
 
     @Autowired
     private SignFileService signFileService;
+
+//    @Autowired
+//    private FileTransferUtil fileTransferUtil;
 
     @PostMapping("/upload")
     public ResponseResult upload(@RequestPart("files") MultipartFile[] files,@RequestPart("userUploadInfoVO") UserUploadInfoVo userUploadInfo) throws Exception {
@@ -105,7 +109,7 @@ public class FileUploadController {
         String unzipFilePath = filePath + unzipName;
 
         // 修改文件为只读
-        zipCompress.changeroot(unzipFilePath);
+       zipCompress.changeroot(unzipFilePath);
 
         List<Map<String, String>> maps = controlExcel.redExcel(docDestPath);
         List<String> excelPaths = new ArrayList<>();
@@ -116,15 +120,17 @@ public class FileUploadController {
         ArrayList<File> allFiles = FileUtil.getAllFiles(unzipFilePath);
         ArrayList<String> allFilesPath = new ArrayList<>();
         for (File file : allFiles) {
-            allFilesPath.add(file.getAbsolutePath());
+            //file replace
+            allFilesPath.add(file.getAbsolutePath().replace("\\","/"));
         }
 
         for (String s : excelPaths){
             String s1 = filePath + s;
-            if (!allFilesPath.contains(s1.replace("/", "\\"))){
+            if (!allFilesPath.contains(s1.replace("\\", "/"))){
                 return ResponseResult.error().message("文件路径错误");
             }
         }
+
 
         // 验证正确   将 hash 和 excel路径 存进数据库
         BlindVerifyAlgorithmImpl1 bva = new BlindVerifyAlgorithmImpl1(softDestPath);
@@ -139,8 +145,7 @@ public class FileUploadController {
         SignFile signFile = new SignFile();
         signFile.setSoftInfo(softInfo);
         for (String s : excelPaths){
-            String s1 = filePath + s;
-            signFile.setPath(s1);
+            signFile.setPath(s);
             signFileService.insert(signFile);
         }
 

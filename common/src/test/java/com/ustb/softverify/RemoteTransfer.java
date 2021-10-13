@@ -32,7 +32,7 @@ public class RemoteTransfer{
 
                 //将本地a.txt 传输到远程主机的/root/目录下
                 SCPClient clt = conn.createSCPClient();
-                clt.put("D:\\a.txt", "/root/");
+                clt.put("D:\\test.txt", "/root/data/");
                 System.out.println("传输完成");
             }
         }

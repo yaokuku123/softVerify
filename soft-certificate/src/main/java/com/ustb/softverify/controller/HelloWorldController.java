@@ -18,7 +18,7 @@ public class HelloWorldController {
     @GetMapping("/hello")
     public ResponseResult sayHello() {
 
-        fileTransferUtil.transfer("D:\\1.jpg","/root/");
+        fileTransferUtil.transfer("D:\\1.jpg","/root/data");
         return ResponseResult.success().data("success","传输成功");
 
     }
