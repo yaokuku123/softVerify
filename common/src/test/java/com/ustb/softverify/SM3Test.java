@@ -16,7 +16,7 @@ public class SM3Test {
     public void test() throws FileNotFoundException {
 
         //FIXME
-        String softDestPath = "D:\\WORK\\TargetField\\zipTest1.zip";
+        String softDestPath = "D:\\typora-scrolls-0.5.zip";
         BlindVerifyAlgorithmImpl1 bva = new BlindVerifyAlgorithmImpl1(softDestPath);
         String hash = HashBasicOperaterSetUtil.byteToHex(bva.SM3Encrypt(softDestPath));
         System.out.println(hash);

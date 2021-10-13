@@ -37,7 +37,7 @@ public class FileTransferUtil {
             }
             else {
                 SCPClient clt = conn.createSCPClient();
-                //clt.put("D:\\a.txt", "/root/");
+                //clt.put("D:\\a.txt", "/root/data");
                 clt.put(localFile, remoteTargetDirectory);
                 System.out.println("传输完成");
             }

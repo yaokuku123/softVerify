@@ -100,12 +100,12 @@ public class FileUploadController {
             e.printStackTrace();
         }
 
-        // TODO 本地 合法性验证后
+        // 本地 合法性验证
         String unzipName = zipCompress.unzip(softDestPath, filePath);
         String unzipFilePath = filePath + unzipName;
 
         // 修改文件为只读
-//        zipCompress.changeroot(unzipFilePath);
+        zipCompress.changeroot(unzipFilePath);
 
         List<Map<String, String>> maps = controlExcel.redExcel(docDestPath);
         List<String> excelPaths = new ArrayList<>();
@@ -126,14 +126,13 @@ public class FileUploadController {
             }
         }
 
-//        // 验证正确   将 hash 和 excel路径 存进数据库
-//        BlindVerifyAlgorithmImpl1 bva = new BlindVerifyAlgorithmImpl1(softDestPath);
-//        String hash = HashBasicOperaterSetUtil.byteToString(bva.SM3Encrypt(softDestPath));
-//        boolean verify = bva.verify(softDestPath, hash);
-//        System.out.println(verify);
+        // 验证正确   将 hash 和 excel路径 存进数据库
+        BlindVerifyAlgorithmImpl1 bva = new BlindVerifyAlgorithmImpl1(softDestPath);
+        String hash = HashBasicOperaterSetUtil.byteToHex(bva.SM3Encrypt(softDestPath));
+        //boolean verify = bva.verify(softDestPath, hash);
 
         //存储软件相关信息
-        softInfo.setSoftName(soft).setSoftPath(softDestPath).setDocPath(docDestPath).setStatus(0).setUser(user);
+        softInfo.setSoftName(soft).setSoftPath(softDestPath).setDocPath(docDestPath).setStatus(0).setUser(user).setHash(hash);
         softInfoService.insertSoft(softInfo);
 
         // 存放读取正确路径
@@ -147,5 +146,4 @@ public class FileUploadController {
 
         return ResponseResult.success().data("paths",excelPaths).data("allFilesPath",allFilesPath);
     }
-
 }
