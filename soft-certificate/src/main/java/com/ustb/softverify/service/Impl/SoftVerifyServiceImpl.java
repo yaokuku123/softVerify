@@ -3,6 +3,7 @@ package com.ustb.softverify.service.Impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ustb.softverify.entity.dto.PageInfo;
 import com.ustb.softverify.entity.po.SoftInfo;
+import com.ustb.softverify.entity.po.StatusEnum;
 import com.ustb.softverify.entity.vo.PageRequest;
 import com.ustb.softverify.entity.vo.PageResult;
 import com.ustb.softverify.mapper.SoftInfoDAO;
@@ -18,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +42,8 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
     public PageResult findPage(PageRequest pageRequest) {
         Integer pageNum = pageRequest.getPageNum();
         Integer pageSize = pageRequest.getPageSize();
-        List<SoftInfo> softInfoList = softInfoDAO.findByPager((pageNum - 1) * pageSize,pageSize);
+        List<SoftInfo> softInfoList = softInfoDAO.findByPager((pageNum - 1) * pageSize,pageSize,
+                Arrays.asList(StatusEnum.UNVERIFIED.getCode(),StatusEnum.REJECTED.getCode()));
         //对象类型转换
         List<PageInfo> pageInfoList = new ArrayList<>();
         for (SoftInfo softInfo : softInfoList) {
@@ -49,7 +52,7 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
             BeanUtils.copyProperties(softInfo.getUser(),pageInfo);
             pageInfoList.add(pageInfo);
         }
-        Long total = softInfoDAO.countUnVerifiedSoft();
+        Long total = softInfoDAO.countUnVerifiedSoft(Arrays.asList(StatusEnum.UNVERIFIED.getCode(),StatusEnum.REJECTED.getCode()));
         return new PageResult<>(pageNum, pageSize, pageInfoList, total);
     }
 
@@ -60,12 +63,12 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
 
     @Override
     public void updateSoftStatusToSuccess(Integer govUserId, String softName) {
-        softInfoDAO.updateSoftStatusToSuccess(govUserId, softName);
+        softInfoDAO.updateSoftStatusToSuccess(govUserId, softName,StatusEnum.VERIFIED.getCode());
     }
 
     @Override
     public void updateSoftStatusToFail(Integer govUserId, String softName) {
-        softInfoDAO.updateSoftStatusToFail(govUserId, softName);
+        softInfoDAO.updateSoftStatusToFail(govUserId, softName,StatusEnum.REJECTED.getCode());
     }
 
     @Override
@@ -87,7 +90,7 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
     public PageResult findPageSuccess(PageRequest pageRequest) {
         Integer pageNum = pageRequest.getPageNum();
         Integer pageSize = pageRequest.getPageSize();
-        List<SoftInfo> softInfoList = softInfoDAO.findByPagerSuccess((pageNum - 1) * pageSize,pageSize);
+        List<SoftInfo> softInfoList = softInfoDAO.findByPagerSuccess((pageNum - 1) * pageSize,pageSize,StatusEnum.VERIFIED.getCode());
         //对象类型转换
         List<PageInfo> pageInfoList = new ArrayList<>();
         for (SoftInfo softInfo : softInfoList) {
@@ -96,7 +99,7 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
             BeanUtils.copyProperties(softInfo.getUser(),pageInfo);
             pageInfoList.add(pageInfo);
         }
-        Long total = softInfoDAO.countVerifySuccess();
+        Long total = softInfoDAO.countVerifySuccess(StatusEnum.VERIFIED.getCode());
         return new PageResult<>(pageNum, pageSize, pageInfoList, total);
     }
 
@@ -104,7 +107,7 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
     public PageResult findPageFail(PageRequest pageRequest) {
         Integer pageNum = pageRequest.getPageNum();
         Integer pageSize = pageRequest.getPageSize();
-        List<SoftInfo> softInfoList = softInfoDAO.findByPagerFail((pageNum - 1) * pageSize,pageSize);
+        List<SoftInfo> softInfoList = softInfoDAO.findByPagerFail((pageNum - 1) * pageSize,pageSize,StatusEnum.REJECTED.getCode());
         List<PageInfo> pageInfoList = new ArrayList<>();
         for (SoftInfo softInfo : softInfoList) {
             PageInfo pageInfo = new PageInfo();
@@ -112,7 +115,7 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
             BeanUtils.copyProperties(softInfo.getUser(),pageInfo);
             pageInfoList.add(pageInfo);
         }
-        Long total = softInfoDAO.countVerifyFail();
+        Long total = softInfoDAO.countVerifyFail(StatusEnum.REJECTED.getCode());
         return new PageResult<>(pageNum, pageSize, pageInfoList, total);
     }
 

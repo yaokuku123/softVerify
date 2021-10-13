@@ -20,13 +20,13 @@ public interface SoftInfoDAO {
      * @param size 每页大小
      * @return 分页查询的软件信息列表
      */
-    List<SoftInfo> findByPager(@Param("page") Integer page, @Param("size") Integer size);
+    List<SoftInfo> findByPager(@Param("page") Integer page, @Param("size") Integer size,@Param("status") List<Integer> status);
 
     /**
      * 获取未通过审核的软件数量
      * @return 未审核的软件数量
      */
-    Long countUnVerifiedSoft();
+    Long countUnVerifiedSoft(@Param("status") List<Integer> status);
 
     /**
      * 根据用户标识和软件名称获取软件路径信息
@@ -41,14 +41,14 @@ public interface SoftInfoDAO {
      * @param govUserId  用户标识
      * @param softName 软件名称
      */
-    void updateSoftStatusToSuccess(@Param("govUserId") Integer govUserId, @Param("softName") String softName);
+    void updateSoftStatusToSuccess(@Param("govUserId") Integer govUserId, @Param("softName") String softName,@Param("status") Integer status);
 
     /**
      * 修改软件状态为审核驳回 待审核：0，审核通过：1，审核驳回：2
      * @param govUserId  用户标识
      * @param softName 软件名称
      */
-    void updateSoftStatusToFail(@Param("govUserId") Integer govUserId, @Param("softName") String softName);
+    void updateSoftStatusToFail(@Param("govUserId") Integer govUserId, @Param("softName") String softName,@Param("status") Integer status);
 
     /**
      * 查询软件和文档的路径信息
@@ -64,13 +64,13 @@ public interface SoftInfoDAO {
      * @param size 每页大小
      * @return 分页查询的软件信息列表
      */
-    List<SoftInfo> findByPagerSuccess(@Param("page") Integer page, @Param("size") Integer size);
+    List<SoftInfo> findByPagerSuccess(@Param("page") Integer page, @Param("size") Integer size,@Param("status") Integer status);
 
     /**
      * 获取已审核的软件数量
      * @return 未审核的软件数量
      */
-    Long countVerifySuccess();
+    Long countVerifySuccess(@Param("status") Integer status);
 
     /**
      * 分页查询审核驳回的软件信息
@@ -78,12 +78,12 @@ public interface SoftInfoDAO {
      * @param size 每页大小
      * @return 分页查询的软件信息列表
      */
-    List<SoftInfo> findByPagerFail(@Param("page") Integer page, @Param("size") Integer size);
+    List<SoftInfo> findByPagerFail(@Param("page") Integer page, @Param("size") Integer size,@Param("status") Integer status);
 
     /**
      * 获取审核驳回的软件数量
      * @return 未审核的软件数量
      */
-    Long countVerifyFail();
+    Long countVerifyFail(@Param("status") Integer status);
 
 }
