@@ -7,13 +7,16 @@ import com.ustb.softverify.entity.po.StatusEnum;
 import com.ustb.softverify.entity.vo.PageRequest;
 import com.ustb.softverify.entity.vo.PageResult;
 import com.ustb.softverify.mapper.SoftInfoDAO;
+import com.ustb.softverify.mapper.UserDAO;
 import com.ustb.softverify.service.SoftVerifyService;
+import com.ustb.softverify.utils.FileUtil;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +31,9 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
 
     private static final String SOFT_PATH = "softPath";
     private static final String DOC_PATH = "docPath";
+
+    @Autowired
+    private UserDAO userDAO;
 
     @Autowired
     private SoftInfoDAO softInfoDAO;
@@ -72,18 +78,14 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
     }
 
     @Override
-    public void deleteSoftAndDoc(Integer govUserId, String softName) {
-        //查找两个文件的路径
-        Map<String, String> pathMap = softInfoDAO.getSoftPathAndDocPath(govUserId, softName);
-        Path softPath = Paths.get(pathMap.get(SOFT_PATH));
-        Path docPath = Paths.get(pathMap.get(DOC_PATH));
-        //删除软件压缩包和文档
-        try {
-            Files.deleteIfExists(softPath);
-            Files.deleteIfExists(docPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void deleteUserFile(Integer govUserId, String softName) {
+        //查找用户名
+        String username = userDAO.getUsername(govUserId);
+        //判断当前文件下是否有文件
+        String filePath = System.getProperty("user.dir") + "/data/" + username + "/" + softName + "/";
+        //判断当前文件下是否有文件
+        File file = new File(filePath);
+        FileUtil.deleteDir(filePath);
     }
 
     @Override

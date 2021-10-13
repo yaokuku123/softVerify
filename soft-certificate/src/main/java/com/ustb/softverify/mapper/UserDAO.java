@@ -9,4 +9,6 @@ import com.ustb.softverify.entity.po.User;
 public interface UserDAO {
 
     void insertUser(User user);
+
+    String getUsername(Integer govUserId);
 }

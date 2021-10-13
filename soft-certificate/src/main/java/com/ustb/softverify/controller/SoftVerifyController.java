@@ -92,7 +92,7 @@ public class SoftVerifyController {
     public ResponseResult verifyFail(@RequestParam("govUserId") Integer govUserId,
                                      @RequestParam("softName") String softName) {
         //删除数据库中指向路径下的文件
-        softVerifyService.deleteSoftAndDoc(govUserId,softName);
+        softVerifyService.deleteUserFile(govUserId,softName);
         //修改数据的状态信息并清除路径和hash信息(2-表示驳回)
         softVerifyService.updateSoftStatusToFail(govUserId,softName);
         return ResponseResult.success().message("审核驳回");

@@ -39,7 +39,7 @@ public interface SoftVerifyService {
      * @param govUserId  用户标识
      * @param softName 软件名称
      */
-    void deleteSoftAndDoc(Integer govUserId, String softName);
+    void deleteUserFile(Integer govUserId, String softName);
 
     /**
      * 分页查询已审核通过的软件信息
