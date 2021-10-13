@@ -2,7 +2,8 @@ package com.ustb.softverify.controller;
 
 
 
-import com.ustb.softverify.algorithm.impl.BlindVerifyAlgorithmImpl1;
+import com.ustb.softverify.algorithm.blind.impl.BlindVerifyAlgorithmImpl1;
+import com.ustb.softverify.algorithm.sm3.SM3Algorithm;
 import com.ustb.softverify.domain.ResponseResult;
 import com.ustb.softverify.entity.SignFile;
 import com.ustb.softverify.entity.SoftInfo;
@@ -13,7 +14,6 @@ import com.ustb.softverify.service.Impl.ZipCompressImpl;
 import com.ustb.softverify.service.SignFileService;
 import com.ustb.softverify.service.SoftInfoService;
 import com.ustb.softverify.service.UserService;
-import com.ustb.softverify.utils.FileTransferUtil;
 import com.ustb.softverify.utils.FileUtil;
 import com.ustb.softverify.utils.HashBasicOperaterSetUtil;
 import org.springframework.beans.BeanUtils;
@@ -86,6 +86,7 @@ public class FileUploadController {
 
         //判断当前文件下是否有文件
         File currentFile = new File(filePath);
+        currentFile.mkdirs();
         if (currentFile.list().length > 0 ){
             FileUtil.deleteDir(filePath);
         }
@@ -93,8 +94,6 @@ public class FileUploadController {
 
         String softDestPath = filePath + softName;
         String docDestPath = filePath + docName;
-        File fileDir = new File(filePath);
-        fileDir.mkdirs();
         File softDestFile = new File(softDestPath);
         File docDestFile = new File(docDestPath);
         try {
@@ -133,9 +132,7 @@ public class FileUploadController {
 
 
         // 验证正确   将 hash 和 excel路径 存进数据库
-        BlindVerifyAlgorithmImpl1 bva = new BlindVerifyAlgorithmImpl1(softDestPath);
-        String hash = HashBasicOperaterSetUtil.byteToHex(bva.SM3Encrypt(softDestPath));
-        //boolean verify = bva.verify(softDestPath, hash);
+        String hash = HashBasicOperaterSetUtil.byteToHex(SM3Algorithm.SM3Encrypt(softDestPath));
 
         //存储软件相关信息
         softInfo.setSoftName(soft).setSoftPath(softDestPath).setDocPath(docDestPath).setStatus(0).setUser(user).setHash(hash);

@@ -18,8 +18,4 @@ target/
 hs_err_pid*
 
 #
-/daemonFile/
-/demo01/
-/demo02/
-/uploadFile/
 /data

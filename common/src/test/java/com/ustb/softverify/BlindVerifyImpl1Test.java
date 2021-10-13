@@ -1,7 +1,7 @@
 package com.ustb.softverify;
 
-import com.ustb.softverify.algorithm.BlindAlgorithm;
-import com.ustb.softverify.algorithm.impl.BlindVerifyAlgorithmImpl1;
+import com.ustb.softverify.algorithm.blind.BlindAlgorithm;
+import com.ustb.softverify.algorithm.blind.impl.BlindVerifyAlgorithmImpl1;
 import com.ustb.softverify.domain.PublicKey;
 import com.ustb.softverify.domain.QueryParam;
 import it.unisa.dia.gas.jpbc.Element;
