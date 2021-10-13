@@ -75,10 +75,7 @@ public class SoftVerifyController {
     @GetMapping("/success")
     public ResponseResult verifySuccess(@RequestParam("govUserId") Integer govUserId,
                                         @RequestParam("softName") String softName) {
-        //修改数据的状态信息(1-表示已审核)
-        softVerifyService.updateSoftStatusToSuccess(govUserId,softName);
-        //签名和上链，采用队列异步处理
-        softVerifyService.signAndUpChain(govUserId,softName);
+        softVerifyService.verifySuccess(govUserId,softName);
         return ResponseResult.success().message("审核通过");
     }
 
@@ -91,10 +88,7 @@ public class SoftVerifyController {
     @GetMapping("fail")
     public ResponseResult verifyFail(@RequestParam("govUserId") Integer govUserId,
                                      @RequestParam("softName") String softName) {
-        //删除数据库中指向路径下的文件
-        softVerifyService.deleteUserFile(govUserId,softName);
-        //修改数据的状态信息并清除路径和hash信息(2-表示驳回)
-        softVerifyService.updateSoftStatusToFail(govUserId,softName);
+        softVerifyService.verifyFail(govUserId,softName);
         return ResponseResult.success().message("审核驳回");
     }
 
