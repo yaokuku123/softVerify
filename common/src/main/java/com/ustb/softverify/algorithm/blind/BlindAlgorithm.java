@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public interface BlindAlgorithm {
+    String PUBLIC_KEY = "publicKey"; //公钥字符串
+    String PRIVATE_KEY = "privateKey"; //私钥字符串
 
     /**
      * 初始化算法参数阶段
