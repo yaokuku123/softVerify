@@ -16,6 +16,7 @@ import com.ustb.softverify.utils.FileUtil;
 import com.ustb.softverify.utils.HashBasicOperaterSetUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,16 +69,15 @@ public class FileUploadController {
 
         User user = softUploadService.insertUser(userUploadInfo);
 
-        String softName = user.getUname() + "-" + soft + softSuffix;
-        String docName = user.getUname() + "-" + soft + docSuffix;
-        String filePath = System.getProperty("user.dir") + "/data/" + userUploadInfo.getGovUserId() + "/" + user.getUname() + "/" + softInfo.getSoftName() + "/";
+        String softName = user.getGovUserId() + "-" + soft + softSuffix;
+        String docName = user.getGovUserId() + "-" + soft + docSuffix;
+        String filePath = System.getProperty("user.dir") + "/data/" + userUploadInfo.getGovUserId() + "/" + softInfo.getSoftName() + "/";
         FileInfo fileInfo = new FileInfo();
         fileInfo.setSoftName(softName).setDocName(docName).setFilePath(filePath);
 
         softUploadService.saveFile(files,userUploadInfo,fileInfo);
         softUploadService.verifyAndSave(fileInfo,softInfo,userUploadInfo,user);
 
-        //  修改插入（user soft_info(uid和 soft_name)）    调整service 事务控制   目录加gov_id
         return ResponseResult.success();
     }
 }
