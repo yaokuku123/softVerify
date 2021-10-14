@@ -11,4 +11,6 @@ public interface UserDAO {
     void insertUser(User user);
 
     String getUsername(Integer govUserId);
+
+    User getUser(Integer govUserId);
 }

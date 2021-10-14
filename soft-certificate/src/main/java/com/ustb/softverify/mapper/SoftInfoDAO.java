@@ -86,4 +86,13 @@ public interface SoftInfoDAO {
      */
     Long countVerifyFail(@Param("status") Integer status);
 
+
+    /**
+     *
+     * @param uid   用户标识
+     * @param softName  软件名称
+     * @return
+     */
+    SoftInfo getSoftByUIdAndName(@Param("uid") Integer uid,@Param("softName") String softName);
+
 }
