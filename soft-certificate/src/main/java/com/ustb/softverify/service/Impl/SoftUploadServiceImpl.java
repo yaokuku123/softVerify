@@ -119,8 +119,14 @@ public class SoftUploadServiceImpl implements SoftUploadService {
 
         List<Map<String, String>> maps = controlExcel.redExcel(docDestPath);
         List<String> excelPaths = new ArrayList<>();
+        List<String> docNumbers = new ArrayList<>();
+        List<String> docTypes = new ArrayList<>();
+        List<String> docDescs = new ArrayList<>();
         for (Map<String, String> map : maps){
             excelPaths.add(map.get("文件路径（相对路径）"));
+            docNumbers.add(map.get("编号"));
+            docTypes.add(map.get("文件类型"));
+            docDescs.add(map.get("文件说明"));
         }
 
         ArrayList<File> allFiles = FileUtil.getAllFiles(unzipFilePath);
@@ -144,13 +150,13 @@ public class SoftUploadServiceImpl implements SoftUploadService {
         SoftInfo softDB = softInfoDAO.getSoftByUIdAndName(user.getUid(), userUploadInfo.getSoftName());
         if (softDB == null){
             softInfoDAO.insertSoft(softInfo);
+        }else {
+            softInfo.setSid(softDB.getSid());
         }
 
-        //   存放读取正确路径
-        SignFile signFile = new SignFile();
-        signFile.setSoftInfo(softInfo);
-        for (String s : excelPaths){
-            signFile.setPath(s);
+        for (int i = 0;i <excelPaths.size();i++){
+            SignFile signFile = new SignFile();
+            signFile.setSoftInfo(softInfo).setPath(excelPaths.get(i)).setDocNumber(docNumbers.get(i)).setDocType(docTypes.get(i)).setDocDesc(docDescs.get(i));
             signFileDAO.insert(signFile);
         }
     }

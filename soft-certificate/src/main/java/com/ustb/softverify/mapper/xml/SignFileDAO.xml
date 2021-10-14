@@ -4,7 +4,7 @@
 <mapper namespace="com.ustb.softverify.mapper.SignFileDAO">
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="fid">
-        insert into t_signfile(path,sid) values (#{path},#{softInfo.sid})
+        insert into t_signfile(path,sid,doc_number,doc_type,doc_desc) values (#{path},#{softInfo.sid},#{docNumber},#{docType},#{docDesc})
     </insert>
 
 
