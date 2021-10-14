@@ -15,7 +15,7 @@ public class SoftVerifyServiceTest {
 
     @Test
     public void testSendMsg(){
-        service.signAndUpChain(1,"test");
+        service.verifySuccess(1,"test");
     }
 }
 

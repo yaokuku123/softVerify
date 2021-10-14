@@ -15,22 +15,15 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class SoftVerifyServiceImpl implements SoftVerifyService {
-
-    private static final String SOFT_PATH = "softPath";
-    private static final String DOC_PATH = "docPath";
 
     @Autowired
     private UserDAO userDAO;
@@ -67,26 +60,6 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
         return softInfoDAO.getSoftPath(govUserId,softName);
     }
 
-    @Override
-    public void updateSoftStatusToSuccess(Integer govUserId, String softName) {
-        softInfoDAO.updateSoftStatusToSuccess(govUserId, softName,StatusEnum.VERIFIED.getCode());
-    }
-
-    @Override
-    public void updateSoftStatusToFail(Integer govUserId, String softName) {
-        softInfoDAO.updateSoftStatusToFail(govUserId, softName,StatusEnum.REJECTED.getCode());
-    }
-
-    @Override
-    public void deleteUserFile(Integer govUserId, String softName) {
-        //查找用户名
-        String username = userDAO.getUsername(govUserId);
-        //判断当前文件下是否有文件
-        String filePath = System.getProperty("user.dir") + "/data/" + username + "/" + softName + "/";
-        //判断当前文件下是否有文件
-        File file = new File(filePath);
-        FileUtil.deleteDir(filePath);
-    }
 
     @Override
     public PageResult findPageSuccess(PageRequest pageRequest) {
@@ -121,12 +94,68 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
         return new PageResult<>(pageNum, pageSize, pageInfoList, total);
     }
 
+    @Transactional
     @Override
-    public void signAndUpChain(Integer govUserId, String softName) {
+    public void verifySuccess(Integer govUserId, String softName) {
+        //修改数据的状态信息(1-表示已审核)
+        updateSoftStatusToSuccess(govUserId,softName);
+        //签名和上链，采用队列异步处理
+        signAndUpChain(govUserId,softName);
+    }
+
+    @Transactional
+    @Override
+    public void verifyFail(Integer govUserId, String softName) {
+        //删除数据库中指向路径下的文件
+        deleteUserFile(govUserId,softName);
+        //修改数据的状态信息并清除路径和hash信息(2-表示驳回)
+        updateSoftStatusToFail(govUserId,softName);
+    }
+
+    /**
+     * 对指定程序文件进行签名并上链
+     * @param govUserId 用户标识
+     * @param softName 软件名称
+     * @return
+     */
+    private void signAndUpChain(Integer govUserId, String softName) {
         //TODO 完善传输对象格式
         ObjectMapper mapper = new ObjectMapper();
         //RabbitMq工作模式
         amqpTemplate.convertAndSend("",queueName,"msg-hello world!");
+    }
+
+    /**
+     * 修改软件状态为审核通过 待审核：0，审核通过：1，审核驳回：2
+     * @param govUserId  用户标识
+     * @param softName 软件名称
+     */
+    private void updateSoftStatusToSuccess(Integer govUserId, String softName) {
+        softInfoDAO.updateSoftStatusToSuccess(govUserId, softName,StatusEnum.VERIFIED.getCode());
+    }
+
+    /**
+     * 修改软件状态为审核驳回 待审核：0，审核通过：1，审核驳回：2
+     * @param govUserId  用户标识
+     * @param softName 软件名称
+     */
+    private void updateSoftStatusToFail(Integer govUserId, String softName) {
+        softInfoDAO.updateSoftStatusToFail(govUserId, softName,StatusEnum.REJECTED.getCode());
+    }
+
+    /**
+     * 删除指定路径下的文件
+     * @param govUserId  用户标识
+     * @param softName 软件名称
+     */
+    private void deleteUserFile(Integer govUserId, String softName) {
+        //查找用户名
+        String username = userDAO.getUsername(govUserId);
+        //判断当前文件下是否有文件
+        String filePath = System.getProperty("user.dir") + "/data/" + username + "/" + softName + "/";
+        //判断当前文件下是否有文件
+        File file = new File(filePath);
+        FileUtil.deleteDir(filePath);
     }
 
 }
