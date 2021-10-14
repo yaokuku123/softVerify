@@ -1,6 +1,8 @@
 package com.ustb.softverify.service.Impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ustb.softverify.entity.dto.IdentityInfo;
 import com.ustb.softverify.entity.dto.PageInfo;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.StatusEnum;
@@ -119,10 +121,16 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
      * @return
      */
     private void signAndUpChain(Integer govUserId, String softName) {
-        //TODO 完善传输对象格式
-        ObjectMapper mapper = new ObjectMapper();
-        //RabbitMq工作模式
-        amqpTemplate.convertAndSend("",queueName,"msg-hello world!");
+        try {
+            // 对象与json转换
+            ObjectMapper mapper = new ObjectMapper();
+            IdentityInfo identityInfo = new IdentityInfo(govUserId, softName);
+            String s = mapper.writeValueAsString(identityInfo);
+            //RabbitMq工作模式
+            amqpTemplate.convertAndSend(queueName,s);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
