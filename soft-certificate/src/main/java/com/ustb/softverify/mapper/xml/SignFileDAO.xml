@@ -7,5 +7,24 @@
         insert into t_signfile(path,sid) values (#{path},#{softInfo.sid})
     </insert>
 
+    <select id="listSignFilePath" resultType="string" >
+        SELECT
+                sf.path
+        FROM
+                t_signfile sf
+        WHERE
+                sf.sid = (SELECT
+                                s.sid
+                        FROM
+                                t_soft s
+                        LEFT JOIN
+                                t_user u
+                        ON
+                                s.uid = u.uid
+                        WHERE
+                                u.uid = (SELECT uid FROM t_user WHERE gov_user_id = #{govUserId})
+                        AND
+                                s.soft_name = #{softName});
+    </select>
 
 </mapper>

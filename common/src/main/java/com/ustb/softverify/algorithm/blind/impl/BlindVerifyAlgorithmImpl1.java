@@ -24,8 +24,6 @@ public class BlindVerifyAlgorithmImpl1 implements BlindAlgorithm {
     private static final int Q_BITS = 1024;
     private final int blockFileSize;
     private final int pieceFileSize;
-    private static final String PUBLIC_KEY = "publicKey";
-    private static final String PRIVATE_KEY = "privateKey";
 
     public BlindVerifyAlgorithmImpl1(String filePath) {
         //初始化配置 默认规定为 100块，每块有10片

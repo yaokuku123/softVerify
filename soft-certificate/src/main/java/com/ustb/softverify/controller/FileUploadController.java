@@ -12,6 +12,7 @@ import com.ustb.softverify.entity.vo.UserUploadInfoVo;
 import com.ustb.softverify.service.Impl.ControlExcelImpl;
 import com.ustb.softverify.service.Impl.ZipCompressImpl;
 import com.ustb.softverify.service.SoftUploadService;
+import com.ustb.softverify.utils.EnvUtils;
 import com.ustb.softverify.utils.FileUtil;
 import com.ustb.softverify.utils.HashBasicOperaterSetUtil;
 import org.springframework.beans.BeanUtils;
@@ -71,7 +72,7 @@ public class FileUploadController {
 
         String softName = user.getGovUserId() + "-" + soft + softSuffix;
         String docName = user.getGovUserId() + "-" + soft + docSuffix;
-        String filePath = System.getProperty("user.dir") + "/data/" + userUploadInfo.getGovUserId() + "/" + softInfo.getSoftName() + "/";
+        String filePath = EnvUtils.ROOT_PATH + userUploadInfo.getGovUserId() + "/" + softInfo.getSoftName() + "/";
         FileInfo fileInfo = new FileInfo();
         fileInfo.setSoftName(softName).setDocName(docName).setFilePath(filePath);
 
