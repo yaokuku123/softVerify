@@ -1,6 +1,7 @@
 package com.ustb.softverify.mapper;
 
 import com.ustb.softverify.entity.dto.IdentityInfo;
+import com.ustb.softverify.entity.dto.SignIdentityInfo;
 import com.ustb.softverify.entity.po.SignFile;
 
 import java.util.List;
@@ -18,5 +19,5 @@ public interface SignFileDAO {
      * @param identityInfo 用户标识和软件名称
      * @return 文件列表
      */
-    List<String> listSignFilePath(IdentityInfo identityInfo);
+    List<SignIdentityInfo> listSignFilePath(IdentityInfo identityInfo);
 }
