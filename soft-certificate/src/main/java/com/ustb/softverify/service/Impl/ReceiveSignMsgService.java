@@ -5,6 +5,7 @@ import com.ustb.softverify.algorithm.blind.BlindAlgorithm;
 import com.ustb.softverify.algorithm.blind.impl.BlindVerifyAlgorithmImpl1;
 import com.ustb.softverify.domain.PublicKey;
 import com.ustb.softverify.entity.dto.IdentityInfo;
+import com.ustb.softverify.entity.dto.SignIdentityInfo;
 import com.ustb.softverify.mapper.SignFileDAO;
 import com.ustb.softverify.utils.EnvUtils;
 import it.unisa.dia.gas.jpbc.Element;
@@ -38,16 +39,17 @@ public class ReceiveSignMsgService {
             ObjectMapper mapper = new ObjectMapper();
             IdentityInfo identityInfo = mapper.readValue(msg, IdentityInfo.class);
             //获取需要签名文件路径
-            List<String> signFilePathList = signFileDAO.listSignFilePath(identityInfo);
+            List<SignIdentityInfo> signFilePathList = signFileDAO.listSignFilePath(identityInfo);
             //拼接得到全路径
             for (int i = 0; i < signFilePathList.size(); i++) {
                 String absolutePath = EnvUtils.ROOT_PATH + identityInfo.getGovUserId() + "/"
-                        + identityInfo.getSoftName() + "/" + signFilePathList.get(i);
-                signFilePathList.set(i,absolutePath);
+                        + identityInfo.getSoftName() + "/" + signFilePathList.get(i).getPath();
+                signFilePathList.get(i).setPath(absolutePath);
             }
+            System.out.println(signFilePathList);
             //对每个文件进行签名
-            for (String signFilePath : signFilePathList) {
-                PublicKey publicKey = signFile(signFilePath,identityInfo);
+            for (SignIdentityInfo signIdentityInfo : signFilePathList) {
+                PublicKey publicKey = signFile(signIdentityInfo,identityInfo);
             }
 
 
@@ -58,26 +60,30 @@ public class ReceiveSignMsgService {
 
     /**
      * 对指定路径对文件进行签名处理
-     * @param signFilePath 需要签名文件的位置
+     * @param signIdentityInfo 文件路径和编号信息
+     * @param identityInfo 用户标识和软件名称
      * @return 公钥信息
      */
-    private PublicKey signFile(String signFilePath,IdentityInfo identityInfo) {
+    private PublicKey signFile(SignIdentityInfo signIdentityInfo,IdentityInfo identityInfo) {
         //签名
-        BlindAlgorithm algorithm = new BlindVerifyAlgorithmImpl1(signFilePath);
+        String signPath = signIdentityInfo.getPath();
+        BlindAlgorithm algorithm = new BlindVerifyAlgorithmImpl1(signPath);
         Map<String, Object> keyMap = algorithm.initParams();
         PublicKey publicKey = (PublicKey) keyMap.get(BlindAlgorithm.PUBLIC_KEY);
-        ArrayList<Element> signList = algorithm.sign(signFilePath, publicKey ,
+        ArrayList<Element> signList = algorithm.sign(signPath, publicKey ,
                 (Element) keyMap.get(BlindAlgorithm.PRIVATE_KEY));
         //保存签名文件
-        saveSignFile(signList,identityInfo);
+        saveSignFile(signList,identityInfo,signIdentityInfo.getDocNumber());
         return publicKey;
     }
 
     /**
      * 保存签名文件
-     * @param signList
+     * @param signList 签名列表
+     * @param identityInfo 用户标识和软件名称
+     * @param number 签名文件编号
      */
-    private void saveSignFile(ArrayList<Element> signList,IdentityInfo identityInfo) {
+    private void saveSignFile(ArrayList<Element> signList,IdentityInfo identityInfo,Integer number) {
         //签名列表格式转换
         List<String> signStringList = new ArrayList<>();
         Base64.Encoder encoder = Base64.getEncoder();

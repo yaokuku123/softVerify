@@ -7,9 +7,9 @@
         insert into t_signfile(path,sid,doc_number,doc_type,doc_desc) values (#{path},#{softInfo.sid},#{docNumber},#{docType},#{docDesc})
     </insert>
 
-    <select id="listSignFilePath" resultType="string" >
+    <select id="listSignFilePath" resultType="com.ustb.softverify.entity.dto.SignIdentityInfo" >
         SELECT
-                sf.path
+                sf.doc_number as docNumber,sf.path
         FROM
                 t_signfile sf
         WHERE
