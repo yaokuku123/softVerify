@@ -1,6 +1,8 @@
 package com.ustb.softverify.controller;
 
 import com.ustb.softverify.domain.ResponseResult;
+import com.ustb.softverify.exception.FileReadWriteException;
+import com.ustb.softverify.exception.JsonTransferException;
 import com.ustb.softverify.exception.ParamNullException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,17 @@ public class ExceptionTestController {
 
     @GetMapping("/paramNullException")
     public ResponseResult paramNullException() {
-        throw new ParamNullException("参数错误");
+        throw new ParamNullException();
     }
+
+    @GetMapping("/jsonTransferException")
+    public ResponseResult jsonTransferExceptio() {
+        throw new JsonTransferException();
+    }
+
+    @GetMapping("/fileReadWriteException")
+    public ResponseResult fileReadWriteException() {
+        throw new FileReadWriteException();
+    }
+
 }
