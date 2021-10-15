@@ -29,4 +29,6 @@ public interface SoftUploadService {
     // 压缩 合法性验证
     void verifyAndSave(FileInfo fileInfo,SoftInfo softInfo,UserUploadInfoVo userUploadInfo,User user) throws Exception;
 
+    void clear(Integer uid,String softName);
+
 }

@@ -108,8 +108,6 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
     @Transactional
     @Override
     public void verifyFail(Integer govUserId, String softName) {
-        //删除数据库中指向路径下的文件
-        deleteUserFile(govUserId,softName);
         //修改数据的状态信息并清除路径和hash信息(2-表示驳回)
         updateSoftStatusToFail(govUserId,softName);
     }

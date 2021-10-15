@@ -95,4 +95,6 @@ public interface SoftInfoDAO {
      */
     SoftInfo getSoftByUIdAndName(@Param("uid") Integer uid,@Param("softName") String softName);
 
+    void clear(Integer uid,String softName);
+
 }

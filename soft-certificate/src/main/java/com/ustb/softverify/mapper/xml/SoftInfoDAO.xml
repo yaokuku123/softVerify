@@ -180,4 +180,9 @@
         select * from t_soft where uid = #{uid} and soft_name = #{softName}
     </select>
 
+    <delete id="clear" >
+        delete from t_soft
+        where uid = #{uid} and soft_name = #{softName}
+    </delete>
+
 </mapper>

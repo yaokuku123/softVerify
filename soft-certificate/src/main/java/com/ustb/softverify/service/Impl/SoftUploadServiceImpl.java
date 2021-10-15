@@ -160,4 +160,9 @@ public class SoftUploadServiceImpl implements SoftUploadService {
             signFileDAO.insert(signFile);
         }
     }
+
+    @Override
+    public void clear(Integer uid, String softName) {
+        softInfoDAO.clear(uid,softName);
+    }
 }

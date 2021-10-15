@@ -71,6 +71,11 @@ public class FileUploadController {
 
         User user = softUploadService.insertUser(userUploadInfo);
 
+        //删除
+        Integer uid = softUploadService.getUser(userUploadInfo.getGovUserId()).getUid();
+        softUploadService.clear(uid,userUploadInfo.getSoftName());
+
+
         String softName = user.getGovUserId() + "-" + soft + softSuffix;
         String docName = user.getGovUserId() + "-" + soft + docSuffix;
         String filePath = EnvUtils.ROOT_PATH + userUploadInfo.getGovUserId() + "/" + softInfo.getSoftName() + "/";
