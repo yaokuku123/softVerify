@@ -101,4 +101,37 @@ public class GlobalExceptionHandler {
         return ResponseResult.error().message("证书上链存证异常");
     }
 
+    /**
+     * 编解码数据异常
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(CodecException.class)
+    public ResponseResult certificateUpChainExceptionHandler(CodecException e) {
+        e.printStackTrace();
+        return ResponseResult.error().message("编解码数据异常");
+    }
+
+    /**
+     * 软件压缩包超过指定大小异常
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(CompressSizeException.class)
+    public ResponseResult certificateUpChainExceptionHandler(CompressSizeException e) {
+        e.printStackTrace();
+        return ResponseResult.error().message("软件压缩包超过指定大小异常");
+    }
+
+    /**
+     * 软件压缩包数量不匹配异常
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(CompressNumException.class)
+    public ResponseResult certificateUpChainExceptionHandler(CompressNumException e) {
+        e.printStackTrace();
+        return ResponseResult.error().message("软件压缩包超过指定大小异常");
+    }
+
 }

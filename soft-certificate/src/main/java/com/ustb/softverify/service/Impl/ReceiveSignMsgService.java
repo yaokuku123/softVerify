@@ -10,6 +10,9 @@ import com.ustb.softverify.entity.dto.IdentityInfo;
 import com.ustb.softverify.entity.dto.SignFileInfo;
 import com.ustb.softverify.entity.dto.SignIdentityInfo;
 import com.ustb.softverify.entity.po.SignFile;
+import com.ustb.softverify.exception.CertificateUpChainException;
+import com.ustb.softverify.exception.CodecException;
+import com.ustb.softverify.exception.FileReadWriteException;
 import com.ustb.softverify.mapper.SignFileDAO;
 import com.ustb.softverify.utils.*;
 import edu.ustb.shellchainapi.shellchain.command.ShellChainException;
@@ -93,8 +96,7 @@ public class ReceiveSignMsgService {
             PublicKeyStr publicKeyStr = PublicKeyTransferUtil.encodeToStr(publicKey);
             return new CertificateInfo(publicKeyStr,signFileInfo);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new CodecException();
         }
     }
 
@@ -137,7 +139,7 @@ public class ReceiveSignMsgService {
             String str = ListStringUtils.listToString(signStringList);
             FileUtil.write(signFilePath, str);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new FileReadWriteException();
         }
     }
 
@@ -154,8 +156,7 @@ public class ReceiveSignMsgService {
             txid = chainService.send2Obj(chainAddresses, 0, attributes);
             return txid;
         } catch (ShellChainException | SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
+            throw new CertificateUpChainException();
         }
     }
 }

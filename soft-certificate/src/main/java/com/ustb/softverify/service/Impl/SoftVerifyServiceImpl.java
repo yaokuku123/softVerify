@@ -8,6 +8,7 @@ import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.StatusEnum;
 import com.ustb.softverify.entity.vo.PageRequest;
 import com.ustb.softverify.entity.vo.PageResult;
+import com.ustb.softverify.exception.JsonTransferException;
 import com.ustb.softverify.mapper.SoftInfoDAO;
 import com.ustb.softverify.mapper.UserDAO;
 import com.ustb.softverify.service.SoftVerifyService;
@@ -127,7 +128,7 @@ public class SoftVerifyServiceImpl implements SoftVerifyService {
             //RabbitMq工作模式
             amqpTemplate.convertAndSend(queueName,s);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new JsonTransferException();
         }
     }
 

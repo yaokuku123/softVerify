@@ -7,6 +7,8 @@ import com.ustb.softverify.entity.po.SignFile;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.UserUploadInfoVo;
+import com.ustb.softverify.exception.DocPathMisMatchException;
+import com.ustb.softverify.exception.FileReadWriteException;
 import com.ustb.softverify.mapper.SignFileDAO;
 import com.ustb.softverify.mapper.SoftInfoDAO;
 import com.ustb.softverify.mapper.UserDAO;
@@ -102,62 +104,64 @@ public class SoftUploadServiceImpl implements SoftUploadService {
             files[0].transferTo(softDestFile);
             files[1].transferTo(docDestFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new FileReadWriteException();
         }
     }
 
     @Override
-    public void verifyAndSave(FileInfo fileInfo,SoftInfo softInfo,UserUploadInfoVo userUploadInfo,User user) throws Exception {
+    public void verifyAndSave(FileInfo fileInfo,SoftInfo softInfo,UserUploadInfoVo userUploadInfo,User user) {
+        try {
+            String softDestPath = fileInfo.getFilePath() + fileInfo.getSoftName();
+            String docDestPath = fileInfo.getFilePath() + fileInfo.getDocName();
 
-        String softDestPath = fileInfo.getFilePath()+fileInfo.getSoftName();
-        String docDestPath = fileInfo.getFilePath()+fileInfo.getDocName();
 
+            String unzipName = zipCompress.unzip(softDestPath, fileInfo.getFilePath());
+            String unzipFilePath = fileInfo.getFilePath() + unzipName;
+            zipCompress.changeroot(unzipFilePath);
 
-        String unzipName = zipCompress.unzip(softDestPath, fileInfo.getFilePath());
-        String unzipFilePath = fileInfo.getFilePath() + unzipName;
-        zipCompress.changeroot(unzipFilePath);
-
-        List<Map<String, String>> maps = controlExcel.redExcel(docDestPath);
-        List<String> excelPaths = new ArrayList<>();
-        List<String> docNumbers = new ArrayList<>();
-        List<String> docTypes = new ArrayList<>();
-        List<String> docDescs = new ArrayList<>();
-        for (Map<String, String> map : maps){
-            excelPaths.add(map.get("文件路径（相对路径）"));
-            docNumbers.add(map.get("编号"));
-            docTypes.add(map.get("文件类型"));
-            docDescs.add(map.get("文件说明"));
-        }
-
-        ArrayList<File> allFiles = FileUtil.getAllFiles(unzipFilePath);
-        ArrayList<String> allFilesPath = new ArrayList<>();
-        for (File file : allFiles) {
-            //file replace
-            allFilesPath.add(file.getAbsolutePath().replace("\\","/"));
-        }
-
-        for (String s : excelPaths){
-            String s1 = fileInfo.getFilePath() + s;
-            if (!allFilesPath.contains(s1.replace("\\", "/"))){
-                throw new RuntimeException("文件路径错误");
+            List<Map<String, String>> maps = controlExcel.redExcel(docDestPath);
+            List<String> excelPaths = new ArrayList<>();
+            List<String> docNumbers = new ArrayList<>();
+            List<String> docTypes = new ArrayList<>();
+            List<String> docDescs = new ArrayList<>();
+            for (Map<String, String> map : maps) {
+                excelPaths.add(map.get("文件路径（相对路径）"));
+                docNumbers.add(map.get("编号"));
+                docTypes.add(map.get("文件类型"));
+                docDescs.add(map.get("文件说明"));
             }
-        }
+            ArrayList<File> allFiles = FileUtil.getAllFiles(unzipFilePath);
+            ArrayList<String> allFilesPath = new ArrayList<>();
+            for (File file : allFiles) {
+                //file replace
+                allFilesPath.add(file.getAbsolutePath().replace("\\", "/"));
+            }
 
-        String hash = HashBasicOperaterSetUtil.byteToHex(SM3Algorithm.SM3Encrypt(softDestPath));
+            for (String s : excelPaths) {
+                String s1 = fileInfo.getFilePath() + s;
+                if (!allFilesPath.contains(s1.replace("\\", "/"))) {
+                    throw new RuntimeException("文件路径错误");
+                }
+            }
 
-        //存储软件相关信息
-        softInfo.setSoftName(userUploadInfo.getSoftName()).setSoftPath(softDestPath).setDocPath(docDestPath).setStatus(0).setUser(user).setHash(hash);
-        SoftInfo softDB = softInfoDAO.getSoftByUIdAndName(user.getUid(), userUploadInfo.getSoftName());
-        if (softDB == null){
-            softInfoDAO.insertSoft(softInfo);
-        }else {
-            softInfo.setSid(softDB.getSid());
-        }
+            String hash = HashBasicOperaterSetUtil.byteToHex(SM3Algorithm.SM3Encrypt(softDestPath));
 
-        for (int i = 0;i <excelPaths.size();i++){
-            SignFile signFile = new SignFile();
-            signFile.setSoftInfo(softInfo).setPath(excelPaths.get(i)).setDocNumber(docNumbers.get(i)).setDocType(docTypes.get(i)).setDocDesc(docDescs.get(i));
-            signFileDAO.insert(signFile);
+            //存储软件相关信息
+            softInfo.setSoftName(userUploadInfo.getSoftName()).setSoftPath(softDestPath).setDocPath(docDestPath).setStatus(0).setUser(user).setHash(hash);
+            SoftInfo softDB = softInfoDAO.getSoftByUIdAndName(user.getUid(), userUploadInfo.getSoftName());
+            if (softDB == null) {
+                softInfoDAO.insertSoft(softInfo);
+            } else {
+                softInfo.setSid(softDB.getSid());
+            }
+
+            for (int i = 0; i < excelPaths.size(); i++) {
+                SignFile signFile = new SignFile();
+                signFile.setSoftInfo(softInfo).setPath(excelPaths.get(i)).setDocNumber(docNumbers.get(i)).setDocType(docTypes.get(i)).setDocDesc(docDescs.get(i));
+                signFileDAO.insert(signFile);
+            }
+        } catch (Exception e) {
+            throw new DocPathMisMatchException();
         }
     }
 

@@ -9,6 +9,9 @@ import com.ustb.softverify.entity.po.SignFile;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.UserUploadInfoVo;
+import com.ustb.softverify.exception.CompressFormatException;
+import com.ustb.softverify.exception.CompressNumException;
+import com.ustb.softverify.exception.CompressSizeException;
 import com.ustb.softverify.service.Impl.ControlExcelImpl;
 import com.ustb.softverify.service.Impl.ZipCompressImpl;
 import com.ustb.softverify.service.SoftUploadService;
@@ -49,12 +52,13 @@ public class FileUploadController {
 
 
     @PostMapping("/upload")
-    public ResponseResult upload(@RequestPart("files") MultipartFile[] files,@RequestPart("userUploadInfoVO") UserUploadInfoVo userUploadInfo) throws Exception {
+    public ResponseResult upload(@RequestPart("files") MultipartFile[] files,
+                                 @RequestPart("userUploadInfoVO") UserUploadInfoVo userUploadInfo) {
         if (files.length != 2){
-            return ResponseResult.error().message("文件个数错误");
+            throw new CompressNumException();
         }
         if (files[0].getSize() > 1024 * 1024 * 500 && files[1].getSize() > 1024 * 1024 * 500){
-            return ResponseResult.error().message("上传文件过大~");
+            throw new CompressSizeException();
         }
         String soft = userUploadInfo.getSoftName();
         String originalFileName = files[0].getOriginalFilename();
@@ -63,7 +67,7 @@ public class FileUploadController {
         String docSuffix = originalDocName.substring(originalDocName.lastIndexOf("."));
 
         if (!".rar".equals(softSuffix) && !".zip".equals(softSuffix) ||!".xlsx".equals(docSuffix)){
-            return ResponseResult.error().message("上传文件类型错误");
+            throw new CompressFormatException();
         }
 
         SoftInfo softInfo = new SoftInfo();
