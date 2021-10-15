@@ -6,7 +6,7 @@ package com.ustb.softverify.domain;
  * Author: yaoqijun
  * Date: 2021/5/25 14:08
  */
-public enum ResponseCodeEnum {
+public enum ResponseCodeEnum implements BaseErrorInfoInterface {
     SUCCESS(20000, "成功"),
     FAIL(20001, "失败");
 
