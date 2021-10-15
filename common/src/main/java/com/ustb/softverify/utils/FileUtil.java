@@ -145,6 +145,9 @@ public class FileUtil {
      */
     public static String read(String fileName) throws IOException {
         File f = new File(fileName);
+        if (!f.getParentFile().exists()) { // 如果父目录不存在，创建父目录
+            f.getParentFile().mkdirs();
+        }
         FileInputStream fs = new FileInputStream(f);
         String result = null;
         byte[] b = new byte[fs.available()];

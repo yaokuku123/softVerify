@@ -4,23 +4,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ustb.softverify.algorithm.blind.BlindAlgorithm;
 import com.ustb.softverify.algorithm.blind.impl.BlindVerifyAlgorithmImpl1;
 import com.ustb.softverify.domain.PublicKey;
+import com.ustb.softverify.domain.vo.PublicKeyStr;
+import com.ustb.softverify.entity.dto.CertificateInfo;
 import com.ustb.softverify.entity.dto.IdentityInfo;
+import com.ustb.softverify.entity.dto.SignFileInfo;
 import com.ustb.softverify.entity.dto.SignIdentityInfo;
 import com.ustb.softverify.mapper.SignFileDAO;
-import com.ustb.softverify.utils.EnvUtils;
+import com.ustb.softverify.utils.*;
+import edu.ustb.shellchainapi.shellchain.command.ShellChainException;
 import it.unisa.dia.gas.jpbc.Element;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.sql.SQLException;
+import java.util.*;
 
 @Service
 @RabbitListener(queues = "sign-queue")
@@ -31,6 +35,12 @@ public class ReceiveSignMsgService {
 
     @Autowired
     private SignFileDAO signFileDAO;
+
+    @Autowired
+    private ChainService chainService;
+
+    @Value("${chainobj.address}")
+    private String chainAddresses;
 
     @RabbitHandler
     public void receiveMsg(String msg){
@@ -46,13 +56,14 @@ public class ReceiveSignMsgService {
                         + identityInfo.getSoftName() + "/" + signFilePathList.get(i).getPath();
                 signFilePathList.get(i).setPath(absolutePath);
             }
-            System.out.println(signFilePathList);
-            //对每个文件进行签名
+
             for (SignIdentityInfo signIdentityInfo : signFilePathList) {
-                PublicKey publicKey = signFile(signIdentityInfo,identityInfo);
+                //对每个文件进行签名
+                CertificateInfo certificateInfo = signFile(signIdentityInfo, identityInfo);
+                //证书上链
+                String txid = upChain(certificateInfo);
+                System.out.println(txid);
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,7 +75,7 @@ public class ReceiveSignMsgService {
      * @param identityInfo 用户标识和软件名称
      * @return 公钥信息
      */
-    private PublicKey signFile(SignIdentityInfo signIdentityInfo,IdentityInfo identityInfo) {
+    private CertificateInfo signFile(SignIdentityInfo signIdentityInfo,IdentityInfo identityInfo) {
         //签名
         String signPath = signIdentityInfo.getPath();
         BlindAlgorithm algorithm = new BlindVerifyAlgorithmImpl1(signPath);
@@ -74,7 +85,31 @@ public class ReceiveSignMsgService {
                 (Element) keyMap.get(BlindAlgorithm.PRIVATE_KEY));
         //保存签名文件
         saveSignFile(signList,identityInfo,signIdentityInfo.getDocNumber());
-        return publicKey;
+        //构造证书对象
+        try {
+            SignFileInfo signFileInfo = getSignFileInfo(signIdentityInfo,identityInfo);
+            PublicKeyStr publicKeyStr = PublicKeyTransferUtil.encodeToStr(publicKey);
+            return new CertificateInfo(publicKeyStr,signFileInfo);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 获取被签名文件的相关属性信息
+     * @param signIdentityInfo 文件路径和编号信息
+     * @param identityInfo 用户标识和软件名称
+     * @return 签名文件信息对象
+     */
+    private SignFileInfo getSignFileInfo(SignIdentityInfo signIdentityInfo,IdentityInfo identityInfo) {
+        SignFileInfo signFileInfo = new SignFileInfo();
+        File file = new File(signIdentityInfo.getPath());
+        signFileInfo.setGovUserId(identityInfo.getGovUserId().toString());
+        signFileInfo.setFileName(identityInfo.getSoftName());
+        signFileInfo.setFileSize(((Long)file.length()).toString());
+        signFileInfo.setCreateTime(((Long)System.currentTimeMillis()).toString());
+        return signFileInfo;
     }
 
     /**
@@ -91,9 +126,34 @@ public class ReceiveSignMsgService {
             byte[] signByte = encoder.encode(elm.toBytes());
             signStringList.add(new String(signByte, StandardCharsets.UTF_8));
         }
-        //保存至指定目录位置
-
+        //指定文件路径
+        String signFileName = number + ".sign";
         String signFilePath = EnvUtils.ROOT_PATH + identityInfo.getGovUserId() + "/"
-                + identityInfo.getSoftName() + "/" ;
+                + identityInfo.getSoftName() + "/sign/" + signFileName;
+        //将list集合变为String字符串后存储至指定路径下
+        try {
+            String str = ListStringUtils.listToString(signStringList);
+            FileUtil.write(signFilePath, str);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 证书上链处理
+     * @param certificateInfo 证书对象
+     * @return 交易id
+     */
+    private String upChain(CertificateInfo certificateInfo) {
+        HashMap<String, Object> attributes = new HashMap<>();
+        attributes.put("certificateInfo",certificateInfo);
+        String txid = null;
+        try {
+            txid = chainService.send2Obj(chainAddresses, 0, attributes);
+            return txid;
+        } catch (ShellChainException | SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
