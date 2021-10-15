@@ -35,6 +35,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/file")
+@CrossOrigin
 public class FileUploadController {
 
     @Autowired

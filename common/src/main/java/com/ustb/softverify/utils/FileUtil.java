@@ -169,6 +169,9 @@ public class FileUtil {
             throws IOException {
         boolean result = false;
         File f = new File(fileName);
+        if (!f.getParentFile().exists()) { // 如果父目录不存在，创建父目录
+            f.getParentFile().mkdirs();
+        }
         FileOutputStream fs = new FileOutputStream(f);
         byte[] b = fileContent.getBytes();
         fs.write(b);

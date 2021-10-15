@@ -85,7 +85,7 @@ public class SoftVerifyController {
      * @param softName 软件名称
      * @return
      */
-    @GetMapping("fail")
+    @GetMapping("/fail")
     public ResponseResult verifyFail(@RequestParam("govUserId") Integer govUserId,
                                      @RequestParam("softName") String softName) {
         softVerifyService.verifyFail(govUserId,softName);
