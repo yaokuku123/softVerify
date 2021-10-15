@@ -7,9 +7,9 @@
         insert into t_signfile(path,sid,doc_number,doc_type,doc_desc) values (#{path},#{softInfo.sid},#{docNumber},#{docType},#{docDesc})
     </insert>
 
-    <select id="listSignFilePath" resultType="com.ustb.softverify.entity.dto.SignIdentityInfo" >
+    <select id="listSignFilePath" resultType="com.ustb.softverify.entity.po.SignFile" >
         SELECT
-                sf.doc_number as docNumber,sf.path
+                sf.*
         FROM
                 t_signfile sf
         WHERE
@@ -26,5 +26,9 @@
                         AND
                                 s.soft_name = #{softName});
     </select>
+
+    <update id="updateTxidById" >
+        update t_signfile set txid=#{txid} where fid = #{fid};
+    </update>
 
 </mapper>

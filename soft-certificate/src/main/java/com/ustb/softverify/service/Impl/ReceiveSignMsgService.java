@@ -9,6 +9,7 @@ import com.ustb.softverify.entity.dto.CertificateInfo;
 import com.ustb.softverify.entity.dto.IdentityInfo;
 import com.ustb.softverify.entity.dto.SignFileInfo;
 import com.ustb.softverify.entity.dto.SignIdentityInfo;
+import com.ustb.softverify.entity.po.SignFile;
 import com.ustb.softverify.mapper.SignFileDAO;
 import com.ustb.softverify.utils.*;
 import edu.ustb.shellchainapi.shellchain.command.ShellChainException;
@@ -49,7 +50,7 @@ public class ReceiveSignMsgService {
             ObjectMapper mapper = new ObjectMapper();
             IdentityInfo identityInfo = mapper.readValue(msg, IdentityInfo.class);
             //获取需要签名文件路径
-            List<SignIdentityInfo> signFilePathList = signFileDAO.listSignFilePath(identityInfo);
+            List<SignFile> signFilePathList = signFileDAO.listSignFilePath(identityInfo);
             //拼接得到全路径
             for (int i = 0; i < signFilePathList.size(); i++) {
                 String absolutePath = EnvUtils.ROOT_PATH + identityInfo.getGovUserId() + "/"
@@ -57,12 +58,13 @@ public class ReceiveSignMsgService {
                 signFilePathList.get(i).setPath(absolutePath);
             }
 
-            for (SignIdentityInfo signIdentityInfo : signFilePathList) {
+            for (SignFile signFile : signFilePathList) {
                 //对每个文件进行签名
-                CertificateInfo certificateInfo = signFile(signIdentityInfo, identityInfo);
+                CertificateInfo certificateInfo = signFile(signFile, identityInfo);
                 //证书上链
                 String txid = upChain(certificateInfo);
-                System.out.println(txid);
+                //交易id存储
+                signFileDAO.updateTxidById(signFile.getFid(),txid);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -71,23 +73,23 @@ public class ReceiveSignMsgService {
 
     /**
      * 对指定路径对文件进行签名处理
-     * @param signIdentityInfo 文件路径和编号信息
+     * @param signFile 文件路径和编号信息
      * @param identityInfo 用户标识和软件名称
      * @return 公钥信息
      */
-    private CertificateInfo signFile(SignIdentityInfo signIdentityInfo,IdentityInfo identityInfo) {
+    private CertificateInfo signFile(SignFile signFile,IdentityInfo identityInfo) {
         //签名
-        String signPath = signIdentityInfo.getPath();
+        String signPath = signFile.getPath();
         BlindAlgorithm algorithm = new BlindVerifyAlgorithmImpl1(signPath);
         Map<String, Object> keyMap = algorithm.initParams();
         PublicKey publicKey = (PublicKey) keyMap.get(BlindAlgorithm.PUBLIC_KEY);
         ArrayList<Element> signList = algorithm.sign(signPath, publicKey ,
                 (Element) keyMap.get(BlindAlgorithm.PRIVATE_KEY));
         //保存签名文件
-        saveSignFile(signList,identityInfo,signIdentityInfo.getDocNumber());
+        saveSignFile(signList,identityInfo, signFile.getDocNumber());
         //构造证书对象
         try {
-            SignFileInfo signFileInfo = getSignFileInfo(signIdentityInfo,identityInfo);
+            SignFileInfo signFileInfo = getSignFileInfo(signFile,identityInfo);
             PublicKeyStr publicKeyStr = PublicKeyTransferUtil.encodeToStr(publicKey);
             return new CertificateInfo(publicKeyStr,signFileInfo);
         } catch (IOException e) {
@@ -98,13 +100,13 @@ public class ReceiveSignMsgService {
 
     /**
      * 获取被签名文件的相关属性信息
-     * @param signIdentityInfo 文件路径和编号信息
+     * @param signFile 文件路径和编号信息
      * @param identityInfo 用户标识和软件名称
      * @return 签名文件信息对象
      */
-    private SignFileInfo getSignFileInfo(SignIdentityInfo signIdentityInfo,IdentityInfo identityInfo) {
+    private SignFileInfo getSignFileInfo(SignFile signFile,IdentityInfo identityInfo) {
         SignFileInfo signFileInfo = new SignFileInfo();
-        File file = new File(signIdentityInfo.getPath());
+        File file = new File(signFile.getPath());
         signFileInfo.setGovUserId(identityInfo.getGovUserId().toString());
         signFileInfo.setFileName(identityInfo.getSoftName());
         signFileInfo.setFileSize(((Long)file.length()).toString());
@@ -118,7 +120,7 @@ public class ReceiveSignMsgService {
      * @param identityInfo 用户标识和软件名称
      * @param number 签名文件编号
      */
-    private void saveSignFile(ArrayList<Element> signList,IdentityInfo identityInfo,Integer number) {
+    private void saveSignFile(ArrayList<Element> signList,IdentityInfo identityInfo,String number) {
         //签名列表格式转换
         List<String> signStringList = new ArrayList<>();
         Base64.Encoder encoder = Base64.getEncoder();
