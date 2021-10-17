@@ -131,7 +131,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CompressNumException.class)
     public ResponseResult certificateUpChainExceptionHandler(CompressNumException e) {
         e.printStackTrace();
-        return ResponseResult.error().message("软件压缩包超过指定大小异常");
+        return ResponseResult.error().message("软件压缩包数量不匹配异常");
     }
 
 }
