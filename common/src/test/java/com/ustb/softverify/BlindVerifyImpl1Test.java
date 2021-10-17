@@ -8,7 +8,9 @@ import it.unisa.dia.gas.jpbc.Element;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BlindVerifyImpl1Test {
 
@@ -17,18 +19,29 @@ public class BlindVerifyImpl1Test {
 
     @Test
     public void algorithmTest() {
-        String filePath = "/Users/yorick/Downloads/auth-resource.jar";
+        String filePath = "C:\\Users\\WYP\\Desktop\\251.rmvb";
         BlindAlgorithm algorithm = new BlindVerifyAlgorithmImpl1(filePath);
-        //初始化
-        Map<String, Object> keyMap = algorithm.initParams();
-        //签名
-        PublicKey publicKey = (PublicKey) keyMap.get(PUBLIC_KEY);
-        ArrayList<Element> signList = algorithm.sign(filePath, publicKey , (Element) keyMap.get(PRIVATE_KEY));
-        //查询
-        QueryParam queryParam = algorithm.check(filePath, publicKey.getTypeAParams(), signList);
-        //验证
-        Boolean res = algorithm.verify(publicKey, queryParam);
-        System.out.println(res);
+        List<Long> list = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++){
+            //初始化
+            Map<String, Object> keyMap = algorithm.initParams();
+            //签名
+            long start = System.currentTimeMillis();
+            PublicKey publicKey = (PublicKey) keyMap.get(PUBLIC_KEY);
+            ArrayList<Element> signList = algorithm.sign(filePath, publicKey , (Element) keyMap.get(PRIVATE_KEY));
+            long end = System.currentTimeMillis();
+            System.out.println(end - start);
+            list.add(end - start);
+            //查询
+            QueryParam queryParam = algorithm.check(filePath, publicKey.getTypeAParams(), signList);
+            //验证
+            Boolean res = algorithm.verify(publicKey, queryParam);
+            System.out.println(res);
+        }
+        System.out.println(list.stream().collect(Collectors.summarizingLong(e -> {
+            return e;
+        })));
     }
 
     @Test
