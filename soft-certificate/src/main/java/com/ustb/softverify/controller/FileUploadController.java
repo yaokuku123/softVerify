@@ -12,6 +12,7 @@ import com.ustb.softverify.entity.vo.UserUploadInfoVo;
 import com.ustb.softverify.exception.CompressFormatException;
 import com.ustb.softverify.exception.CompressNumException;
 import com.ustb.softverify.exception.CompressSizeException;
+import com.ustb.softverify.exception.UploaderInfoException;
 import com.ustb.softverify.service.Impl.ControlExcelImpl;
 import com.ustb.softverify.service.Impl.ZipCompressImpl;
 import com.ustb.softverify.service.SoftUploadService;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +55,13 @@ public class FileUploadController {
 
     @PostMapping("/upload")
     public ResponseResult upload(@RequestPart("files") MultipartFile[] files,
-                                 @RequestPart("userUploadInfoVO") UserUploadInfoVo userUploadInfo) {
+                                 @RequestPart("userUploadInfoVO") UserUploadInfoVo userUploadInfo) throws IllegalAccessException {
+        for (Field f : userUploadInfo.getClass().getDeclaredFields()) {
+            f.setAccessible(true);
+            if (f.get(userUploadInfo) == null) {
+                throw new UploaderInfoException();
+            }
+        }
         if (files.length != 2){
             throw new CompressNumException();
         }
