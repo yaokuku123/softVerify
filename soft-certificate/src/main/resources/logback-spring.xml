@@ -168,13 +168,16 @@
     <!-- 4. 最终的策略 -->
     <!-- 4.1 开发环境:打印控制台和文档-->
     <springProfile name="dev">
-        <root level="info">
+        <root level="warn">
+            <appender-ref ref="CONSOLE" />
+        </root>
+        <logger name="com.ustb" level="info" additivity="false">
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="DEBUG_FILE" />
             <appender-ref ref="INFO_FILE" />
             <appender-ref ref="WARN_FILE" />
             <appender-ref ref="ERROR_FILE" />
-        </root>
+        </logger>
     </springProfile>
 
     <!--     4.2 生产环境:输出到文档-->
