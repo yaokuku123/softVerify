@@ -1,0 +1,9 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ustb.softverify.mapper.UploadInfoDAO">
+    <insert id="insertTxid" >
+        insert into t_upload_info (txid,gov_user_id) values (#{txid},#{govUserId})
+    </insert>
+
+</mapper>

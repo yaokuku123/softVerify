@@ -1,7 +1,6 @@
 package com.ustb.softverify.handler;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -15,22 +14,22 @@ import java.util.Arrays;
 
 @Aspect
 @Component
-public class WebLogAcpect {
+public class SoftVerifyControllerAcpect {
 
-    private Logger logger = LoggerFactory.getLogger(WebLogAcpect.class);
+    private Logger logger = LoggerFactory.getLogger(SoftVerifyControllerAcpect.class);
 
     /**
      * 定义切入点，切入点为com.ustb.softverify.controller下的所有函数
      */
-    @Pointcut("execution(public * com.ustb.softverify.controller.*.*(..))")
-    public void webLog(){}
+    @Pointcut("execution(public * com.ustb.softverify.controller.SoftVerifyController.*(..))")
+    public void executeService(){}
 
     /**
      * 前置通知：在连接点之前执行的通知
      * @param joinPoint
      * @throws Throwable
      */
-    @Before("webLog()")
+    @Before("executeService()")
     public void doBefore(JoinPoint joinPoint) {
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -40,11 +39,5 @@ public class WebLogAcpect {
         logger.info("URL:{}; HTTP_METHOD:{}; IP:{}; CLASS_METHOD:{}; ARGS:{}" , request.getRequestURL().toString(),
                 request.getMethod(),request.getRemoteAddr(),joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName(),
                 Arrays.toString(joinPoint.getArgs()));
-    }
-
-    @AfterReturning(returning = "ret",pointcut = "webLog()")
-    public void doAfterReturning(Object ret) throws Throwable {
-        // 处理完请求，返回内容
-        logger.info("RESPONSE : " + ret);
     }
 }
