@@ -57,7 +57,7 @@ public class ReceiveSignMsgService {
             //拼接得到全路径
             for (int i = 0; i < signFilePathList.size(); i++) {
                 String absolutePath = EnvUtils.ROOT_PATH + identityInfo.getGovUserId() + "/"
-                        + identityInfo.getSoftName() + "/" + signFilePathList.get(i).getPath();
+                        + identityInfo.getSoftName() + "/file/" + signFilePathList.get(i).getPath();
                 signFilePathList.get(i).setPath(absolutePath);
             }
 
