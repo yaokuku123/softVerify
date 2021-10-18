@@ -15,6 +15,7 @@ import com.ustb.softverify.mapper.UserDAO;
 import com.ustb.softverify.service.SoftUploadService;
 import com.ustb.softverify.utils.FileUtil;
 import com.ustb.softverify.utils.HashBasicOperaterSetUtil;
+import com.ustb.softverify.utils.ZipUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -113,12 +116,9 @@ public class SoftUploadServiceImpl implements SoftUploadService {
         try {
             String softDestPath = fileInfo.getFilePath() + fileInfo.getSoftName();
             String docDestPath = fileInfo.getFilePath() + fileInfo.getDocName();
-
-
-            String unzipName = zipCompress.unzip(softDestPath, fileInfo.getFilePath());
-            String unzipFilePath = fileInfo.getFilePath() + unzipName;
+            String unzipFilePath = fileInfo.getFilePath() + "file/";
+            ZipUtil.decompressZip(softDestPath,unzipFilePath);
             zipCompress.changeroot(unzipFilePath);
-
             List<Map<String, String>> maps = controlExcel.redExcel(docDestPath);
             List<String> excelPaths = new ArrayList<>();
             List<String> docNumbers = new ArrayList<>();
@@ -138,7 +138,7 @@ public class SoftUploadServiceImpl implements SoftUploadService {
             }
 
             for (String s : excelPaths) {
-                String s1 = fileInfo.getFilePath() + s;
+                String s1 = unzipFilePath + s;
                 if (!allFilesPath.contains(s1.replace("\\", "/"))) {
                     throw new DocPathMisMatchException();
                 }
