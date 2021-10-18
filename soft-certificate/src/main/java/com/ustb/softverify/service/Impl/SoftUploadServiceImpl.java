@@ -32,7 +32,6 @@ import java.util.Map;
  * @date 2021-10-14 10:30
  */
 @Service
-@Transactional
 public class SoftUploadServiceImpl implements SoftUploadService {
 
     @Autowired
@@ -51,6 +50,7 @@ public class SoftUploadServiceImpl implements SoftUploadService {
     private ControlExcelImpl controlExcel;
 
     @Override
+    @Transactional
     public User insertUser(UserUploadInfoVo userUploadInfo) {
 
         User user = userDAO.getUser(userUploadInfo.getGovUserId());
@@ -68,6 +68,7 @@ public class SoftUploadServiceImpl implements SoftUploadService {
     }
 
     @Override
+    @Transactional
     public void insertSoft(SoftInfo softInfo) {
         softInfoDAO.insertSoft(softInfo);
     }
@@ -78,11 +79,13 @@ public class SoftUploadServiceImpl implements SoftUploadService {
     }
 
     @Override
+    @Transactional
     public void insert(SignFile signFile) {
         signFileDAO.insert(signFile);
     }
 
     @Override
+    @Transactional
     public void saveFile(MultipartFile[] files, UserUploadInfoVo userUploadInfoVo, FileInfo fileInfo) {
 
         String softName = fileInfo.getSoftName();
@@ -109,6 +112,7 @@ public class SoftUploadServiceImpl implements SoftUploadService {
     }
 
     @Override
+    @Transactional
     public void verifyAndSave(FileInfo fileInfo,SoftInfo softInfo,UserUploadInfoVo userUploadInfo,User user) {
         try {
             String softDestPath = fileInfo.getFilePath() + fileInfo.getSoftName();

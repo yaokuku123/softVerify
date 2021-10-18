@@ -65,7 +65,7 @@ public class FileUploadController {
         if (files.length != 2){
             throw new CompressNumException();
         }
-        if (files[0].getSize() > 1024 * 1024 * 500 && files[1].getSize() > 1024 * 1024 * 500){
+        if (files[0].getSize() > 1024 * 1024 * 1000 && files[1].getSize() > 1024 * 1024 * 1000){
             throw new CompressSizeException();
         }
         String soft = userUploadInfo.getSoftName();
