@@ -19,7 +19,7 @@ public class BlindVerifyImpl1Test {
 
     @Test
     public void algorithmTest() {
-        String filePath = "C:\\Users\\WYP\\Desktop\\251.rmvb";
+        String filePath = "/Users/yorick/Downloads/3.zip";
         BlindAlgorithm algorithm = new BlindVerifyAlgorithmImpl1(filePath);
         List<Long> list = new ArrayList<>();
 
@@ -42,6 +42,23 @@ public class BlindVerifyImpl1Test {
         System.out.println(list.stream().collect(Collectors.summarizingLong(e -> {
             return e;
         })));
+    }
+
+    @Test
+    public void algorithmTestSingle() {
+        String filePath = "/Users/yorick/Downloads/test.zip";
+        BlindAlgorithm algorithm = new BlindVerifyAlgorithmImpl1(filePath);
+        //初始化
+        Map<String, Object> keyMap = algorithm.initParams();
+        //签名
+        PublicKey publicKey = (PublicKey) keyMap.get(PUBLIC_KEY);
+        ArrayList<Element> signList = algorithm.sign(filePath, publicKey, (Element) keyMap.get(PRIVATE_KEY));
+        long end = System.currentTimeMillis();
+        //查询
+        QueryParam queryParam = algorithm.check(filePath, publicKey.getTypeAParams(), signList);
+        //验证
+        Boolean res = algorithm.verify(publicKey, queryParam);
+        System.out.println(res);
     }
 
     @Test

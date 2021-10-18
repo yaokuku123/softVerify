@@ -7,6 +7,7 @@ package com.ustb.softverify.utils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.channels.FileChannel;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -477,7 +478,7 @@ public class FileUtil {
     /**
      * 获得指定文件的byte数组
      */
-    public byte[] getBytes(File file){
+    public static byte[] getBytes(File file){
         byte[] buffer = null;
         try {
             FileInputStream fis = new FileInputStream(file);
@@ -593,6 +594,63 @@ public class FileUtil {
             paths.add(file.getAbsolutePath());
         }
         return paths;
+    }
+
+    /**
+     * 文件拷贝
+     * @param source 源文件
+     * @param dest 目标文件
+     * @throws IOException
+     */
+    public static void copyFileUsingFileChannels(String source, String dest) throws IOException {
+        FileChannel inputChannel = null;
+        FileChannel outputChannel = null;
+        try {
+            inputChannel = new FileInputStream(source).getChannel();
+            outputChannel = new FileOutputStream(dest).getChannel();
+            outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
+        } finally {
+            inputChannel.close();
+            outputChannel.close();
+        }
+    }
+
+    /**
+     * 将文件字节数组拷贝至文件
+     * @param bfile
+     * @param filePath
+     */
+    public static void createFile(byte[] bfile, String filePath) {
+        BufferedOutputStream bos = null;
+        FileOutputStream fos = null;
+        File file = null;
+        try {
+            File dir = new File(filePath);
+            if(!dir.exists()&&dir.isDirectory()){//判断文件目录是否存在
+                dir.mkdirs();
+            }
+            file = new File(filePath);
+            fos = new FileOutputStream(file);
+            bos = new BufferedOutputStream(fos);
+            bos.write(bfile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
     }
 }
 
