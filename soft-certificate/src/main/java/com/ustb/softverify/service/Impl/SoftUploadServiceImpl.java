@@ -140,7 +140,7 @@ public class SoftUploadServiceImpl implements SoftUploadService {
             for (String s : excelPaths) {
                 String s1 = fileInfo.getFilePath() + s;
                 if (!allFilesPath.contains(s1.replace("\\", "/"))) {
-                    throw new RuntimeException("文件路径错误");
+                    throw new DocPathMisMatchException();
                 }
             }
 

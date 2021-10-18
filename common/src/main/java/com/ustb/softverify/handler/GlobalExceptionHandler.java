@@ -134,4 +134,16 @@ public class GlobalExceptionHandler {
         return ResponseResult.error().message("软件压缩包数量不匹配异常");
     }
 
+
+    /**
+     * 上传软件用户信息异常
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(UploaderInfoException.class)
+    public ResponseResult uploaderInfoException(UploaderInfoException e) {
+        e.printStackTrace();
+        return ResponseResult.error().message("上传软件用户信息异常");
+    }
+
 }
