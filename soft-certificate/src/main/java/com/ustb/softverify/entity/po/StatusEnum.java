@@ -3,7 +3,7 @@ package com.ustb.softverify.entity.po;
     上传文件状态枚举对象
  */
 public enum StatusEnum {
-    NOTSAVED(0,"文件未保存"),
+    UNSAVED(0,"文件未保存"),
     DRAFT(1,"文件存为草稿"),
     SUMMIT(2,"文件提交保存"),
     FILED(3,"文件以归档");
