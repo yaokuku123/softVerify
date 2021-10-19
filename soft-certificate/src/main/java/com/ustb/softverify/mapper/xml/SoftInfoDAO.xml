@@ -37,5 +37,8 @@
         where gov_user_id=#{govUserId}
     </select>
 
+    <select id="listSoft"  resultType="com.ustb.softverify.entity.po.SoftInfo">
+        select * from t_soft where gov_user_id=#{govUserId}
+    </select>
 
 </mapper>

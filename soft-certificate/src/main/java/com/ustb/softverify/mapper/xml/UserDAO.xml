@@ -6,10 +6,6 @@
         insert ignore into t_user (uname,company,phone,gov_user_id) values (#{uname},#{company},#{phone},#{govUserId})
     </insert>
 
-    <select id="getUsername" resultType="String">
-        select uname from t_user where gov_user_id = #{govUserId}
-    </select>
-
     <select id="getUser" resultType="User">
         select * from t_user where gov_user_id = #{govUserId}
     </select>

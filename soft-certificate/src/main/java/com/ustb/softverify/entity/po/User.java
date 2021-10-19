@@ -35,10 +35,4 @@ public class User implements Serializable {
     /* 评审平台用户标识 */
     private Integer govUserId;
 
-    /* 一对多 */
-    private ArrayList<UploadInfo> uploadInfos = new ArrayList<>();
-
-    /* 一对多 */
-    private ArrayList<SoftInfo> softInfos = new ArrayList<>();
-
 }

@@ -1,6 +1,7 @@
 package com.ustb.softverify.mapper;
 
 import com.ustb.softverify.entity.dto.SignFileInfo;
+import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -41,8 +42,12 @@ public interface SoftInfoDAO {
      */
     List<SignFileInfo> SignFileInfos(@Param("govUserId") Integer govUserId);
 
-
-
+    /**
+     * 根据用户标识获取软件列表
+     * @param govUserId 用户标识
+     * @return 软件列表信息
+     */
+    List<SoftInfo> listSoft(@Param("govUserId") Integer govUserId);
 
 
 

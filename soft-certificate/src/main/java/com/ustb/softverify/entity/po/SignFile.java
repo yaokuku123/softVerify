@@ -26,9 +26,6 @@ public class SignFile implements Serializable {
     /* 文件名 */
     private String fileName;
 
-    /* 签名存放路径 */
-    private String path;
-
     /* 签名交易ID */
     private String txid;
 
