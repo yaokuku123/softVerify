@@ -22,7 +22,7 @@
     </select>
 
     <select id="getUnFiledSoftInfo" resultMap="UserSoftInfoResult">
-        select s.soft_name, s.soft_desc, s.status, f.server_local_name
+        select s.soft_name, s.soft_desc, s.status, s.gov_user_id, f.server_local_name
          from  t_soft s, sys_file_record f
         where s.gov_user_id = f.gov_user_id and s.status = 2
     </select>
