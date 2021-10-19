@@ -1,11 +1,7 @@
 package com.ustb.softverify.controller;
 
-
-
-import com.ustb.softverify.algorithm.sm3.SM3Algorithm;
 import com.ustb.softverify.domain.ResponseResult;
 import com.ustb.softverify.entity.dto.FileInfo;
-import com.ustb.softverify.entity.po.SignFile;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.UserUploadInfoVo;
@@ -13,25 +9,14 @@ import com.ustb.softverify.exception.CompressFormatException;
 import com.ustb.softverify.exception.CompressNumException;
 import com.ustb.softverify.exception.CompressSizeException;
 import com.ustb.softverify.exception.UploaderInfoException;
-import com.ustb.softverify.service.Impl.ControlExcelImpl;
-import com.ustb.softverify.service.Impl.ZipCompressImpl;
 import com.ustb.softverify.service.SoftUploadService;
 import com.ustb.softverify.utils.EnvUtils;
-import com.ustb.softverify.utils.FileUtil;
-import com.ustb.softverify.utils.HashBasicOperaterSetUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
 
 
 /**
@@ -42,12 +27,6 @@ import java.util.Map;
 @RequestMapping("/file")
 @CrossOrigin
 public class FileUploadController {
-
-    @Autowired
-    private ZipCompressImpl zipCompress;
-
-    @Autowired
-    private ControlExcelImpl controlExcel;
 
     @Autowired
     private SoftUploadService softUploadService;
@@ -62,9 +41,6 @@ public class FileUploadController {
                 throw new UploaderInfoException();
             }
         }
-        if (files.length != 2){
-            throw new CompressNumException();
-        }
         if (files[0].getSize() > 1024 * 1024 * 1000 && files[1].getSize() > 1024 * 1024 * 1000){
             throw new CompressSizeException();
         }
@@ -74,18 +50,10 @@ public class FileUploadController {
         String softSuffix = originalFileName.substring(originalFileName.lastIndexOf("."));
         String docSuffix = originalDocName.substring(originalDocName.lastIndexOf("."));
 
-        if (!".rar".equals(softSuffix) && !".zip".equals(softSuffix) ||!".xlsx".equals(docSuffix)){
-            throw new CompressFormatException();
-        }
-
         SoftInfo softInfo = new SoftInfo();
         BeanUtils.copyProperties(userUploadInfo,softInfo);
 
         User user = softUploadService.insertUser(userUploadInfo);
-
-        //删除
-        Integer uid = softUploadService.getUser(userUploadInfo.getGovUserId()).getUid();
-        softUploadService.clear(uid,userUploadInfo.getSoftName());
 
 
         String softName = user.getGovUserId() + "-" + soft + softSuffix;

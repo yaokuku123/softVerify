@@ -17,18 +17,11 @@ public interface SoftUploadService {
 
     User getUser(Integer govUserId);
 
-    void insertSoft(SoftInfo softInfo);
-
-    SoftInfo getSoftByUIdAndName(Integer uid, String softName);
-
-    void insert(SignFile signFile);
-
     // 保存文件
     void saveFile(MultipartFile[] files, UserUploadInfoVo userUploadInfoVo, FileInfo fileInfo);
 
     // 压缩 合法性验证
     void verifyAndSave(FileInfo fileInfo,SoftInfo softInfo,UserUploadInfoVo userUploadInfo,User user);
 
-    void clear(Integer uid,String softName);
 
 }

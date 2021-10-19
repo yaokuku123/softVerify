@@ -30,15 +30,9 @@ public class SoftInfo implements Serializable {
     private String softDesc;
 
     /* 软件存放路径 */
-    private String softPath;
+    private String softRemotePath;
 
-    /* 说明文档存放路径 */
-    private String docPath;
-
-    /* 软件包hash */
-    private String hash;
-
-    /* 审核状态 */
+    /* 文件状态 */
     private Integer status;
 
     /* 外键 */

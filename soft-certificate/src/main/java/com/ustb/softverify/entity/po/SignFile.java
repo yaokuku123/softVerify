@@ -22,18 +22,14 @@ public class SignFile implements Serializable {
     /* 主键 */
     private Integer fid;
 
+    /* 文件名 */
+    private String fileName;
+
     /* 签名存放路径 */
     private String path;
 
     /* 签名交易ID */
     private String txid;
-
-
-    private String docNumber;
-
-    private String docType;
-
-    private String docDesc;
 
     /* 外键 */
     private SoftInfo softInfo;
