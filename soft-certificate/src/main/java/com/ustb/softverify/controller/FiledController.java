@@ -8,6 +8,7 @@ import com.ustb.softverify.entity.dto.SignFileInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import com.ustb.softverify.exception.FileReadWriteException;
 import com.ustb.softverify.service.SoftInfoService;
+import com.ustb.softverify.utils.EnvUtils;
 import com.ustb.softverify.utils.FileUtil;
 import com.ustb.softverify.utils.ListStringUtils;
 import it.unisa.dia.gas.jpbc.Element;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ public class FiledController {
 
 
     /**
-     * 已归档软件信息列表
+     * 已归档软件信息列表   连查signfile   status = 3
      * @param
      * @return
      */
@@ -60,7 +62,7 @@ public class FiledController {
     }
 
     /**
-     * 文件保存待归档软件信息列表
+     * 文件保存待归档软件信息列表  status = 2
      * @param
      * @return
      */
@@ -96,9 +98,8 @@ public class FiledController {
                 signStringList.add(new String(signByte, StandardCharsets.UTF_8));
             }
             // 指定文件路径
-            String[] split = signFileInfo.getServerLocalName().split(".");
-            String signFileName = signFileInfo.getServerLocalName() + ".sign";
-            String signFilePath = "D:\\file\\" + signFileName;
+            String signFileName = signFileInfo.getServerLocalName().split("\\.")[0] + ".sign";
+            String signFilePath = EnvUtils.ROOT_PATH + signFileName;
             //将list集合变为String字符串后存储至指定路径下
             try {
                 String str = ListStringUtils.listToString(signStringList);
@@ -106,7 +107,12 @@ public class FiledController {
             } catch (IOException e) {
                 throw new FileReadWriteException();
             }
+
+            FileUtil.copyFile(signFileInfo.getServerLocalPath(),EnvUtils.ROOT_PATH + signFileInfo.getServerLocalName());
+
+
         }
+
 
         return ResponseResult.success().data("info",signFileInfos);
     }
