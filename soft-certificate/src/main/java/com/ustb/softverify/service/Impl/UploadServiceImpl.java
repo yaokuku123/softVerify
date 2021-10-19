@@ -28,4 +28,24 @@ public class UploadServiceImpl implements UploadService {
     public List<SoftInfo> listSoft(Integer govUserId) {
         return softInfoDAO.listSoft(govUserId);
     }
+
+    @Override
+    public void insertUser(User user) {
+        userDAO.insertUser(user);
+    }
+
+    @Override
+    public void insertSoft(SoftInfo softInfo) {
+        softInfoDAO.insertSoft(softInfo);
+    }
+
+    @Override
+    public void updateUser(User user) {
+        userDAO.updateUser(user);
+    }
+
+    @Override
+    public void updateSoft(SoftInfo softInfo) {
+        softInfoDAO.updateSoft(softInfo);
+    }
 }

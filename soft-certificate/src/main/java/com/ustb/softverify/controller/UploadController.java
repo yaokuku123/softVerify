@@ -8,6 +8,7 @@ import com.ustb.softverify.service.UploadService;
 import com.ustb.softverify.webupload.service.IFileRecordService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,11 @@ public class UploadController {
     @Autowired
     private IFileRecordService fileRecordService;
 
+    /**
+     * 根据用户标识查找软件状态信息
+     * @param govUserId
+     * @return
+     */
     @GetMapping("/getStatus")
     public ResponseResult getStatus(@RequestParam("govUserId") Integer govUserId) {
         List<SoftInfo> softInfos = null;
@@ -55,10 +61,53 @@ public class UploadController {
         return ResponseResult.success().data("status",3);
     }
 
+    /**
+     * 根据用户标识删除软件关联的文档字段
+     * @param govUserId
+     * @return
+     */
     @GetMapping("/deleteInfo")
     public ResponseResult deleteInfo(@RequestParam("govUserId") Integer govUserId) {
         //删除软件文档信息
         fileRecordService.delFileByGovUserId(govUserId);
+        return ResponseResult.success();
+    }
+
+    /**
+     * 插入用户和软件数据信息
+     * @param userUploadInfoVo
+     * @return
+     */
+    @Transactional
+    @PostMapping("/insertInfo")
+    public ResponseResult insertInfo(@RequestBody UserUploadInfoVo userUploadInfoVo) {
+        User user = new User();
+        BeanUtils.copyProperties(userUploadInfoVo,user);
+        SoftInfo softInfo = new SoftInfo();
+        BeanUtils.copyProperties(userUploadInfoVo,softInfo);
+        //插入用户信息
+        uploadService.insertUser(user);
+        //插入软件信息
+        uploadService.insertSoft(softInfo);
+        return ResponseResult.success();
+    }
+
+    /**
+     * 更新用户和软件数据信息
+     * @param userUploadInfoVo
+     * @return
+     */
+    @Transactional
+    @PostMapping("/updateInfo")
+    public ResponseResult updateInfo(@RequestBody UserUploadInfoVo userUploadInfoVo) {
+        User user = new User();
+        BeanUtils.copyProperties(userUploadInfoVo,user);
+        SoftInfo softInfo = new SoftInfo();
+        BeanUtils.copyProperties(userUploadInfoVo,softInfo);
+        //更新用户信息
+        uploadService.updateUser(user);
+        //更新软件信息
+        uploadService.updateSoft(softInfo);
         return ResponseResult.success();
     }
 }
