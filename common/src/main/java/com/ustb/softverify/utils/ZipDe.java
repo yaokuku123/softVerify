@@ -29,15 +29,19 @@ public class ZipDe {
         }
     }
 
-    public void zip() throws ZipException {
-        ZipFile zipFile = new ZipFile("D:\\WORK\\TargetField\\zipTest4.zip");
+    public static void zip(String FilePath,String zipFilePath) {
+        try {
+            ZipFile zipFile = new ZipFile(zipFilePath);
 
-        String folderToAdd = "D:\\WORK\\TargetField\\zip";
+            String folderToAdd = FilePath;
 
-        ZipParameters parameters = new ZipParameters();
-        parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
-        parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+            ZipParameters parameters = new ZipParameters();
+            parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+            parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
 
-        zipFile.addFolder(folderToAdd, parameters);
+            zipFile.addFolder(folderToAdd, parameters);
+        } catch (ZipException e) {
+            e.printStackTrace();
+        }
     }
 }

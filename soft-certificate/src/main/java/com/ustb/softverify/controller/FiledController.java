@@ -11,7 +11,9 @@ import com.ustb.softverify.service.SoftInfoService;
 import com.ustb.softverify.utils.EnvUtils;
 import com.ustb.softverify.utils.FileUtil;
 import com.ustb.softverify.utils.ListStringUtils;
+import com.ustb.softverify.utils.ZipDe;
 import it.unisa.dia.gas.jpbc.Element;
+import net.lingala.zip4j.exception.ZipException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -108,7 +110,11 @@ public class FiledController {
                 throw new FileReadWriteException();
             }
 
+
             FileUtil.copyFile(signFileInfo.getServerLocalPath(),EnvUtils.ROOT_PATH + signFileInfo.getServerLocalName());
+
+                ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "");
+
 
 
         }
