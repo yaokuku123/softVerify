@@ -137,7 +137,8 @@ public class UploadController {
                 filePath = fileRecord.getServerLocalPath();
             }
             CompInfo compInfo = new CompInfo();
-            BeanUtils.copyProperties(fileRecord,compInfo);
+            compInfo.setOrgName(fileRecord.getOrgName());
+            compInfo.setFileSize(fileRecord.getFileSize());
             compInfos.add(compInfo);
         }
         boolean flag = ReadTxt.comp2txt(filePath, compInfos);
