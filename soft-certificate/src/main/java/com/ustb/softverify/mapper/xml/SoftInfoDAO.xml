@@ -58,5 +58,9 @@
         where gov_user_id = #{govUserId} and status = 2
     </select>
 
+    <update id="updateStatus" >
+        update t_soft set status=#{status}+1 where gov_user_id=#{govUserId} and status=#{status}
+    </update>
+
 
 </mapper>

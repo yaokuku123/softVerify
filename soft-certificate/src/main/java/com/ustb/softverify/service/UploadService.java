@@ -36,4 +36,11 @@ public interface UploadService {
     void updateUser(User user);
 
     void updateSoft(SoftInfo softInfo);
+
+    /**
+     * 更新软件状态
+     * @param govUserId 用户标识
+     * @param status 当前状态
+     */
+    void updateStatus(Integer govUserId, Integer status);
 }

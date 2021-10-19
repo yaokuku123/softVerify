@@ -48,4 +48,9 @@ public class UploadServiceImpl implements UploadService {
     public void updateSoft(SoftInfo softInfo) {
         softInfoDAO.updateSoft(softInfo);
     }
+
+    @Override
+    public void updateStatus(Integer govUserId, Integer status) {
+        softInfoDAO.updateStatus(govUserId,status);
+    }
 }

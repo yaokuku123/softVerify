@@ -110,4 +110,14 @@ public class UploadController {
         uploadService.updateSoft(softInfo);
         return ResponseResult.success();
     }
+
+    /**
+     * 保存当前文件信息
+     * @param govUserId
+     */
+    @GetMapping("/save")
+    public ResponseResult save(Integer govUserId) {
+        uploadService.updateStatus(govUserId,0);
+        return ResponseResult.success();
+    }
 }

@@ -69,4 +69,11 @@ public interface SoftInfoDAO {
      */
     void updateSoft(SoftInfo softInfo);
 
+    /**
+     * 更新状态
+     * @param govUserId
+     * @param status
+     */
+    void updateStatus(@Param("govUserId") Integer govUserId,@Param("status") Integer status);
+
 }
