@@ -5,6 +5,7 @@ import com.ustb.softverify.entity.vo.SoftInfoVo;
 import com.ustb.softverify.service.SoftInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -64,11 +65,11 @@ public class FiledController {
      * @param
      * @return
      */
-    @GetMapping("/fileInfos")
-    public ResponseResult file(){
-        List<SoftInfoVo> uploadInfo = softInfoService.getAllUploadInfo();
-        return ResponseResult.success().data("softInfo",uploadInfo);
-    }
+//    @GetMapping("/fileInfos")
+//    public ResponseResult file(){
+//        List<SoftInfoVo> uploadInfo = softInfoService.getAllUploadInfo();
+//        return ResponseResult.success().data("softInfo",uploadInfo);
+//    }
 
 
 

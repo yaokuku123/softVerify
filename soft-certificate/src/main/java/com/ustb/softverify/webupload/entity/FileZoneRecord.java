@@ -129,6 +129,12 @@ public class FileZoneRecord extends Model<FileZoneRecord> {
 	//@ApiModelProperty(value = "文件记录ID")
     private String fileRecordId;
 
+	/**
+	 * 用户标识
+	 */
+	@TableField("gov_user_id")
+	private Integer govUserId;
+
 	@Override
 	protected Serializable pkVal() {
 		return this.id;

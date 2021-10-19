@@ -165,6 +165,24 @@ public class FileRecord extends Model<FileRecord> {
 	@TableLogic
     private Integer delFlag;
 
+	/**
+	 * 用户标识
+	 */
+	@TableField("gov_user_id")
+	private Integer govUserId;
+
+	/**
+	 * 交易地址
+	 */
+	@TableField("txid")
+	private String txid;
+
+	/**
+	 * 软件标识
+	 */
+	@TableField("sid")
+	private Integer sid;
+
 	@Override
 	protected Serializable pkVal() {
 		return this.id;
