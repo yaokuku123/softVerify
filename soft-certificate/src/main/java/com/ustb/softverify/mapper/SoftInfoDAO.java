@@ -1,8 +1,10 @@
 package com.ustb.softverify.mapper;
 
 import com.ustb.softverify.entity.dto.SignFileInfo;
+import com.ustb.softverify.entity.po.SignFile;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -56,5 +58,26 @@ public interface SoftInfoDAO {
      */
     String findSoftName(@Param("govUserId") Integer govUserId);
 
+    /**
+     * 归档文件改变status
+     * @param govUserId
+     * @return
+     */
+    void changeStatus(@Param("govUserId") Integer govUserId);
+
+    /**
+     * 根据用户标识获取
+     * @param govUserId
+     * @return
+     */
+    Integer findSoftId(@Param("govUserId") Integer govUserId);
+
+
+    void insertSignFile(@Param("fileName") String fileName,@Param("txid")String txid,@Param("sid")Integer sid);
+
+
+    List<SignFile> getTxid(@Param("sid") Integer sid);
+
+    SoftInfo getSoftInfo(@Param("sid") Integer sid);
 
 }

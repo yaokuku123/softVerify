@@ -1,6 +1,8 @@
 package com.ustb.softverify.service.Impl;
 
 import com.ustb.softverify.entity.dto.SignFileInfo;
+import com.ustb.softverify.entity.po.SignFile;
+import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import com.ustb.softverify.mapper.SoftInfoDAO;
 import com.ustb.softverify.service.SoftInfoService;
@@ -42,5 +44,30 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     @Override
     public String findSoftName(Integer govUserId) {
         return softInfoDAO.findSoftName(govUserId);
+    }
+
+    @Override
+    public void changeStatus(Integer govUserId) {
+        softInfoDAO.changeStatus(govUserId);
+    }
+
+    @Override
+    public Integer findSoftId(Integer govUserId) {
+        return softInfoDAO.findSoftId(govUserId);
+    }
+
+    @Override
+    public void insertSignFile(String fileName, String txid, Integer sid) {
+        softInfoDAO.insertSignFile(fileName,txid,sid);
+    }
+
+    @Override
+    public List<SignFile> getTxid(Integer sid) {
+        return softInfoDAO.getTxid(sid);
+    }
+
+    @Override
+    public SoftInfo getSoftInfo(Integer sid) {
+        return softInfoDAO.getSoftInfo(sid);
     }
 }
