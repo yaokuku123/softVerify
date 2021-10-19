@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CompInfo {
     private String orgName;
-    private String fileSize;
+    private Long fileSize;
     private boolean flag;
 
-    public CompInfo(String orgName,String fileSize) {
+    public CompInfo(String orgName,Long fileSize) {
         this.orgName = orgName;
         this.fileSize = fileSize;
     }

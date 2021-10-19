@@ -2,7 +2,6 @@ package com.ustb.softverify.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonObject;
-import com.sun.deploy.uitoolkit.impl.fx.ui.CertificateDialog;
 import com.ustb.softverify.algorithm.blind.BlindAlgorithm;
 import com.ustb.softverify.algorithm.blind.impl.BlindVerifyAlgorithmImpl1;
 import com.ustb.softverify.domain.PublicKey;
