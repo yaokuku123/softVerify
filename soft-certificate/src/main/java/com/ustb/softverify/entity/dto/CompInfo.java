@@ -1,40 +1,19 @@
 package com.ustb.softverify.entity.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CompInfo {
-    private String fileName;
+    private String orgName;
     private String fileSize;
-
-    public boolean isFlag() {
-        return flag;
-    }
-
-    public boolean setFlag(boolean flag1) {
-        flag = flag1;
-        return this.flag;
-    }
-
     private boolean flag;
 
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(String fileSize) {
+    public CompInfo(String orgName,String fileSize) {
+        this.orgName = orgName;
         this.fileSize = fileSize;
     }
-
-    public CompInfo(String fileName, String fileSize) {
-        this.fileName = fileName;
-        this.fileSize = fileSize;
-        this.flag = false;
-    }
-
 }
