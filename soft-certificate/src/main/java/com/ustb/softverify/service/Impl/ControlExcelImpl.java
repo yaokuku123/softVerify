@@ -35,7 +35,7 @@ public class ControlExcelImpl implements ControlExcel {
         //默认第一行为标题行，i = 0
         XSSFRow titleRow = sheetAt.getRow(0);
         // 循环获取每一行数据
-        for (int i = 1; i < sheetAt.getLastRowNum(); i++) {
+        for (int i = 1; i < sheetAt.getPhysicalNumberOfRows(); i++) {
             XSSFRow row = sheetAt.getRow(i);
             LinkedHashMap<String, String> map = new LinkedHashMap<>();
             // 读取每一格内容

@@ -39,8 +39,6 @@ public class ZipUtil {
 //          zip = new ZipFile(zipFile, Charset.forName("UTF-8"));//防止中文目录，乱码
             String encoding = getEncoding(zipPath);
             zip = new ZipFile(zipFile, Charset.forName(encoding));//防止中文目录，乱码
-            String name = zip.getName();
-            System.out.println(name);
             for (Enumeration entries = zip.entries(); entries.hasMoreElements(); ) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
                 String zipEntryName = entry.getName();
