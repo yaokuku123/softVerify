@@ -18,11 +18,19 @@ public interface SoftInfoDAO {
     List<SoftInfoVo> getUploadInfo(Integer govUserId);
 
 
+
+    /**
+     * 查询所有已保存待归档软件列表信息
+     * @return
+     */
+    List<SoftInfoVo> getUnFiledSoftInfo();
+
+
     /**
      * 查询所有以归档软件列表信息
      * @return
      */
-    List<SoftInfoVo> getALlUploadInfo();
+    List<SoftInfoVo> getAllUploadInfo();
 
 
 

@@ -23,9 +23,13 @@ public class SoftInfoServiceImpl implements SoftInfoService {
         return softInfoDAO.getUploadInfo(govUserId);
     }
 
+    @Override
+    public List<SoftInfoVo> getUnFiledSoftInfo() {
+        return softInfoDAO.getUnFiledSoftInfo();
+    }
 
     @Override
-    public List<SoftInfoVo> getALlUploadInfo() {
-        return null;
+    public List<SoftInfoVo> getAllUploadInfo() {
+        return softInfoDAO.getAllUploadInfo();
     }
 }

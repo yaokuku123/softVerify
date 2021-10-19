@@ -21,12 +21,55 @@ public class FiledController {
     private SoftInfoService softInfoService;
 
 
+    /**
+     * 用户上传软件列表
+     * @param govUserId
+     * @return
+     */
     @GetMapping("/userFileInfo")
     public ResponseResult getUserUploadInfo(@RequestParam("govUserId") Integer govUserId){
         List<SoftInfoVo> uploadInfo = softInfoService.getUploadInfo(govUserId);
         return ResponseResult.success().data("softInfo",uploadInfo);
 
     }
+
+
+    /**
+     * 文件保存待归档软件信息列表
+     * @param
+     * @return
+     */
+    @GetMapping("/unFiledInfos")
+    public ResponseResult getAllUnFiledInfo(){
+        List<SoftInfoVo> uploadInfo = softInfoService.getUnFiledSoftInfo();
+        return ResponseResult.success().data("softInfo",uploadInfo);
+
+    }
+
+
+    /**
+     * 已归档软件信息列表
+     * @param
+     * @return
+     */
+    @GetMapping("/fileInfos")
+    public ResponseResult getAllUploadInfo(){
+        List<SoftInfoVo> uploadInfo = softInfoService.getAllUploadInfo();
+        return ResponseResult.success().data("softInfo",uploadInfo);
+
+    }
+
+    /**
+     * 归档
+     * @param
+     * @return
+     */
+    @GetMapping("/fileInfos")
+    public ResponseResult file(){
+        List<SoftInfoVo> uploadInfo = softInfoService.getAllUploadInfo();
+        return ResponseResult.success().data("softInfo",uploadInfo);
+    }
+
 
 
 }

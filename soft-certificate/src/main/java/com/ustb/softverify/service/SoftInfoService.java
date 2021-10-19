@@ -12,5 +12,7 @@ public interface SoftInfoService {
 
     List<SoftInfoVo> getUploadInfo(Integer govUserId);
 
-    List<SoftInfoVo> getALlUploadInfo();
+    List<SoftInfoVo> getUnFiledSoftInfo();
+
+    List<SoftInfoVo> getAllUploadInfo();
 }
