@@ -1,6 +1,8 @@
 package com.ustb.softverify.service;
 
+import com.ustb.softverify.entity.dto.SignFileInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,4 +17,6 @@ public interface SoftInfoService {
     List<SoftInfoVo> getUnFiledSoftInfo();
 
     List<SoftInfoVo> getAllUploadInfo();
+
+    List<SignFileInfo> SignFileInfos(Integer govUserId);
 }

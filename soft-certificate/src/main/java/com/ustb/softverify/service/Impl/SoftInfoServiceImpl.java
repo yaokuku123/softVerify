@@ -1,5 +1,6 @@
 package com.ustb.softverify.service.Impl;
 
+import com.ustb.softverify.entity.dto.SignFileInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import com.ustb.softverify.mapper.SoftInfoDAO;
 import com.ustb.softverify.service.SoftInfoService;
@@ -31,5 +32,10 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     @Override
     public List<SoftInfoVo> getAllUploadInfo() {
         return softInfoDAO.getAllUploadInfo();
+    }
+
+    @Override
+    public List<SignFileInfo> SignFileInfos(Integer govUserId) {
+        return softInfoDAO.SignFileInfos(govUserId);
     }
 }
