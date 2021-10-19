@@ -8,7 +8,6 @@ import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.UserUploadInfoVo;
 import com.ustb.softverify.exception.DocPathMisMatchException;
 import com.ustb.softverify.exception.FileReadWriteException;
-import com.ustb.softverify.mapper.SignFileDAO;
 import com.ustb.softverify.mapper.UserDAO;
 import com.ustb.softverify.service.SoftUploadService;
 import com.ustb.softverify.utils.FileUtil;
@@ -35,8 +34,6 @@ public class SoftUploadServiceImpl implements SoftUploadService {
     @Autowired
     private UserDAO userDAO;
 
-    @Autowired
-    private SignFileDAO signFileDAO;
 
     @Autowired
     private ControlExcelImpl controlExcel;
@@ -133,7 +130,7 @@ public class SoftUploadServiceImpl implements SoftUploadService {
             for (int i = 0; i < excelPaths.size(); i++) {
                 SignFile signFile = new SignFile();
                 signFile.setSoftInfo(softInfo).setPath(excelPaths.get(i));
-                signFileDAO.insert(signFile);
+              //  signFileDAO.insert(signFile);
             }
         } catch (Exception e) {
             throw new DocPathMisMatchException();

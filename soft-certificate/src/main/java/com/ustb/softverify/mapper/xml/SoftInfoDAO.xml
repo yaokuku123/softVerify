@@ -1,0 +1,24 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ustb.softverify.mapper.SoftInfoDAO">
+    
+    <resultMap id="UserSoftInfoResult" type="UserSoftInfoVo">
+        <result property="softName" column="soft_name"/>
+        <result property="softDesc" column="soft_desc"/>
+        <result property="status" column="status"/>
+        <collection property="signFileList" resultMap="signFileListMap"/>
+    </resultMap>
+
+    <resultMap id="signFileListMap" type="SignFile">
+        <result property="fileName" column="file_name"/>
+    </resultMap>
+
+    <select id="getUploadInfo" resultMap="UserSoftInfoResult">
+        select s.soft_name, s.soft_desc, s.status, f.file_name
+         from t_user u, t_soft s, t_signfile f
+        where u.uid = s.uid and s.sid = f.sid and u.gov_user_id = #{govUserId}
+    </select>
+
+
+</mapper>

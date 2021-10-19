@@ -1,6 +1,5 @@
 package com.ustb.softverify.handler;
 
-import com.ustb.softverify.entity.dto.CertificateInfo;
 import com.ustb.softverify.entity.vo.UserUploadInfoVo;
 import com.ustb.softverify.exception.CertificateUpChainException;
 import com.ustb.softverify.mapper.UploadInfoDAO;
