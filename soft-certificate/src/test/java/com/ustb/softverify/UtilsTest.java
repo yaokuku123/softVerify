@@ -5,6 +5,7 @@ import com.ustb.softverify.utils.HashBasicOperaterSetUtil;
 import com.ustb.softverify.utils.ReadTxt;
 import com.ustb.softverify.utils.ScpUtil;
 import com.ustb.softverify.utils.ZipDe;
+import net.lingala.zip4j.exception.ZipException;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -54,5 +55,11 @@ public class UtilsTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void zipTest() throws ZipException {
+        ZipDe zipDe = new ZipDe();
+        zipDe.zip();
     }
 }

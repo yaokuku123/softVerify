@@ -1,6 +1,9 @@
 package com.ustb.softverify.utils;
 
 import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
 import org.apache.commons.lang3.StringUtils;
 
 public class ZipDe {
@@ -24,5 +27,17 @@ public class ZipDe {
         }catch (Exception e){
             System.out.println("解压失败");
         }
+    }
+
+    public void zip() throws ZipException {
+        ZipFile zipFile = new ZipFile("D:\\WORK\\TargetField\\zipTest4.zip");
+
+        String folderToAdd = "D:\\WORK\\TargetField\\zip";
+
+        ZipParameters parameters = new ZipParameters();
+        parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+        parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+
+        zipFile.addFolder(folderToAdd, parameters);
     }
 }
