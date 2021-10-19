@@ -60,6 +60,6 @@ public class UtilsTest {
     @Test
     public void zipTest() throws ZipException {
         ZipDe zipDe = new ZipDe();
-        zipDe.zip();
+
     }
 }
