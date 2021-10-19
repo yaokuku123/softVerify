@@ -7,6 +7,7 @@
         <result property="softName" column="soft_name"/>
         <result property="softDesc" column="soft_desc"/>
         <result property="status" column="status"/>
+        <result property="govUserId" column="gov_user_id"/>
         <collection property="signFileList" resultMap="signFileListMap"/>
     </resultMap>
 
@@ -27,7 +28,7 @@
     </select>
 
     <select id="getAllUploadInfo" resultMap="UserSoftInfoResult">
-        select s.soft_name, s.soft_desc, s.status, f.file_name
+        select s.soft_name, s.soft_desc, s.status, s.gov_user_id, f.file_name
          from  t_soft s, t_signfile f
         where f.sid = (select sid from t_soft where status =3)
          and s.status = 3
