@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 @Aspect
-@Component
+//@Component
 public class FileUploadControllerAcpect {
 
     private Logger logger = LoggerFactory.getLogger(FileUploadControllerAcpect.class);
@@ -40,7 +40,7 @@ public class FileUploadControllerAcpect {
     /**
      * 定义切入点，切入点为com.ustb.softverify.controller下的所有函数
      */
-    @Pointcut("execution(public * com.ustb.softverify.controller.FileUploadController.*(..))")
+    @Pointcut("execution(public * com.ustb.softverify.controller.UploadController.*(..))")
     public void executeService() {
     }
 
