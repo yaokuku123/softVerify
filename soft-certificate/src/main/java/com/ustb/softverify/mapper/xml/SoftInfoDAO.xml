@@ -8,6 +8,7 @@
         <result property="softDesc" column="soft_desc"/>
         <result property="status" column="status"/>
         <result property="govUserId" column="gov_user_id"/>
+        <result property="sid" column="sid"/>
         <collection property="signFileList" resultMap="signFileListMap"/>
     </resultMap>
 
@@ -16,9 +17,9 @@
     </resultMap>
 
     <select id="getUploadInfo" resultMap="UserSoftInfoResult">
-        select s.soft_name, s.soft_desc, s.status, f.server_local_name
+        select s.soft_name, s.soft_desc, s.status,s.gov_user_id,s.sid, f.server_local_name
          from t_soft s, sys_file_record f
-        where  s.gov_user_id = f.gov_user_id and s.gov_user_id = #{govUserId}
+        where  s.gov_user_id = f.gov_user_id and s.gov_user_id = #{govUserId} and s.status = 3
     </select>
 
     <select id="getUnFiledSoftInfo" resultMap="UserSoftInfoResult">
@@ -28,11 +29,8 @@
     </select>
 
     <select id="getAllUploadInfo" resultMap="UserSoftInfoResult">
-        select s.soft_name, s.soft_desc, s.status, s.gov_user_id, f.file_name
-         from  t_soft s, t_signfile f
-        where f.sid = (select sid from t_soft where status =3)
-         and s.status = 3
-    </select>
+    select s.soft_name, s.soft_desc, s.status, s.gov_user_id,s.sid from t_soft s where s.status = 3
+</select>
     
     <select id="SignFileInfos" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
         select server_local_name, server_local_path from sys_file_record
@@ -56,6 +54,28 @@
     <select id="findSoftName" resultType="String">
         select soft_name from t_soft
         where gov_user_id = #{govUserId} and status = 2
+    </select>
+
+    <update id="changeStatus" >
+        update t_soft set status = 3
+        where gov_user_id = #{govUserId} and status = 2
+    </update>
+
+    <select id="findSoftId" resultType="Integer">
+        select sid from t_soft
+        where gov_user_id = #{govUserId} and status = 2
+    </select>
+
+    <insert id="insertSignFile">
+        insert into t_signfile (file_name,txid,sid) values (#{fileName},#{txid},#{sid});
+    </insert>
+
+    <select id="getTxid" resultType="SignFile" >
+        select * from t_signfile where sid = #{sid}
+    </select>
+
+    <select id="getSoftInfo" resultType="SoftInfo">
+        select * from t_soft where sid = #{sid};
     </select>
 
     <update id="updateStatus" >

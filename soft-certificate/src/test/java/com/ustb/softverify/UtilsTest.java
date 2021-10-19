@@ -59,4 +59,11 @@ public class UtilsTest {
         System.out.println(EnvUtils.ROOT_PATH);
         ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH+"/a.zip");
     }
+
+
+    @Test
+    public void zipTest1(){
+
+        FileUtil.deleteDir("D:\\file");
+    }
 }

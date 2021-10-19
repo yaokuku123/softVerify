@@ -1,6 +1,8 @@
 package com.ustb.softverify.service;
 
 import com.ustb.softverify.entity.dto.SignFileInfo;
+import com.ustb.softverify.entity.po.SignFile;
+import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,4 +23,14 @@ public interface SoftInfoService {
     List<SignFileInfo> SignFileInfos(Integer govUserId);
 
     String findSoftName(Integer govUserId);
+
+    void changeStatus(Integer govUserId);
+
+    Integer findSoftId(Integer govUserId);
+
+    void insertSignFile(String fileName,String txid,Integer sid);
+
+    List<SignFile> getTxid(@Param("sid") Integer sid);
+
+    SoftInfo getSoftInfo(Integer sid);
 }
