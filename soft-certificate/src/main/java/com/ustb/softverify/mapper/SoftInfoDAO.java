@@ -56,6 +56,14 @@ public interface SoftInfoDAO {
     void insertSoft(SoftInfo softInfo);
 
     /**
+     * 根据用户标识获取
+     * @param govUserId
+     * @return
+     */
+    String findSoftName(@Param("govUserId") Integer govUserId);
+
+
+    /**
      * 更新软件信息
      * @param softInfo
      */

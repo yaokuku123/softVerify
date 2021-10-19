@@ -38,4 +38,9 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     public List<SignFileInfo> SignFileInfos(Integer govUserId) {
         return softInfoDAO.SignFileInfos(govUserId);
     }
+
+    @Override
+    public String findSoftName(Integer govUserId) {
+        return softInfoDAO.findSoftName(govUserId);
+    }
 }

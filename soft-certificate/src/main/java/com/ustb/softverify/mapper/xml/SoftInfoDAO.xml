@@ -7,6 +7,7 @@
         <result property="softName" column="soft_name"/>
         <result property="softDesc" column="soft_desc"/>
         <result property="status" column="status"/>
+        <result property="govUserId" column="gov_user_id"/>
         <collection property="signFileList" resultMap="signFileListMap"/>
     </resultMap>
 
@@ -21,13 +22,13 @@
     </select>
 
     <select id="getUnFiledSoftInfo" resultMap="UserSoftInfoResult">
-        select s.soft_name, s.soft_desc, s.status, f.server_local_name
+        select s.soft_name, s.soft_desc, s.status, s.gov_user_id, f.server_local_name
          from  t_soft s, sys_file_record f
         where s.gov_user_id = f.gov_user_id and s.status = 2
     </select>
 
     <select id="getAllUploadInfo" resultMap="UserSoftInfoResult">
-        select s.soft_name, s.soft_desc, s.status, f.file_name
+        select s.soft_name, s.soft_desc, s.status, s.gov_user_id, f.file_name
          from  t_soft s, t_signfile f
         where f.sid = (select sid from t_soft where status =3)
          and s.status = 3
@@ -42,6 +43,7 @@
         select * from t_soft where gov_user_id=#{govUserId}
     </select>
 
+
     <insert id="insertSoft" >
         insert into t_soft (soft_name,soft_desc,status,gov_user_id) values (#{softName},#{softDesc},0,#{govUserId})
     </insert>
@@ -49,5 +51,12 @@
     <update id="updateSoft" >
         update t_soft set soft_name=#{softName},soft_desc=#{softDesc} where sid=#{sid}
     </update>
+
+
+    <select id="findSoftName" resultType="String">
+        select soft_name from t_soft
+        where gov_user_id = #{govUserId} and status = 2
+    </select>
+
 
 </mapper>

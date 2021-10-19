@@ -20,6 +20,7 @@ public class SoftInfoVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private Integer govUserId;
     private String softName;
     private String softDesc;
     private Integer status;
