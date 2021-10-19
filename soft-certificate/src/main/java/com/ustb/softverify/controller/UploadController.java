@@ -3,9 +3,8 @@ package com.ustb.softverify.controller;
 import com.ustb.softverify.domain.ResponseResult;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
-import com.ustb.softverify.entity.vo.UserUploadInfo;
+import com.ustb.softverify.entity.vo.UserUploadInfoVo;
 import com.ustb.softverify.service.UploadService;
-import org.apache.ibatis.executor.ExecutorException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +33,13 @@ public class UploadController {
         }
         for (SoftInfo softInfo : softInfos) {
             if (softInfo.getStatus() == 0) {
-                return ResponseResult.success().data("status",0);
+                UserUploadInfoVo userUploadInfo = new UserUploadInfoVo();
+                BeanUtils.copyProperties(softInfo,userUploadInfo);
+                BeanUtils.copyProperties(user,userUploadInfo);
+                return ResponseResult.success().data("status",0).data("userUploadInfo",userUploadInfo);
             }
             if (softInfo.getStatus() == 1) {
-                UserUploadInfo userUploadInfo = new UserUploadInfo();
+                UserUploadInfoVo userUploadInfo = new UserUploadInfoVo();
                 BeanUtils.copyProperties(softInfo,userUploadInfo);
                 BeanUtils.copyProperties(user,userUploadInfo);
                 return ResponseResult.success().data("status",1).data("userUploadInfo",userUploadInfo);
