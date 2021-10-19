@@ -42,6 +42,15 @@
     </select>
 
 
+    <insert id="insertSoft" >
+        insert into t_soft (soft_name,soft_desc,status,gov_user_id) values (#{softName},#{softDesc},0,#{govUserId})
+    </insert>
+
+    <update id="updateSoft" >
+        update t_soft set soft_name=#{softName},soft_desc=#{softDesc} where sid=#{sid}
+    </update>
+
+
     <select id="findSoftName" resultType="String">
         select soft_name from t_soft
         where gov_user_id = #{govUserId} and status = 2
@@ -68,5 +77,10 @@
     <select id="getSoftInfo" resultType="SoftInfo">
         select * from t_soft where sid = #{sid};
     </select>
+
+    <update id="updateStatus" >
+        update t_soft set status=#{status}+1 where gov_user_id=#{govUserId} and status=#{status}
+    </update>
+
 
 </mapper>

@@ -36,7 +36,7 @@ public class SoftInfo implements Serializable {
     private Integer status;
 
     /* 用户标识 */
-    private String govUserId;
+    private Integer govUserId;
 
     /* 签名文件 */
     private List<SignFile> signFiles;

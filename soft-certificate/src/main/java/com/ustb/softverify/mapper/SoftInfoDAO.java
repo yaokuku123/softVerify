@@ -52,6 +52,12 @@ public interface SoftInfoDAO {
     List<SoftInfo> listSoft(@Param("govUserId") Integer govUserId);
 
     /**
+     * 插入软件信息
+     * @param softInfo
+     */
+    void insertSoft(SoftInfo softInfo);
+
+    /**
      * 根据用户标识获取
      * @param govUserId
      * @return
@@ -79,5 +85,18 @@ public interface SoftInfoDAO {
     List<SignFile> getTxid(@Param("sid") Integer sid);
 
     SoftInfo getSoftInfo(@Param("sid") Integer sid);
+
+    /**
+     * 更新软件信息
+     * @param softInfo
+     */
+    void updateSoft(SoftInfo softInfo);
+
+    /**
+     * 更新状态
+     * @param govUserId
+     * @param status
+     */
+    void updateStatus(@Param("govUserId") Integer govUserId,@Param("status") Integer status);
 
 }

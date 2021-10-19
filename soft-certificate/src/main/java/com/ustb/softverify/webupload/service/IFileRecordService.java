@@ -30,6 +30,11 @@ public interface IFileRecordService extends IService<FileRecord> {
 
     Result delFile(String fileId);
 
+    /**
+     * 根据用户标识删除软件文档
+     * @param govUserId
+     * @return
+     */
     Result delFileByGovUserId(Integer govUserId);
 //    void recordDownloadLog(String fileId, FileRecord fileRecord);
 }

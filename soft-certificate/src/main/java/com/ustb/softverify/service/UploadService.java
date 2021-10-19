@@ -21,4 +21,26 @@ public interface UploadService {
      */
     List<SoftInfo> listSoft(Integer govUserId);
 
+    /**
+     * 插入用户信息
+     * @param user 用户信息
+     */
+    void insertUser(User user);
+
+    /**
+     * 插入软件信息
+     * @param softInfo
+     */
+    void insertSoft(SoftInfo softInfo);
+
+    void updateUser(User user);
+
+    void updateSoft(SoftInfo softInfo);
+
+    /**
+     * 更新软件状态
+     * @param govUserId 用户标识
+     * @param status 当前状态
+     */
+    void updateStatus(Integer govUserId, Integer status);
 }
