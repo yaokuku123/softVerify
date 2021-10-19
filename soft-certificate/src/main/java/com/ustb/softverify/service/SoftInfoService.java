@@ -1,6 +1,6 @@
 package com.ustb.softverify.service;
 
-import com.ustb.softverify.entity.vo.UserSoftInfoVo;
+import com.ustb.softverify.entity.vo.SoftInfoVo;
 
 import java.util.List;
 
@@ -10,5 +10,7 @@ import java.util.List;
  */
 public interface SoftInfoService {
 
-    List<UserSoftInfoVo> getUploadInfo(Integer govUserId);
+    List<SoftInfoVo> getUploadInfo(Integer govUserId);
+
+    List<SoftInfoVo> getALlUploadInfo();
 }

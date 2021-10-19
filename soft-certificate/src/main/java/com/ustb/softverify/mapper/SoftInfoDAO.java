@@ -1,6 +1,6 @@
 package com.ustb.softverify.mapper;
 
-import com.ustb.softverify.entity.vo.UserSoftInfoVo;
+import com.ustb.softverify.entity.vo.SoftInfoVo;
 
 import java.util.List;
 
@@ -10,5 +10,23 @@ import java.util.List;
  */
 public interface SoftInfoDAO {
 
-    List<UserSoftInfoVo> getUploadInfo(Integer govUserId);
+    /**
+     * 获取用户以上传列表信息
+     * @param govUserId
+     * @return
+     */
+    List<SoftInfoVo> getUploadInfo(Integer govUserId);
+
+
+    /**
+     * 查询所有以归档软件列表信息
+     * @return
+     */
+    List<SoftInfoVo> getALlUploadInfo();
+
+
+
+
+
+
 }

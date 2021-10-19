@@ -1,6 +1,6 @@
 package com.ustb.softverify.service.Impl;
 
-import com.ustb.softverify.entity.vo.UserSoftInfoVo;
+import com.ustb.softverify.entity.vo.SoftInfoVo;
 import com.ustb.softverify.mapper.SoftInfoDAO;
 import com.ustb.softverify.service.SoftInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,13 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     private SoftInfoDAO softInfoDAO;
 
     @Override
-    public List<UserSoftInfoVo> getUploadInfo(Integer govUserId) {
+    public List<SoftInfoVo> getUploadInfo(Integer govUserId) {
         return softInfoDAO.getUploadInfo(govUserId);
+    }
+
+
+    @Override
+    public List<SoftInfoVo> getALlUploadInfo() {
+        return null;
     }
 }

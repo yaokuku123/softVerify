@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserSoftInfoVo implements Serializable {
+public class SoftInfoVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
