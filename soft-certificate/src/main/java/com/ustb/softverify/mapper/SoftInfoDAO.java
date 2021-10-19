@@ -49,6 +49,13 @@ public interface SoftInfoDAO {
      */
     List<SoftInfo> listSoft(@Param("govUserId") Integer govUserId);
 
+    /**
+     * 根据用户标识获取
+     * @param govUserId
+     * @return
+     */
+    String findSoftName(@Param("govUserId") Integer govUserId);
+
 
 
 }

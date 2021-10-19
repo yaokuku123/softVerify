@@ -1,10 +1,7 @@
 package com.ustb.softverify;
 
 import com.ustb.softverify.entity.dto.CompInfo;
-import com.ustb.softverify.utils.HashBasicOperaterSetUtil;
-import com.ustb.softverify.utils.ReadTxt;
-import com.ustb.softverify.utils.ScpUtil;
-import com.ustb.softverify.utils.ZipDe;
+import com.ustb.softverify.utils.*;
 import net.lingala.zip4j.exception.ZipException;
 import org.junit.Test;
 
@@ -59,6 +56,7 @@ public class UtilsTest {
 
     @Test
     public void zipTest() throws ZipException {
-        ZipDe zipDe = new ZipDe();
+        System.out.println(EnvUtils.ROOT_PATH);
+        ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH+"/a.zip");
     }
 }

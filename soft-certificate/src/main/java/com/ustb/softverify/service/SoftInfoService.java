@@ -19,4 +19,6 @@ public interface SoftInfoService {
     List<SoftInfoVo> getAllUploadInfo();
 
     List<SignFileInfo> SignFileInfos(Integer govUserId);
+
+    String findSoftName(Integer govUserId);
 }

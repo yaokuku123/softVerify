@@ -8,10 +8,7 @@ import com.ustb.softverify.entity.dto.SignFileInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import com.ustb.softverify.exception.FileReadWriteException;
 import com.ustb.softverify.service.SoftInfoService;
-import com.ustb.softverify.utils.EnvUtils;
-import com.ustb.softverify.utils.FileUtil;
-import com.ustb.softverify.utils.ListStringUtils;
-import com.ustb.softverify.utils.ZipDe;
+import com.ustb.softverify.utils.*;
 import it.unisa.dia.gas.jpbc.Element;
 import net.lingala.zip4j.exception.ZipException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author WYP
@@ -52,14 +47,14 @@ public class FiledController {
 
 
     /**
-     * 已归档软件信息列表   连查signfile   status = 3
+     * 已归档软件信息列表   status = 3
      * @param
      * @return
      */
     @GetMapping("/fileInfos")
     public ResponseResult getAllUploadInfo(){
         List<SoftInfoVo> uploadInfo = softInfoService.getAllUploadInfo();
-        return ResponseResult.success().data("softInfo",uploadInfo);
+        return ResponseResult.success().data("softInfo",uploadInfo.get(0));
 
     }
 
@@ -110,14 +105,16 @@ public class FiledController {
                 throw new FileReadWriteException();
             }
 
-
             FileUtil.copyFile(signFileInfo.getServerLocalPath(),EnvUtils.ROOT_PATH + signFileInfo.getServerLocalName());
-
-                ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "");
-
-
-
         }
+
+        // 根据govId
+        String softName = softInfoService.findSoftName(govUserId);
+        String jointPath = govUserId + "-" + softName + "-" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".zip";
+        ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + jointPath);
+
+        //
+        ScpUtil.putFile(EnvUtils.ROOT_PATH + "/" + jointPath,"/root/scpTest");
 
 
         return ResponseResult.success().data("info",signFileInfos);
