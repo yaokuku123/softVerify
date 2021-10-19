@@ -30,5 +30,6 @@ public interface IFileRecordService extends IService<FileRecord> {
 
     Result delFile(String fileId);
 
+    Result delFileByGovUserId(Integer govUserId);
 //    void recordDownloadLog(String fileId, FileRecord fileRecord);
 }

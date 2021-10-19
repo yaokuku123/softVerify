@@ -372,6 +372,14 @@ public class FileRecordServiceImpl extends ServiceImpl<FileRecordMapper, FileRec
         return null;
     }
 
+    @Override
+    public Result delFileByGovUserId(Integer govUserId) {
+        QueryWrapper<FileRecord> wrapper = new QueryWrapper<>();
+        wrapper.eq("gov_user_id",govUserId);
+        fileRecordMapper.delete(wrapper);
+        return null;
+    }
+
 //    @Override
 //    public void recordDownloadLog(String fileId,FileRecord fileRecord) {
 //        FileDownloadLog fileDownloadLog=new FileDownloadLog();

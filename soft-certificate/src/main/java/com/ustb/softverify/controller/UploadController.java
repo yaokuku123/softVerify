@@ -5,6 +5,7 @@ import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.UserUploadInfoVo;
 import com.ustb.softverify.service.UploadService;
+import com.ustb.softverify.webupload.service.IFileRecordService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,9 @@ public class UploadController {
 
     @Autowired
     private UploadService uploadService;
+
+    @Autowired
+    private IFileRecordService fileRecordService;
 
     @GetMapping("/getStatus")
     public ResponseResult getStatus(@RequestParam("govUserId") Integer govUserId) {
@@ -49,5 +53,12 @@ public class UploadController {
             }
         }
         return ResponseResult.success().data("status",3);
+    }
+
+    @GetMapping("/deleteInfo")
+    public ResponseResult deleteInfo(@RequestParam("govUserId") Integer govUserId) {
+        //删除软件文档信息
+        fileRecordService.delFileByGovUserId(govUserId);
+        return ResponseResult.success();
     }
 }
