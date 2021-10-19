@@ -20,13 +20,17 @@
         where u.uid = s.uid and s.sid = f.sid and u.gov_user_id = #{govUserId}
     </select>
 
-    <select id="getALlUploadInfo" resultMap="UserSoftInfoResult">
+    <select id="getUnFiledSoftInfo" resultMap="UserSoftInfoResult">
+        select s.soft_name, s.soft_desc, s.status, f.file_name
+         from  t_soft s, t_signfile f
+        where s.sid = f.sid and s.status = 2
+    </select>
+
+    <select id="getAllUploadInfo" resultMap="UserSoftInfoResult">
         select s.soft_name, s.soft_desc, s.status, f.file_name
          from  t_soft s, t_signfile f
         where s.sid = f.sid and s.status = 3
     </select>
-
-
 
 
 </mapper>
