@@ -64,11 +64,11 @@ public class FiledController {
      * @param
      * @return
      */
-    @GetMapping("/fileInfos")
+    /* @GetMapping("/fileInfos")
     public ResponseResult file(){
         List<SoftInfoVo> uploadInfo = softInfoService.getAllUploadInfo();
         return ResponseResult.success().data("softInfo",uploadInfo);
-    }
+    }*/
 
 
 
