@@ -27,10 +27,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -145,7 +143,7 @@ public class FiledController {
 
         // 根据govId
         String softName = softInfoService.findSoftName(govUserId);
-        String jointPath = govUserId + "-" + softName + "-" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".zip";
+        String jointPath = govUserId + "-" + softName + ".zip";
         ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + jointPath);
 
         //改变status
@@ -176,8 +174,8 @@ public class FiledController {
         }
     }
 
-    @PostMapping("/getInfo")
-    public ResponseResult getInfo(@RequestParam("sid")Integer sid){
+    @GetMapping("/getInfo")
+    public ResponseResult getInfo(@RequestParam("sid")Integer sid, HttpServletResponse response){
         List<SignFile> signFiles = softInfoService.getTxid(sid);
 
         JSONObject jsonObject = new JSONObject();
@@ -193,15 +191,34 @@ public class FiledController {
         }
 
         SoftInfo softInfo = softInfoService.getSoftInfo(sid);
-        String path = EnvUtils.CERT_PATH + softInfo.getGovUserId() + "-" + softInfo.getSoftName() +".txt";
+        String softPath = EnvUtils.CERT_PATH + softInfo.getGovUserId() + "-" + softInfo.getSoftName() +".txt";
         try {
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(path));
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(softPath));
             writer.write(jsonObject.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return ResponseResult.success().data("jsonObject",jsonObject);
+        //下载软件
+        File file = new File(softPath);
+        // 设置下载软件文件名
+        String fileName = softPath.substring(softPath.lastIndexOf("/") + 1);
+        response.setContentType("application/force-download");// 设置强制下载不打开
+        response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
+        try (FileInputStream fis = new FileInputStream(file);
+             BufferedInputStream bis = new BufferedInputStream(fis)) {
+            OutputStream os = response.getOutputStream();
+            byte[] buffer = new byte[1024];
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+            return ResponseResult.success().message("下载成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseResult.error().message("下载失败");
 
     }
 
