@@ -197,6 +197,10 @@ public class FiledController {
         }
 
         SoftInfo softInfo = softInfoService.getSoftInfo(sid);
+        File fileP = new File(EnvUtils.CERT_PATH);
+        if (!fileP.exists()){
+            fileP.mkdirs();
+        }
         String softPath = EnvUtils.CERT_PATH + softInfo.getGovUserId() + "-" + softInfo.getSoftName() +".txt";
         try {
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(softPath));
@@ -235,13 +239,18 @@ public class FiledController {
 
     }
 
+
     @GetMapping(value = "/zipSoftDownload",produces = "application/json;charset=UTF-8")
     public ResponseResult zipDownload(@RequestParam("sid")Integer sid, HttpServletResponse response){
 
         SoftInfo softInfo = softInfoService.getSoftInfo(sid);
 
-        ScpUtil.getFile(softInfo.getSoftRemotePath() + softInfo.getZipName(),EnvUtils.CERT_PATH);
+        File fileP = new File(EnvUtils.CERT_PATH);
+        if (!fileP.exists()){
+            fileP.mkdirs();
+        }
 
+        ScpUtil.getFile(softInfo.getSoftRemotePath() + softInfo.getZipName(),EnvUtils.CERT_PATH);
 
         //下载软件
         File file = new File(EnvUtils.CERT_PATH + softInfo.getZipName() );
@@ -270,8 +279,5 @@ public class FiledController {
         }
         return ResponseResult.error().message("下载失败");
     }
-
-
-
 
 }
