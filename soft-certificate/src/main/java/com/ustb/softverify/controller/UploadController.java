@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,6 +136,7 @@ public class UploadController {
         for (FileRecord fileRecord : fileRecords) {
             if ("CoreFiles.txt".equals(fileRecord.getOrgName())) {
                 filePath = fileRecord.getServerLocalPath();
+                continue;
             }
             CompInfo compInfo = new CompInfo();
             compInfo.setOrgName(fileRecord.getOrgName());
