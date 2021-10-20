@@ -82,5 +82,11 @@
         update t_soft set status=#{status}+1 where gov_user_id=#{govUserId} and status=#{status}
     </update>
 
+    <update id="insertPath">
+        update t_soft set soft_remote_path = #{path},zip_name = #{zipName}
+        where soft_name = #{softName}
+    </update>
+
+
 
 </mapper>

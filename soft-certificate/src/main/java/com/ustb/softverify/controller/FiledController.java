@@ -143,12 +143,18 @@ public class FiledController {
 
         // 根据govId
         String softName = softInfoService.findSoftName(govUserId);
-        String jointPath = govUserId + "-" + softName + ".zip";
-        ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + jointPath);
+        //String jointPath = govUserId + "-" + softName + "-" + new SimpleDateFormat("yyyyMMss").format(new Date())  + ".zip";
+        String zipName = govUserId + "-" + softName + "-" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".zip";
+        ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName);
 
         //改变status
         softInfoService.changeStatus(govUserId);
-        ScpUtil.putFile(EnvUtils.ROOT_PATH + "/" + jointPath,"/root/scpTest");
+        ScpUtil.putFile(EnvUtils.ROOT_PATH + "/" + zipName,"/root/scpTest");
+
+
+        //根据softName保存
+        String remotePath = "/root/scpTest/";
+        softInfoService.insertPath(softName,remotePath,zipName);
 
         //删除
         FileUtil.deleteDir(EnvUtils.ROOT_PATH);
@@ -203,7 +209,7 @@ public class FiledController {
         File file = new File(softPath);
         // 设置下载软件文件名
         String fileName = softPath.substring(softPath.lastIndexOf("/") + 1);
-       // response.setContentType("application/json");// 设置强制下载不打开
+        // response.setContentType("application/json");// 设置强制下载不打开
         response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
         OutputStream os = null;
         try (FileInputStream fis = new FileInputStream(file);
@@ -227,6 +233,42 @@ public class FiledController {
         }
         return ResponseResult.error().message("下载失败");
 
+    }
+
+    @GetMapping(value = "/zipSoftDownload",produces = "application/json;charset=UTF-8")
+    public ResponseResult zipDownload(@RequestParam("sid")Integer sid, HttpServletResponse response){
+
+        SoftInfo softInfo = softInfoService.getSoftInfo(sid);
+
+        ScpUtil.getFile(softInfo.getSoftRemotePath() + softInfo.getZipName(),EnvUtils.CERT_PATH);
+
+
+        //下载软件
+        File file = new File(EnvUtils.CERT_PATH + softInfo.getZipName() );
+        // 设置下载软件文件名
+        String fileName = (EnvUtils.CERT_PATH + softInfo.getZipName()).substring(EnvUtils.CERT_PATH.lastIndexOf("/") + 1);
+        response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
+        OutputStream os = null;
+        try (FileInputStream fis = new FileInputStream(file);
+             BufferedInputStream bis = new BufferedInputStream(fis)) {
+            os = response.getOutputStream();
+            byte[] buffer = new byte[1024];
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+            return ResponseResult.success().message("下载成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return ResponseResult.error().message("下载失败");
     }
 
 

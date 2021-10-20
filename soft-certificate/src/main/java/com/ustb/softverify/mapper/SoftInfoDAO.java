@@ -99,4 +99,8 @@ public interface SoftInfoDAO {
      */
     void updateStatus(@Param("govUserId") Integer govUserId,@Param("status") Integer status);
 
+
+    void insertPath(@Param("softName")String softName,@Param("path")String path,@Param("zipName")String zipName);
+
+
 }

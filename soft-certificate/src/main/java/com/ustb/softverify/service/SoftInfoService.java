@@ -30,7 +30,10 @@ public interface SoftInfoService {
 
     void insertSignFile(String fileName,String txid,Integer sid);
 
-    List<SignFile> getTxid(@Param("sid") Integer sid);
+    List<SignFile> getTxid(Integer sid);
 
     SoftInfo getSoftInfo(Integer sid);
+
+    void insertPath(String softName,String path,String zipName);
+
 }

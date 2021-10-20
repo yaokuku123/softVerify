@@ -70,4 +70,10 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     public SoftInfo getSoftInfo(Integer sid) {
         return softInfoDAO.getSoftInfo(sid);
     }
+
+    @Override
+    public void insertPath(String softName, String path,String zipName) {
+        softInfoDAO.insertPath(softName,path,zipName);
+    }
+
 }

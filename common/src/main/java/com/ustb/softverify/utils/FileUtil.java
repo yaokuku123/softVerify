@@ -653,7 +653,12 @@ public class FileUtil {
         }
     }
 
-
+    /**
+     * 文件拷贝
+     * @param oldPath
+     * @param newPath
+     * @return
+     */
     public static void  copyFile(String oldPath, String newPath) {
         try {
             int bytesum = 0;

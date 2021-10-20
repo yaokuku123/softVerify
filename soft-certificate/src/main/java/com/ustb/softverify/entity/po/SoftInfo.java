@@ -32,6 +32,8 @@ public class SoftInfo implements Serializable {
     /* 软件存放路径 */
     private String softRemotePath;
 
+    private String zipName;
+
     /* 文件状态 */
     private Integer status;
 
