@@ -106,7 +106,9 @@ public class UploadController {
         }
         //插入软件信息
         uploadService.insertSoft(softInfo);
-        return ResponseResult.success().data("uid",user.getUid()).data("sid",softInfo.getSid());
+        Integer uid = user.getUid();
+        Integer sid = softInfo.getSid();
+        return ResponseResult.success().data("uid",uid).data("sid",sid);
     }
 
     /**
