@@ -4,13 +4,14 @@ import com.ustb.softverify.entity.dto.CompInfo;
 import com.ustb.softverify.utils.ReadTxt;
 import org.junit.Test;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TextTest {
 
     @Test
-    public void test() {
+    public void test() throws UnsupportedEncodingException {
         String dirPath = "/Users/yorick/Downloads/CoreFiles.txt";
         List<CompInfo> compInfos = new ArrayList<>();
         CompInfo compInfo1 = new CompInfo();

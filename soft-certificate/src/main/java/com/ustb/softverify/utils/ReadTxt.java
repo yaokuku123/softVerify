@@ -12,7 +12,7 @@ public class ReadTxt {
      * @param filePath 想要读取的文件对象
      * @return 返回文件内容
      */
-    public static boolean comp2txt(String filePath, List<CompInfo> compInfoList){
+    public static boolean comp2txt(String filePath, List<CompInfo> compInfoList)  {
         List<String> strList = new ArrayList<String>();
         boolean flag = true;
         File file = new File(filePath);

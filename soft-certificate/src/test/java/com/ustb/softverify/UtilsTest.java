@@ -5,6 +5,7 @@ import com.ustb.softverify.utils.*;
 import net.lingala.zip4j.exception.ZipException;
 import org.junit.Test;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class UtilsTest {
     }
 
     @Test
-    public void testComp2txt() {
+    public void testComp2txt() throws UnsupportedEncodingException {
         ReadTxt readTxt = new ReadTxt();
 
         String filePath = "D:\\WORK\\TargetField\\CoreFiles.txt";
