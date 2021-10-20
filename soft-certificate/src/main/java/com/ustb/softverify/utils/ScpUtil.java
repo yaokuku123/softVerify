@@ -118,4 +118,18 @@ public class ScpUtil {
         }
     }
 
+    /**
+     * 向远程服务器下载文件
+     * @param localFile
+     * @param remoteTargetDirectory
+     */
+    public static void downFile(String localFile, String remoteTargetDirectory) {
+
+
+
+
+
+    }
+
+
 }
