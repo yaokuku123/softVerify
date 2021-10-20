@@ -1,18 +1,31 @@
 package com.ustb.softverify;
 
 
+import com.ustb.softverify.entity.po.SoftInfo;
+import com.ustb.softverify.entity.po.User;
+import com.ustb.softverify.mapper.SoftInfoDAO;
+import com.ustb.softverify.mapper.UserDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class LogTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LogTest.class);
+
+    @Autowired
+    private UserDAO userDAO;
+
+    @Autowired
+    private SoftInfoDAO softInfoDAO;
 
     @Test
     public void test() {
@@ -26,5 +39,17 @@ public class LogTest {
         LOGGER.warn("这是warn日志...");
         LOGGER.error("这是error日志...");
 
+    }
+
+    @Test
+    public void test2() {
+        User user = userDAO.getUser(1189);
+        System.out.println(user);
+    }
+
+    @Test
+    public void test3() {
+        List<SoftInfo> softInfos = softInfoDAO.listSoft(1189);
+        System.out.println(softInfos);
     }
 }

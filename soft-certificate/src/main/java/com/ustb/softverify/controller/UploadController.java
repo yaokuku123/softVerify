@@ -36,14 +36,12 @@ public class UploadController {
      */
     @GetMapping("/getStatus")
     public ResponseResult getStatus(@RequestParam("govUserId") Integer govUserId) {
-        List<SoftInfo> softInfos = null;
-        User user = null;
-        try {
-            //获取用户信息
-            user = uploadService.getUser(govUserId);
-            //获取软件信息
-            softInfos = uploadService.listSoft(govUserId);
-        } catch (Exception e) {
+
+        //获取用户信息
+        User user = uploadService.getUser(govUserId);
+        //获取软件信息
+        List<SoftInfo> softInfos = uploadService.listSoft(govUserId);
+        if (user == null || softInfos.size() == 0 ) {
             return ResponseResult.success().data("status",-1);
         }
         for (SoftInfo softInfo : softInfos) {
@@ -91,7 +89,15 @@ public class UploadController {
         SoftInfo softInfo = new SoftInfo();
         BeanUtils.copyProperties(userUploadInfoVo,softInfo);
         //插入用户信息
-        uploadService.insertUser(user);
+        //如果不是第一次上传，需要先查看是否有数据
+        User userDb = uploadService.getUser(userUploadInfoVo.getGovUserId());
+        System.out.println(userDb);
+        if (userDb != null) {
+            BeanUtils.copyProperties(user,userDb);
+            uploadService.updateUser(userDb);
+        } else {
+            uploadService.insertUser(user);
+        }
         //插入软件信息
         uploadService.insertSoft(softInfo);
         return ResponseResult.success();
