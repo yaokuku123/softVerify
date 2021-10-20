@@ -174,7 +174,7 @@ public class FiledController {
         }
     }
 
-    @GetMapping("/getInfo")
+    @GetMapping(value = "/getInfo", produces = "application/json;charset=UTF-8")
     public ResponseResult getInfo(@RequestParam("sid")Integer sid, HttpServletResponse response){
         List<SignFile> signFiles = softInfoService.getTxid(sid);
 
@@ -203,11 +203,12 @@ public class FiledController {
         File file = new File(softPath);
         // 设置下载软件文件名
         String fileName = softPath.substring(softPath.lastIndexOf("/") + 1);
-        response.setContentType("application/force-download");// 设置强制下载不打开
+       // response.setContentType("application/json");// 设置强制下载不打开
         response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
+        OutputStream os = null;
         try (FileInputStream fis = new FileInputStream(file);
              BufferedInputStream bis = new BufferedInputStream(fis)) {
-            OutputStream os = response.getOutputStream();
+            os = response.getOutputStream();
             byte[] buffer = new byte[1024];
             int i = bis.read(buffer);
             while (i != -1) {
@@ -217,6 +218,12 @@ public class FiledController {
             return ResponseResult.success().message("下载成功");
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            try {
+                os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return ResponseResult.error().message("下载失败");
 
