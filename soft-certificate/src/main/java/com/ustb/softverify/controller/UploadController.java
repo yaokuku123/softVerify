@@ -1,16 +1,20 @@
 package com.ustb.softverify.controller;
 
 import com.ustb.softverify.domain.ResponseResult;
+import com.ustb.softverify.entity.dto.CompInfo;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.UserUploadInfoVo;
 import com.ustb.softverify.service.UploadService;
+import com.ustb.softverify.utils.ReadTxt;
+import com.ustb.softverify.webupload.entity.FileRecord;
 import com.ustb.softverify.webupload.service.IFileRecordService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -118,6 +122,29 @@ public class UploadController {
     @GetMapping("/save")
     public ResponseResult save(Integer govUserId) {
         uploadService.updateStatus(govUserId,0);
+        return ResponseResult.success();
+    }
+
+    @Transactional
+    @GetMapping("/submit")
+    public ResponseResult submit(Integer govUserId) {
+        uploadService.updateStatus(govUserId,1);
+        List<FileRecord> fileRecords = fileRecordService.listFileByGovUserId(govUserId);
+        List<CompInfo> compInfos = new ArrayList<>();
+        String filePath = null;
+        for (FileRecord fileRecord : fileRecords) {
+            if ("CoreFiles.txt".equals(fileRecord.getOrgName())) {
+                filePath = fileRecord.getServerLocalPath();
+            }
+            CompInfo compInfo = new CompInfo();
+            compInfo.setOrgName(fileRecord.getOrgName());
+            compInfo.setFileSize(fileRecord.getFileSize());
+            compInfos.add(compInfo);
+        }
+        boolean flag = ReadTxt.comp2txt(filePath, compInfos);
+        if (!flag) {
+            return ResponseResult.error();
+        }
         return ResponseResult.success();
     }
 }

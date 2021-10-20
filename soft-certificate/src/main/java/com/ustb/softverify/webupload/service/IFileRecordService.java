@@ -7,6 +7,7 @@ import com.ustb.softverify.webupload.entity.FileRecord;
 import com.ustb.softverify.webupload.entity.FileZoneRecord;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * <p>
@@ -35,6 +36,13 @@ public interface IFileRecordService extends IService<FileRecord> {
      * @param govUserId
      * @return
      */
-    Result delFileByGovUserId(Integer govUserId);
+    void delFileByGovUserId(Integer govUserId);
+
+    /**
+     * 根据用户标识获取软件文件列表对象
+     * @param govUserId
+     * @return
+     */
+    List<FileRecord> listFileByGovUserId(Integer govUserId);
 //    void recordDownloadLog(String fileId, FileRecord fileRecord);
 }

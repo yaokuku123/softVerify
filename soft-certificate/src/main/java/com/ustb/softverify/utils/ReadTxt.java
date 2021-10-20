@@ -53,15 +53,15 @@ public class ReadTxt {
 
         for(CompInfo comp : compInfoList) {
             for (String s : strList) {
-                if(comp.setFlag((s.contains(comp.getFileName()) && s.contains(comp.getFileName()))) ){
-                    // System.out.println("存在");
+                boolean flag1 = s.contains(comp.getOrgName());
+                boolean flag2 = s.contains(comp.getFileSize().toString());
+                comp.setFlag(flag1 && flag2);
+                if (comp.isFlag()) {
                     break;
                 }
             }
             flag = flag && comp.isFlag();
         }
-
-
         return flag;
     }
 

@@ -29,9 +29,9 @@ public class UtilsTest {
         boolean status = false;
 
         List<CompInfo> compInfoList = new ArrayList<CompInfo>();
-        CompInfo compInfo1 = new CompInfo(s1, s2);
-        CompInfo compInfo2 = new CompInfo(s3, s4);
-        CompInfo compInfo3 = new CompInfo(s1, s2);
+        CompInfo compInfo1 = new CompInfo(s1, Long.valueOf(s1));
+        CompInfo compInfo2 = new CompInfo(s3, Long.valueOf(s4));
+        CompInfo compInfo3 = new CompInfo(s1, Long.valueOf(s2));
 
         compInfoList.add(compInfo1);
         compInfoList.add(compInfo2);
