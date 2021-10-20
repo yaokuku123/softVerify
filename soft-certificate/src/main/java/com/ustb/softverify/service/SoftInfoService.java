@@ -34,6 +34,6 @@ public interface SoftInfoService {
 
     SoftInfo getSoftInfo(Integer sid);
 
-    void insertPath(String softName,String path,String zipName);
+    void insertPath(String softName,Integer govUserId,String path,String zipName);
 
 }

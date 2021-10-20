@@ -84,7 +84,7 @@
 
     <update id="insertPath">
         update t_soft set soft_remote_path = #{path},zip_name = #{zipName}
-        where soft_name = #{softName}
+        where soft_name = #{softName} and gov_user_id = #{govUserId}
     </update>
 
 

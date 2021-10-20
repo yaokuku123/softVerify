@@ -72,8 +72,8 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     }
 
     @Override
-    public void insertPath(String softName, String path,String zipName) {
-        softInfoDAO.insertPath(softName,path,zipName);
+    public void insertPath(String softName, Integer govUserId,String path,String zipName) {
+        softInfoDAO.insertPath(softName,govUserId,path,zipName);
     }
 
 }

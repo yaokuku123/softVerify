@@ -154,7 +154,7 @@ public class FiledController {
 
         //根据softName保存
         String remotePath = "/root/scpTest/";
-        softInfoService.insertPath(softName,remotePath,zipName);
+        softInfoService.insertPath(softName,govUserId,remotePath,zipName);
 
         //删除
         FileUtil.deleteDir(EnvUtils.ROOT_PATH);
