@@ -5,6 +5,8 @@ import com.ustb.softverify.entity.dto.CompInfo;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.UserUploadInfoVo;
+import com.ustb.softverify.exception.CoreFileMisException;
+import com.ustb.softverify.exception.MisMatchContentException;
 import com.ustb.softverify.service.UploadService;
 import com.ustb.softverify.utils.ReadTxt;
 import com.ustb.softverify.webupload.entity.FileRecord;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/soft")
@@ -91,16 +94,19 @@ public class UploadController {
         //插入用户信息
         //如果不是第一次上传，需要先查看是否有数据
         User userDb = uploadService.getUser(userUploadInfoVo.getGovUserId());
-        System.out.println(userDb);
         if (userDb != null) {
-            BeanUtils.copyProperties(user,userDb);
+            userDb.setCompany(user.getCompany());
+            userDb.setGovUserId(user.getGovUserId());
+            userDb.setPhone(user.getPhone());
+            userDb.setUname(user.getUname());
+            user.setUid(userDb.getUid());
             uploadService.updateUser(userDb);
         } else {
             uploadService.insertUser(user);
         }
         //插入软件信息
         uploadService.insertSoft(softInfo);
-        return ResponseResult.success();
+        return ResponseResult.success().data("uid",user.getUid()).data("sid",softInfo.getSid());
     }
 
     /**
@@ -149,9 +155,12 @@ public class UploadController {
             compInfo.setFileSize(fileRecord.getFileSize());
             compInfos.add(compInfo);
         }
+        if (filePath == null){
+            throw new CoreFileMisException();
+        }
         boolean flag = ReadTxt.comp2txt(filePath, compInfos);
         if (!flag) {
-            return ResponseResult.error();
+            throw new MisMatchContentException();
         }
         return ResponseResult.success();
     }

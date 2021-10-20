@@ -140,10 +140,16 @@ public class GlobalExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler(UploaderInfoException.class)
-    public ResponseResult uploaderInfoException(UploaderInfoException e) {
+    @ExceptionHandler(MisMatchContentException.class)
+    public ResponseResult misMatchContentException(MisMatchContentException e) {
         e.printStackTrace();
-        return ResponseResult.error().message("上传软件用户信息异常");
+        return ResponseResult.error().message("重要文档未匹配目录文件异常");
+    }
+
+    @ExceptionHandler(CoreFileMisException.class)
+    public ResponseResult coreFileMisException(CoreFileMisException e) {
+        e.printStackTrace();
+        return ResponseResult.error().message("未上传目录文件异常");
     }
 
 }

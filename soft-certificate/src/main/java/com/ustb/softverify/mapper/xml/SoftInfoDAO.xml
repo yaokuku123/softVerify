@@ -42,7 +42,7 @@
     </select>
 
 
-    <insert id="insertSoft" >
+    <insert id="insertSoft" useGeneratedKeys="true" keyProperty="sid">
         insert into t_soft (soft_name,soft_desc,status,gov_user_id) values (#{softName},#{softDesc},0,#{govUserId})
     </insert>
 
