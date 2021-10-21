@@ -40,4 +40,6 @@ public interface SoftInfoService {
 
     void insertTxid( Integer govUserId, String txid);
 
+    List<SignFileInfo> softFileRecords(Integer govUserId);
+
 }

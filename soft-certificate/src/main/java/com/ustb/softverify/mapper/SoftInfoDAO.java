@@ -113,4 +113,7 @@ public interface SoftInfoDAO {
     SoftInfo getSoftDetail(@Param("govUserId") Integer govUserId);
 
     void insertTxid(@Param("govUserId") Integer govUserId, @Param("txid") String txid);
+
+    List<SignFileInfo> softFileRecords(@Param("govUserId") Integer govUserId);
+
 }

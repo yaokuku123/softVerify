@@ -85,4 +85,9 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     public void insertTxid(Integer govUserId, String txid) {
         softInfoDAO.insertTxid(govUserId,txid);
     }
+
+    @Override
+    public List<SignFileInfo> softFileRecords(Integer govUserId) {
+        return softInfoDAO.softFileRecords(govUserId);
+    }
 }

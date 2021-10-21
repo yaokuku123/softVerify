@@ -154,8 +154,11 @@ public class FiledController {
         String txid = upChain(certificateInfo);
         softInfoService.insertTxid(govUserId,txid);
 
-        for (SignFileInfo signFileInfo : signFileInfos ){
-            FileUtil.copyFile(signFileInfo.getServerLocalPath(), EnvUtils.ROOT_PATH + signFileInfo.getServerLocalName());
+        List<SignFileInfo> fileRecords = softInfoService.softFileRecords(govUserId);
+        for (SignFileInfo signFileInfo : fileRecords ){
+            String split = signFileInfo.getServerLocalName().split("\\.")[0] + ".bin";
+            String s = "(" + signFileInfo.getServerLocalName().split("\\.")[1] +")";
+            FileUtil.copyFile(signFileInfo.getServerLocalPath(), EnvUtils.ROOT_PATH + split + s);
         }
 
         // 根据govId
@@ -289,5 +292,7 @@ public class FiledController {
         }
         return ResponseResult.error().message("下载失败");
     }
+
+
 
 }
