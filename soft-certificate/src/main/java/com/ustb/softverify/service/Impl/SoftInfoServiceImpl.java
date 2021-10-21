@@ -76,4 +76,13 @@ public class SoftInfoServiceImpl implements SoftInfoService {
         softInfoDAO.insertPath(softName,govUserId,path,zipName);
     }
 
+    @Override
+    public SoftInfo getSoftDetail(Integer govUserId) {
+        return softInfoDAO.getSoftDetail(govUserId);
+    }
+
+    @Override
+    public void insertTxid(Integer govUserId, String txid) {
+        softInfoDAO.insertTxid(govUserId,txid);
+    }
 }

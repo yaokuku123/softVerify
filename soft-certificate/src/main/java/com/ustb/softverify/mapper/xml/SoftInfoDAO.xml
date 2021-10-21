@@ -87,6 +87,14 @@
         where soft_name = #{softName} and gov_user_id = #{govUserId}
     </update>
 
+    <select id="getSoftDetail" resultType="SoftInfo">
+        select * from t_soft where gov_user_id = #{govUserId}
+    </select>
+
+    <update id="insertTxid">
+        update t_soft set txid = #{txid} where gov_user_id=#{govUserId}
+    </update>
+
 
 
 </mapper>

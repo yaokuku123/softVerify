@@ -103,4 +103,7 @@ public interface SoftInfoDAO {
     void insertPath(@Param("softName")String softName,@Param("govUserId")Integer govUserId,@Param("path")String path,@Param("zipName")String zipName);
 
 
+    SoftInfo getSoftDetail(@Param("govUserId") Integer govUserId);
+
+    void insertTxid(@Param("govUserId") Integer govUserId, @Param("txid") String txid);
 }
