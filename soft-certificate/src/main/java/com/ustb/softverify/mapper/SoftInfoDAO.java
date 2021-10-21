@@ -102,5 +102,12 @@ public interface SoftInfoDAO {
 
     void insertPath(@Param("softName")String softName,@Param("govUserId")Integer govUserId,@Param("path")String path,@Param("zipName")String zipName);
 
+    /**
+     * 根据govUserId和状态信息查询软件
+     * @param govUserId
+     * @param status
+     * @return
+     */
+    SoftInfo getSoftInfoByGovUserId(@Param("govUserId") Integer govUserId,@Param("status") Integer status);
 
 }
