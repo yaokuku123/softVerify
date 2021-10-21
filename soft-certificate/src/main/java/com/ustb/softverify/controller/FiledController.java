@@ -126,64 +126,51 @@ public class FiledController {
                 (Element) keyMap.get(BlindAlgorithm.PRIVATE_KEY));
 
         //保存签名文件   签名列表格式转换
-            List<String> signStringList = new ArrayList<>();
-//            Base64.Encoder encoder = Base64.getEncoder();
-//            for (Element elm : signList) {
-//                byte[] signByte = encoder.encode(elm.toBytes());
-//                signStringList.add(new String(signByte, StandardCharsets.UTF_8));
-//            }
-//            // 指定文件路径
-//            String signFileName = signFileInfo.getServerLocalName().split("\\.")[0] + ".sign";
-//            String signFilePath = EnvUtils.ROOT_PATH + signFileName;
-//            //将list集合变为String字符串后存储至指定路径下
-            try {
-                String str = ListStringUtils.listToString(signStringList);
-                FileUtil.write(signFilePath, str);
-            } catch (IOException e) {
-                throw new FileReadWriteException();
-            }
-            //构造证书对象
-            PublicKeyStr publicKeyStr = null;
-            try {
-                publicKeyStr = PublicKeyTransferUtil.encodeToStr(publicKey);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            CertificateInfo certificateInfo =  new CertificateInfo(publicKeyStr,signFileInfo);
-            String txid = upChain(certificateInfo);
+        List<String> signStringList = new ArrayList<>();
+        Base64.Encoder encoder = Base64.getEncoder();
+        for (Element elm : signList) {
+            byte[] signByte = encoder.encode(elm.toBytes());
+            signStringList.add(new String(signByte, StandardCharsets.UTF_8));
+        }
+        // 指定文件路径
+        String signFileName = softName + ".sign";
+        String signFilePathDes = EnvUtils.ROOT_PATH + signFileName;
+        //将list集合变为String字符串后存储至指定路径下
+        try {
+            String str = ListStringUtils.listToString(signStringList);
+            FileUtil.write(signFilePathDes, str);
+        } catch (IOException e) {
+            throw new FileReadWriteException();
+        }
+        //构造证书对象
+        PublicKeyStr publicKeyStr = null;
+        try {
+            publicKeyStr = PublicKeyTransferUtil.encodeToStr(publicKey);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SoftInfo softDetail = softInfoService.getSoftDetail(govUserId);
+        CertificateInfo certificateInfo = new CertificateInfo(publicKeyStr, softDetail);
+        String txid = upChain(certificateInfo);
+        softInfoService.insertTxid(govUserId,txid);
 
-            Integer softId = softInfoService.findSoftId(govUserId);
-            softInfoService.insertSignFile(signFileInfo.getServerLocalName(),txid,softId);
-            FileUtil.copyFile(signFileInfo.getServerLocalPath(),EnvUtils.ROOT_PATH + signFileInfo.getServerLocalName());
-
-
-
-
-
-
-
-
+        for (SignFileInfo signFileInfo : signFileInfos ){
+            FileUtil.copyFile(signFileInfo.getServerLocalPath(), EnvUtils.ROOT_PATH + signFileInfo.getServerLocalName());
+        }
 
         // 根据govId
-
-        //String jointPath = govUserId + "-" + softName + "-" + new SimpleDateFormat("yyyyMMss").format(new Date())  + ".zip";
         String zipName = govUserId + "-" + softName + "-" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".zip";
         ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName);
 
         //改变status
         softInfoService.changeStatus(govUserId);
-        ScpUtil.putFile(EnvUtils.ROOT_PATH + "/" + zipName,"/root/scpTest");
-
-
-        //根据softName保存
-        String remotePath = "/root/scpTest/";
+        String remotePath = "/root/softStore/";
+        ScpUtil.putFile(EnvUtils.ROOT_PATH + "/" + zipName,remotePath);
         softInfoService.insertPath(softName,govUserId,remotePath,zipName);
-
         //删除
         FileUtil.deleteDir(EnvUtils.ROOT_PATH);
         return ResponseResult.success();
     }
-
 
 
     /**

@@ -110,4 +110,7 @@ public interface SoftInfoDAO {
      */
     SoftInfo getSoftInfoByGovUserId(@Param("govUserId") Integer govUserId,@Param("status") Integer status);
 
+    SoftInfo getSoftDetail(@Param("govUserId") Integer govUserId);
+
+    void insertTxid(@Param("govUserId") Integer govUserId, @Param("txid") String txid);
 }
