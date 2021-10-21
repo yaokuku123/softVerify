@@ -97,29 +97,45 @@ public class FiledController {
 
     @GetMapping("/filed")
     public ResponseResult file(@RequestParam("govUserId")Integer govUserId){
+
+        String softName = softInfoService.findSoftName(govUserId);
+
         // 根据gov sid 查询软件列表的路径
         List<SignFileInfo> signFileInfos = softInfoService.SignFileInfos(govUserId);
+        String signFilePath = EnvUtils.CERT_PATH +softName + ".bin";
+        File signFile = new File(signFilePath);
+        try {
+            signFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         for (SignFileInfo signFileInfo : signFileInfos){
-            //签名
-            BlindAlgorithm algorithm = new BlindVerifyAlgorithmImpl1(signFileInfo.getServerLocalPath());
-            Map<String, Object> keyMap = algorithm.initParams();
-            PublicKey publicKey = (PublicKey) keyMap.get(BlindAlgorithm.PUBLIC_KEY);
-            ArrayList<Element> signList = algorithm.sign(signFileInfo.getServerLocalPath(), publicKey ,
-                    (Element) keyMap.get(BlindAlgorithm.PRIVATE_KEY));
-
-
-
-            //保存签名文件   签名列表格式转换
-            List<String> signStringList = new ArrayList<>();
-            Base64.Encoder encoder = Base64.getEncoder();
-            for (Element elm : signList) {
-                byte[] signByte = encoder.encode(elm.toBytes());
-                signStringList.add(new String(signByte, StandardCharsets.UTF_8));
+            String localPath = signFileInfo.getServerLocalPath();
+            try {
+                FileUtil.append(signFilePath,FileUtil.read(localPath));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            // 指定文件路径
-            String signFileName = signFileInfo.getServerLocalName().split("\\.")[0] + ".sign";
-            String signFilePath = EnvUtils.ROOT_PATH + signFileName;
-            //将list集合变为String字符串后存储至指定路径下
+        }
+
+        //签名
+        BlindAlgorithm algorithm = new BlindVerifyAlgorithmImpl1(signFilePath);
+        Map<String, Object> keyMap = algorithm.initParams();
+        PublicKey publicKey = (PublicKey) keyMap.get(BlindAlgorithm.PUBLIC_KEY);
+        ArrayList<Element> signList = algorithm.sign(signFilePath, publicKey,
+                (Element) keyMap.get(BlindAlgorithm.PRIVATE_KEY));
+
+        //保存签名文件   签名列表格式转换
+            List<String> signStringList = new ArrayList<>();
+//            Base64.Encoder encoder = Base64.getEncoder();
+//            for (Element elm : signList) {
+//                byte[] signByte = encoder.encode(elm.toBytes());
+//                signStringList.add(new String(signByte, StandardCharsets.UTF_8));
+//            }
+//            // 指定文件路径
+//            String signFileName = signFileInfo.getServerLocalName().split("\\.")[0] + ".sign";
+//            String signFilePath = EnvUtils.ROOT_PATH + signFileName;
+//            //将list集合变为String字符串后存储至指定路径下
             try {
                 String str = ListStringUtils.listToString(signStringList);
                 FileUtil.write(signFilePath, str);
@@ -139,10 +155,17 @@ public class FiledController {
             Integer softId = softInfoService.findSoftId(govUserId);
             softInfoService.insertSignFile(signFileInfo.getServerLocalName(),txid,softId);
             FileUtil.copyFile(signFileInfo.getServerLocalPath(),EnvUtils.ROOT_PATH + signFileInfo.getServerLocalName());
-        }
+
+
+
+
+
+
+
+
 
         // 根据govId
-        String softName = softInfoService.findSoftName(govUserId);
+
         //String jointPath = govUserId + "-" + softName + "-" + new SimpleDateFormat("yyyyMMss").format(new Date())  + ".zip";
         String zipName = govUserId + "-" + softName + "-" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".zip";
         ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName);
@@ -158,7 +181,7 @@ public class FiledController {
 
         //删除
         FileUtil.deleteDir(EnvUtils.ROOT_PATH);
-        return ResponseResult.success().data("info",signFileInfos);
+        return ResponseResult.success();
     }
 
 
