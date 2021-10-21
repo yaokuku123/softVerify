@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class ScpUtil {
 
-    private static String IP = "39.107.254.27";
+    private static String IP = "123.56.246.148";
     private static int PORT = 22;
     private static String USER = "root";//登录用户名
     private static String PASSWORD = "chainNode202";//生成私钥的密码和登录密码，这两个共用这个密码
