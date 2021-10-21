@@ -87,6 +87,11 @@
         where soft_name = #{softName} and gov_user_id = #{govUserId}
     </update>
 
+
+    <select id="getSoftInfoByGovUserId" resultType="com.ustb.softverify.entity.po.SoftInfo">
+        select * from t_soft where gov_user_id = #{govUserId} and status = #{status}
+    </select>
+
     <select id="getSoftDetail" resultType="SoftInfo">
         select * from t_soft where gov_user_id = #{govUserId}
     </select>

@@ -40,6 +40,7 @@ public class SoftInfo implements Serializable {
     /* 用户标识 */
     private Integer govUserId;
 
+    /* 交易地址 */
     private String txid;
 
     /* 签名文件 */

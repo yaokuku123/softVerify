@@ -2,6 +2,7 @@ package com.ustb.softverify.service;
 
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
+import com.ustb.softverify.entity.vo.SubmitInfoVo;
 
 import java.util.List;
 
@@ -43,4 +44,12 @@ public interface UploadService {
      * @param status 当前状态
      */
     void updateStatus(Integer govUserId, Integer status);
+
+    /**
+     * 获取显示提交页面信息对象
+     * @param govUserId 用户标识
+     * @param status 状态
+     * @return 提交对象信息
+     */
+    SubmitInfoVo getSubmitInfo(Integer govUserId, Integer status);
 }
