@@ -42,4 +42,5 @@ public interface SoftInfoService {
 
     List<SignFileInfo> softFileRecords(Integer govUserId);
 
+    Integer getSid(Integer govUserId);
 }

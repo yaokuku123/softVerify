@@ -116,4 +116,5 @@ public interface SoftInfoDAO {
 
     List<SignFileInfo> softFileRecords(@Param("govUserId") Integer govUserId);
 
+    Integer getSid(Integer govUserId);
 }

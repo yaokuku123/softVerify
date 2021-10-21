@@ -196,7 +196,8 @@ public class FiledController {
     }
 
     @GetMapping(value = "/getInfo", produces = "application/json;charset=UTF-8")
-    public ResponseResult getInfo(@RequestParam("sid")Integer sid, HttpServletResponse response){
+    public ResponseResult getInfo(@RequestParam("govUserId")Integer govUserId, HttpServletResponse response){
+        Integer sid = softInfoService.getSid(govUserId);
         List<SignFile> signFiles = softInfoService.getTxid(sid);
 
         JSONObject jsonObject = new JSONObject();
@@ -256,8 +257,8 @@ public class FiledController {
 
 
     @GetMapping(value = "/zipSoftDownload",produces = "application/json;charset=UTF-8")
-    public ResponseResult zipDownload(@RequestParam("sid")Integer sid, HttpServletResponse response){
-
+    public ResponseResult zipDownload(@RequestParam("govUserId")Integer govUserId, HttpServletResponse response){
+        Integer sid = softInfoService.getSid(govUserId);
         SoftInfo softInfo = softInfoService.getSoftInfo(sid);
 
         File fileP = new File(EnvUtils.CERT_PATH);

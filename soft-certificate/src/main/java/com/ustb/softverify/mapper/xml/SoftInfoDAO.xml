@@ -105,6 +105,8 @@
         where gov_user_id=#{govUserId}
     </select>
 
-
+    <select id="getSid" resultType="Integer">
+        select sid from t_soft where gov_user_id = #{govUserId}
+    </select>
 
 </mapper>

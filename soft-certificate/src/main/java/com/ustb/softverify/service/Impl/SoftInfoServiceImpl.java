@@ -90,4 +90,9 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     public List<SignFileInfo> softFileRecords(Integer govUserId) {
         return softInfoDAO.softFileRecords(govUserId);
     }
+
+    @Override
+    public Integer getSid(Integer govUserId) {
+        return softInfoDAO.getSid(govUserId);
+    }
 }
