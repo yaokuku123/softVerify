@@ -125,6 +125,8 @@ public class FiledController {
         ArrayList<Element> signList = algorithm.sign(signFilePath, publicKey,
                 (Element) keyMap.get(BlindAlgorithm.PRIVATE_KEY));
 
+        signFile.delete();
+
         //保存签名文件   签名列表格式转换
         List<String> signStringList = new ArrayList<>();
         Base64.Encoder encoder = Base64.getEncoder();
