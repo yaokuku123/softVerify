@@ -154,7 +154,8 @@ public class FiledController {
         String txid = upChain(certificateInfo);
         softInfoService.insertTxid(govUserId,txid);
 
-        for (SignFileInfo signFileInfo : signFileInfos ){
+        List<SignFileInfo> fileRecords = softInfoService.softFileRecords(govUserId);
+        for (SignFileInfo signFileInfo : fileRecords ){
             FileUtil.copyFile(signFileInfo.getServerLocalPath(), EnvUtils.ROOT_PATH + signFileInfo.getServerLocalName());
         }
 

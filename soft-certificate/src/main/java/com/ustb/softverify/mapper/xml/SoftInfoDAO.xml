@@ -34,7 +34,7 @@
     
     <select id="SignFileInfos" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
         select server_local_name, server_local_path from sys_file_record
-        where gov_user_id=#{govUserId}
+        where gov_user_id=#{govUserId} and soft_file_type = 2
     </select>
 
     <select id="listSoft"  resultType="com.ustb.softverify.entity.po.SoftInfo">
@@ -94,6 +94,11 @@
     <update id="insertTxid">
         update t_soft set txid = #{txid} where gov_user_id=#{govUserId}
     </update>
+
+    <select id="softFileRecords" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
+        select server_local_name, server_local_path from sys_file_record
+        where gov_user_id=#{govUserId}
+    </select>
 
 
 
