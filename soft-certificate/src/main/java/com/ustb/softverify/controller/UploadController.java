@@ -2,6 +2,7 @@ package com.ustb.softverify.controller;
 
 import com.ustb.softverify.domain.ResponseResult;
 import com.ustb.softverify.entity.dto.CompInfo;
+import com.ustb.softverify.entity.po.FileTypeEnum;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.UserUploadInfoVo;
@@ -148,14 +149,17 @@ public class UploadController {
         List<CompInfo> compInfos = new ArrayList<>();
         String filePath = null;
         for (FileRecord fileRecord : fileRecords) {
-            if ("CoreFiles.txt".equals(fileRecord.getOrgName())) {
+            //目录文件，提取目录的存放路径
+            if (fileRecord.getSoftFileType().equals(FileTypeEnum.DIR_FILE.getCode())) {
                 filePath = fileRecord.getServerLocalPath();
-                continue;
             }
-            CompInfo compInfo = new CompInfo();
-            compInfo.setOrgName(fileRecord.getOrgName());
-            compInfo.setFileSize(fileRecord.getFileSize());
-            compInfos.add(compInfo);
+            //重要文件获取，将名称和大小提取至用于对比的对象中
+            if (fileRecord.getSoftFileType().equals(FileTypeEnum.IMPORTANT_FILE.getCode())) {
+                CompInfo compInfo = new CompInfo();
+                compInfo.setOrgName(fileRecord.getOrgName());
+                compInfo.setFileSize(fileRecord.getFileSize());
+                compInfos.add(compInfo);
+            }
         }
         if (filePath == null){
             throw new CoreFileMisException();

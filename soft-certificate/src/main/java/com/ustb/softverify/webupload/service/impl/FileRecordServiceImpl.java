@@ -197,6 +197,7 @@ public class FileRecordServiceImpl extends ServiceImpl<FileRecordMapper, FileRec
                             localPath = getUploadFolder() + fileUploadConfig.getLocalPath() + pathTypeDir + "temp/" + fileZoneRecord.getZoneTotalMd5();
 
                             FileRecord fileRecord = new FileRecord();
+                            fileRecord.setSoftFileType(fileZoneRecord.getSoftFileType());
                             fileRecord.setGovUserId(fileZoneRecord.getGovUserId());
                             fileRecord.setFileSize(fileZoneRecord.getZoneTotalSize());
                             fileRecord.setFileType(fileType);
