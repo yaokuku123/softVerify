@@ -157,7 +157,8 @@ public class UploadController {
                 filePath = fileRecord.getServerLocalPath();
             }
             //重要文件获取，将名称和大小提取至用于对比的对象中
-            if (fileRecord.getSoftFileType().equals(FileTypeEnum.IMPORTANT_FILE.getCode())) {
+            if (!fileRecord.getSoftFileType().equals(FileTypeEnum.DIR_FILE.getCode()) &&
+                    !fileRecord.getSoftFileType().equals(FileTypeEnum.CONFIG_FILE.getCode())  ) {
                 CompInfo compInfo = new CompInfo();
                 compInfo.setOrgName(fileRecord.getOrgName());
                 compInfo.setFileSize(fileRecord.getFileSize());
