@@ -34,7 +34,7 @@
     
     <select id="SignFileInfos" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
         select server_local_name, server_local_path from sys_file_record
-        where gov_user_id=#{govUserId} and soft_file_type = 2
+        where gov_user_id=#{govUserId} and soft_file_type not in (0,2)
     </select>
 
     <select id="listSoft"  resultType="com.ustb.softverify.entity.po.SoftInfo">
