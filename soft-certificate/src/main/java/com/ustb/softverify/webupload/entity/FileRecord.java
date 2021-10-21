@@ -177,6 +177,12 @@ public class FileRecord extends Model<FileRecord> {
 	@TableField("soft_file_type")
 	private Integer softFileType;
 
+	/**
+	 * 重要文件类型
+	 */
+	@TableField("soft_imp_type")
+	private Integer softImpType;
+
 	@Override
 	protected Serializable pkVal() {
 		return this.id;
