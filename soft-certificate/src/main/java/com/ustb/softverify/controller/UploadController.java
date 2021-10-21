@@ -6,6 +6,7 @@ import com.ustb.softverify.entity.po.FileTypeEnum;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.StatusEnum;
 import com.ustb.softverify.entity.po.User;
+import com.ustb.softverify.entity.vo.BrowserInfoVo;
 import com.ustb.softverify.entity.vo.SubmitInfoVo;
 import com.ustb.softverify.entity.vo.UserUploadInfoVo;
 import com.ustb.softverify.exception.CoreFileMisException;
@@ -156,7 +157,8 @@ public class UploadController {
                 filePath = fileRecord.getServerLocalPath();
             }
             //重要文件获取，将名称和大小提取至用于对比的对象中
-            if (fileRecord.getSoftFileType().equals(FileTypeEnum.IMPORTANT_FILE.getCode())) {
+            if (!fileRecord.getSoftFileType().equals(FileTypeEnum.DIR_FILE.getCode()) &&
+                    !fileRecord.getSoftFileType().equals(FileTypeEnum.CONFIG_FILE.getCode())  ) {
                 CompInfo compInfo = new CompInfo();
                 compInfo.setOrgName(fileRecord.getOrgName());
                 compInfo.setFileSize(fileRecord.getFileSize());
@@ -183,6 +185,13 @@ public class UploadController {
         //根据用户标识和状态信息获取数据（用户数据，软件数据，上传文件数据）
         SubmitInfoVo submitInfo = uploadService.getSubmitInfo(govUserId, StatusEnum.SUMMIT.getCode());
         return ResponseResult.success().data("submitInfo",submitInfo);
+    }
+
+    @GetMapping("/browseSoftInfo")
+    public ResponseResult browserSoftInfo(@RequestParam("govUserId") Integer govUserId) {
+        //根据用户标识和状态信息获取数据（用户数据，软件数据，上传文件数据），获取链上的证书数据
+        BrowserInfoVo browseInfo = uploadService.getBrowseInfo(govUserId, StatusEnum.FILED.getCode());
+        return ResponseResult.success().data("broseInfo",browseInfo);
     }
 
 }
