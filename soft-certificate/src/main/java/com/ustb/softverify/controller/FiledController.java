@@ -177,7 +177,7 @@ public class FiledController {
         softInfoService.insertPath(pid,remotePath,zipName);
         //删除
         FileUtil.deleteDir(EnvUtils.ROOT_PATH);
-        return ResponseResult.success();
+        return ResponseResult.success().message("归档完成");
     }
 
 

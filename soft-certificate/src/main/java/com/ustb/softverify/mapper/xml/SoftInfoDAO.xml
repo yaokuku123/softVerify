@@ -29,7 +29,7 @@
     </select>
 
     <select id="getAllUploadInfo" resultMap="UserSoftInfoResult">
-    select s.soft_name, s.soft_desc, s.status, s.gov_user_id,s.sid from t_soft s where s.status = 3
+    select * from t_soft s where s.status = 2
 </select>
     
     <select id="SignFileInfos" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
