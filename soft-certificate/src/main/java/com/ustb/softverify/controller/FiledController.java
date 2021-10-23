@@ -165,7 +165,10 @@ public class FiledController {
 
         // 根据govId
         String zipName = govUserId + "-" + softName + "-" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".zip";
-        ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName);
+        Random random = new Random();
+        String password = String.valueOf(random.nextLong());
+        // ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName);
+        ZipDe.zipFile(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName,"password");
 
         //改变status
         softInfoService.changeStatus(govUserId);
