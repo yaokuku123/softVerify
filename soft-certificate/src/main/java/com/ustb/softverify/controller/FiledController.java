@@ -198,65 +198,65 @@ public class FiledController {
         }
     }
 
-    @GetMapping(value = "/getInfo", produces = "application/json;charset=UTF-8")
-    public ResponseResult getInfo(@RequestParam("govUserId")Integer govUserId, HttpServletResponse response){
-        Integer sid = softInfoService.getSid(govUserId);
-        List<SignFile> signFiles = softInfoService.getTxid(sid);
-
-        JSONObject jsonObject = new JSONObject();
-        for (SignFile signFile : signFiles){
-            try {
-                String fromObj = chainService.getFromObj(signFile.getTxid());
-                int i= 1;
-                String jsonString = JSONObject.parseObject(fromObj).get("certificateInfo").toString();
-                jsonObject.put(signFile.getFileName(),jsonString);
-            } catch (ShellChainException e) {
-                e.printStackTrace();
-            }
-        }
-
-        SoftInfo softInfo = softInfoService.getSoftInfo(sid);
-        File fileP = new File(EnvUtils.CERT_PATH);
-        if (!fileP.exists()){
-            fileP.mkdirs();
-        }
-        String softPath = EnvUtils.CERT_PATH + softInfo.getGovUserId() + "-" + softInfo.getSoftName() +".txt";
-        try {
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(softPath));
-            writer.write(jsonObject.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //下载软件
-        File file = new File(softPath);
-        // 设置下载软件文件名
-        String fileName = softPath.substring(softPath.lastIndexOf("/") + 1);
-        // response.setContentType("application/json");// 设置强制下载不打开
-        response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
-        OutputStream os = null;
-        try (FileInputStream fis = new FileInputStream(file);
-             BufferedInputStream bis = new BufferedInputStream(fis)) {
-            os = response.getOutputStream();
-            byte[] buffer = new byte[1024];
-            int i = bis.read(buffer);
-            while (i != -1) {
-                os.write(buffer, 0, i);
-                i = bis.read(buffer);
-            }
-            return ResponseResult.success().message("下载成功");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            try {
-                os.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return ResponseResult.error().message("下载失败");
-
-    }
+//    @GetMapping(value = "/getInfo", produces = "application/json;charset=UTF-8")
+//    public ResponseResult getInfo(@RequestParam("govUserId")Integer govUserId, HttpServletResponse response){
+//        Integer sid = softInfoService.getSid(govUserId);
+//        List<SignFile> signFiles = softInfoService.getTxid(sid);
+//
+//        JSONObject jsonObject = new JSONObject();
+//        for (SignFile signFile : signFiles){
+//            try {
+//                String fromObj = chainService.getFromObj(signFile.getTxid());
+//                int i= 1;
+//                String jsonString = JSONObject.parseObject(fromObj).get("certificateInfo").toString();
+//                jsonObject.put(signFile.getFileName(),jsonString);
+//            } catch (ShellChainException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        SoftInfo softInfo = softInfoService.getSoftInfo(sid);
+//        File fileP = new File(EnvUtils.CERT_PATH);
+//        if (!fileP.exists()){
+//            fileP.mkdirs();
+//        }
+//        String softPath = EnvUtils.CERT_PATH + softInfo.getGovUserId() + "-" + softInfo.getSoftName() +".txt";
+//        try {
+//            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(softPath));
+//            writer.write(jsonObject.toString());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        //下载软件
+//        File file = new File(softPath);
+//        // 设置下载软件文件名
+//        String fileName = softPath.substring(softPath.lastIndexOf("/") + 1);
+//        // response.setContentType("application/json");// 设置强制下载不打开
+//        response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
+//        OutputStream os = null;
+//        try (FileInputStream fis = new FileInputStream(file);
+//             BufferedInputStream bis = new BufferedInputStream(fis)) {
+//            os = response.getOutputStream();
+//            byte[] buffer = new byte[1024];
+//            int i = bis.read(buffer);
+//            while (i != -1) {
+//                os.write(buffer, 0, i);
+//                i = bis.read(buffer);
+//            }
+//            return ResponseResult.success().message("下载成功");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }finally {
+//            try {
+//                os.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return ResponseResult.error().message("下载失败");
+//
+//    }
 
 
     @GetMapping(value = "/zipSoftDownload",produces = "application/json;charset=UTF-8")

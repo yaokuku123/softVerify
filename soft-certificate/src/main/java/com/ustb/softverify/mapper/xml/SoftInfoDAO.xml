@@ -52,8 +52,8 @@
 
 
     <select id="findSoftName" resultType="String">
-        select soft_name from t_soft
-        where pid = #{pid} and status = 2
+        select pro_name from t_soft
+        where pid = #{pid} and status = 1
     </select>
 
     <update id="changeStatus" >
