@@ -30,6 +30,8 @@ public class SoftInfo implements Serializable {
     private String zipName;
     /* 压缩包密码 */
     private String zipPassword;
+    /* 上传密码 */
+    private String uploadPassword;
     /* 单位名称 */
     private String comName;
     /* 项目名称 */
