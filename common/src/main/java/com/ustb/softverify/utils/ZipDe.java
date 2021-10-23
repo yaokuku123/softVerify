@@ -10,7 +10,7 @@ import java.io.File;
 
 public class ZipDe {
     public static void main(String[] args) {
-        zipFile("D:\\file","D:\\file\\a.zip","123456");
+        zipFile("D:\\file\\file.zip","D:\\file\\a.zip","123456");
 
 
     }

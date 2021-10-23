@@ -39,6 +39,8 @@ public class SoftInfo implements Serializable {
     /* 状态 */
     private Integer status;
 
+
+
     /* 标识 */
     private String pid;
 }

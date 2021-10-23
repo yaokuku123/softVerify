@@ -167,7 +167,7 @@ public class FiledController {
         Random random = new Random();
         String password = String.valueOf(random.nextInt(1000000));
         System.out.println(password);
-        softInfoService.insertZipPwd(pid,MD5Utils.md5Hex(password));
+        softInfoService.insertZipPwd(pid,password);
         ZipDe.zipFile(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName,password);
 
         //改变status
@@ -260,13 +260,16 @@ public class FiledController {
 
 
     @GetMapping(value = "/zipSoftDownload",produces = "application/json;charset=UTF-8")
-    public ResponseResult zipDownload(@RequestParam("pid")String pid, HttpServletResponse response){
+    public ResponseResult zipDownload(@RequestParam("pid")String pid, @RequestParam("uploadPassword")String uploadPassword, HttpServletResponse response){
         SoftInfo softInfo = softInfoService.getSoftInfo(pid);
 
         File fileP = new File(EnvUtils.CERT_PATH);
         if (!fileP.exists()){
             fileP.mkdirs();
         }
+        if (MD5Utils.md5Hex(uploadPassword).equals(softInfo.get))
+
+
 
         ScpUtil.getFile(softInfo.getSoftRemotePath() + softInfo.getZipName(),EnvUtils.CERT_PATH);
 
