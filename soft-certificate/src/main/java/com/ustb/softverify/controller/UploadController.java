@@ -13,8 +13,6 @@ import com.ustb.softverify.exception.CoreFileMisException;
 import com.ustb.softverify.exception.MisMatchContentException;
 import com.ustb.softverify.service.UploadService;
 import com.ustb.softverify.utils.ReadTxt;
-import com.ustb.softverify.webupload.entity.FileRecord;
-import com.ustb.softverify.webupload.service.IFileRecordService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +31,6 @@ public class UploadController {
     @Autowired
     private UploadService uploadService;
 
-    @Autowired
-    private IFileRecordService fileRecordService;
 
     /**
      * 根据用户标识查找软件状态信息
@@ -79,7 +75,6 @@ public class UploadController {
     @GetMapping("/deleteInfo")
     public ResponseResult deleteInfo(@RequestParam("govUserId") Integer govUserId) {
         //删除软件文档信息
-        fileRecordService.delFileByGovUserId(govUserId);
         return ResponseResult.success();
     }
 
@@ -147,32 +142,33 @@ public class UploadController {
     @Transactional
     @GetMapping("/submit")
     public ResponseResult submit(Integer govUserId) {
-        uploadService.updateStatus(govUserId,1);
-        List<FileRecord> fileRecords = fileRecordService.listFileByGovUserId(govUserId);
-        List<CompInfo> compInfos = new ArrayList<>();
-        String filePath = null;
-        for (FileRecord fileRecord : fileRecords) {
-            //目录文件，提取目录的存放路径
-            if (fileRecord.getSoftFileType().equals(FileTypeEnum.DIR_FILE.getCode())) {
-                filePath = fileRecord.getServerLocalPath();
-            }
-            //重要文件获取，将名称和大小提取至用于对比的对象中
-            if (!fileRecord.getSoftFileType().equals(FileTypeEnum.DIR_FILE.getCode()) &&
-                    !fileRecord.getSoftFileType().equals(FileTypeEnum.CONFIG_FILE.getCode())  ) {
-                CompInfo compInfo = new CompInfo();
-                compInfo.setOrgName(fileRecord.getOrgName());
-                compInfo.setFileSize(fileRecord.getFileSize());
-                compInfos.add(compInfo);
-            }
-        }
-        if (filePath == null){
-            throw new CoreFileMisException();
-        }
-        boolean flag = ReadTxt.comp2txt(filePath, compInfos);
-        if (!flag) {
-            throw new MisMatchContentException();
-        }
-        return ResponseResult.success();
+//        uploadService.updateStatus(govUserId,1);
+//        List<FileRecord> fileRecords = fileRecordService.listFileByGovUserId(govUserId);
+//        List<CompInfo> compInfos = new ArrayList<>();
+//        String filePath = null;
+//        for (FileRecord fileRecord : fileRecords) {
+//            //目录文件，提取目录的存放路径
+//            if (fileRecord.getSoftFileType().equals(FileTypeEnum.DIR_FILE.getCode())) {
+//                filePath = fileRecord.getServerLocalPath();
+//            }
+//            //重要文件获取，将名称和大小提取至用于对比的对象中
+//            if (!fileRecord.getSoftFileType().equals(FileTypeEnum.DIR_FILE.getCode()) &&
+//                    !fileRecord.getSoftFileType().equals(FileTypeEnum.CONFIG_FILE.getCode())  ) {
+//                CompInfo compInfo = new CompInfo();
+//                compInfo.setOrgName(fileRecord.getOrgName());
+//                compInfo.setFileSize(fileRecord.getFileSize());
+//                compInfos.add(compInfo);
+//            }
+//        }
+//        if (filePath == null){
+//            throw new CoreFileMisException();
+//        }
+//        boolean flag = ReadTxt.comp2txt(filePath, compInfos);
+//        if (!flag) {
+//            throw new MisMatchContentException();
+//        }
+//        return ResponseResult.success();
+        return null;
     }
 
     /**

@@ -11,13 +11,13 @@ public class LinkDataBase {
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
 
-    @Value("${spring.datasource.druid.url}")
+    @Value("${spring.datasource.url}")
     private String url;
 
-    @Value("${spring.datasource.druid.username}")
+    @Value("${spring.datasource.username}")
     private String username;
 
-    @Value("${spring.datasource.druid.password}")
+    @Value("${spring.datasource.password}")
     private String password;
 
 

@@ -23,29 +23,22 @@ public class SoftInfo implements Serializable {
     /* 主键 */
     private Integer sid;
 
-    /* 软件名称 */
-    private String softName;
-
-    /* 软件描述信息 */
-    private String softDesc;
-
     /* 软件存放路径 */
     private String softRemotePath;
 
+    /* 压缩包名称 */
     private String zipName;
-
-    /* 文件状态 */
-    private Integer status;
-
-    /* 用户标识 */
-    private Integer govUserId;
-
+    /* 压缩包密码 */
+    private String zipPassword;
+    /* 单位名称 */
+    private String comName;
+    /* 项目名称 */
+    private String proName;
     /* 交易地址 */
     private String txid;
+    /* 状态 */
+    private Integer status;
 
-    /* 签名文件 */
-    private List<SignFile> signFiles;
-
-
-
+    /* 标识 */
+    private Integer pid;
 }
