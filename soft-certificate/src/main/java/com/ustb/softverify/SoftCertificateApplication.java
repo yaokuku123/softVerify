@@ -1,7 +1,5 @@
 package com.ustb.softverify;
 
-import com.ustb.softverify.common.FileUploadConfig;
-import com.ustb.softverify.common.util.IdWorker;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -16,16 +14,5 @@ import org.springframework.context.annotation.ComponentScan;
 public class SoftCertificateApplication {
     public static void main(String[] args) {
         SpringApplication.run(SoftCertificateApplication.class,args);
-    }
-
-    @Bean
-    public IdWorker idWorker(){
-        return new IdWorker(1,1);
-    }
-
-
-    @Bean
-    public FileUploadConfig fileUploadConfig(){
-        return new FileUploadConfig();
     }
 }

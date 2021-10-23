@@ -15,8 +15,6 @@ import com.ustb.softverify.exception.CertificateUpChainException;
 import com.ustb.softverify.mapper.SoftInfoDAO;
 import com.ustb.softverify.mapper.UserDAO;
 import com.ustb.softverify.service.UploadService;
-import com.ustb.softverify.webupload.dao.FileRecordMapper;
-import com.ustb.softverify.webupload.entity.FileRecord;
 import edu.ustb.shellchainapi.shellchain.command.ShellChainException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +32,6 @@ public class UploadServiceImpl implements UploadService {
 
     @Autowired
     private SoftInfoDAO softInfoDAO;
-
-    @Autowired
-    private FileRecordMapper fileRecordMapper;
 
     @Autowired
     private ChainService chainService;
@@ -83,21 +78,10 @@ public class UploadServiceImpl implements UploadService {
         //获取软件信息
         SoftInfo softInfo = softInfoDAO.getSoftInfoByGovUserId(govUserId, status);
         //获取文档信息
-        QueryWrapper wrapper = new QueryWrapper();
-        wrapper.eq("gov_user_id",govUserId);
-        List<FileRecord> fileRecords = fileRecordMapper.selectList(wrapper);
+
         //设置数据
-        SubmitInfoVo submitInfoVo = new SubmitInfoVo();
-        List<SoftFileInfo> softFileInfos = new ArrayList<>();
-        for (FileRecord fileRecord : fileRecords) {
-            SoftFileInfo softFileInfo = new SoftFileInfo();
-            BeanUtils.copyProperties(fileRecord,softFileInfo);
-            softFileInfos.add(softFileInfo);
-        }
-        BeanUtils.copyProperties(user,submitInfoVo);
-        BeanUtils.copyProperties(softInfo,submitInfoVo);
-        submitInfoVo.setSoftFileList(softFileInfos);
-        return submitInfoVo;
+
+        return null;
     }
 
     @Override
@@ -107,24 +91,12 @@ public class UploadServiceImpl implements UploadService {
         //获取软件信息
         SoftInfo softInfo = softInfoDAO.getSoftInfoByGovUserId(govUserId, status);
         //获取文档信息
-        QueryWrapper wrapper = new QueryWrapper();
-        wrapper.eq("gov_user_id",govUserId);
-        List<FileRecord> fileRecords = fileRecordMapper.selectList(wrapper);
+
         //获取链上信息
         CertificateInfo certificateInfo = getChainInfo(softInfo.getTxid());
         //设置数据
-        BrowserInfoVo browserInfoVo = new BrowserInfoVo();
-        List<SoftFileInfo> softFileInfos = new ArrayList<>();
-        for (FileRecord fileRecord : fileRecords) {
-            SoftFileInfo softFileInfo = new SoftFileInfo();
-            BeanUtils.copyProperties(fileRecord,softFileInfo);
-            softFileInfos.add(softFileInfo);
-        }
-        BeanUtils.copyProperties(user,browserInfoVo);
-        BeanUtils.copyProperties(softInfo,browserInfoVo);
-        browserInfoVo.setSoftFileList(softFileInfos);
-        browserInfoVo.setCertificateInfo(certificateInfo);
-        return browserInfoVo;
+
+        return null;
     }
 
     /**
