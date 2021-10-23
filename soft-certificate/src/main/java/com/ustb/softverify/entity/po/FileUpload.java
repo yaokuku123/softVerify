@@ -17,5 +17,5 @@ public class FileUpload implements Serializable {
     private String fileName;
     private String filePath;
     private Integer fileType;
-    private Integer pid;
+    private String pid;
 }

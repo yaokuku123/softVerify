@@ -55,7 +55,7 @@ public interface SoftInfoDAO {
      * 插入软件信息
      * @param softInfo
      */
-    void insertSoft(SoftInfo softInfo);
+    Integer insertSoft(SoftInfo softInfo);
 
     /**
      * 根据用户标识获取

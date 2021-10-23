@@ -19,11 +19,8 @@ import java.util.List;
 public class SoftInfoVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Integer sid;
-    private Integer govUserId;
-    private String softName;
-    private String softDesc;
-    private Integer status;
-    private List<SignFile> signFileList;
-
+    private String comName;
+    private String proName;
+    private String zipPassword;
+    private String pid;
 }
