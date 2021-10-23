@@ -1,6 +1,5 @@
 package com.ustb.softverify.entity.dto;
 
-import cn.hutool.core.lang.Chain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
