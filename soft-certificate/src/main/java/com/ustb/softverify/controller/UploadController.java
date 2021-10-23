@@ -6,10 +6,7 @@ import com.ustb.softverify.entity.po.FileTypeEnum;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.StatusEnum;
 import com.ustb.softverify.entity.po.User;
-import com.ustb.softverify.entity.vo.BrowserInfoVo;
-import com.ustb.softverify.entity.vo.SoftInfoVo;
-import com.ustb.softverify.entity.vo.SubmitInfoVo;
-import com.ustb.softverify.entity.vo.UserUploadInfoVo;
+import com.ustb.softverify.entity.vo.*;
 import com.ustb.softverify.exception.*;
 import com.ustb.softverify.service.UploadService;
 import com.ustb.softverify.utils.ReadTxt;
@@ -58,6 +55,24 @@ public class UploadController {
         return ResponseResult.success();
     }
 
+    /**
+     * 获取数据信息
+     * @param pid
+     * @return
+     */
+    @GetMapping("/getInfo")
+    public ResponseResult getInfo(@RequestParam("pid") String pid) {
+        InfoBackVo infoBackVo = uploadService.getInfo(pid);
+        return ResponseResult.success().data("softInfo",infoBackVo);
+    }
+
+    /**
+     * 文件文档上传
+     * @param file
+     * @param pid
+     * @param fileType
+     * @return
+     */
     @PostMapping("/upload")
     public ResponseResult upload(@RequestParam("file") MultipartFile file,
                                  @RequestParam("pid") String pid,
@@ -70,25 +85,29 @@ public class UploadController {
             throw new CompressSizeException();
         }
         //文档信息插入数据库与文档保存
-        Integer fid = uploadService.insertUploadFile(file,pid,fileType);
-        return ResponseResult.success().data("fid",fid);
-    }
-
-    /**
-     * 根据用户标识删除软件关联的文档字段
-     * @param govUserId
-     * @return
-     */
-    @GetMapping("/deleteInfo")
-    public ResponseResult deleteInfo(@RequestParam("govUserId") Integer govUserId) {
-        //删除软件文档信息
+        uploadService.uploadFile(file,pid,fileType);
         return ResponseResult.success();
     }
 
+    /**
+     * 删除上传文件
+     * @param pid
+     * @param fileType
+     * @return
+     */
+    @GetMapping("/deleteFile")
+    public ResponseResult deleteInfo(@RequestParam("pid") String pid,
+                                     @RequestParam("fileType") Integer fileType) {
+        //删除软件文档信息
+        uploadService.deleteFile(pid,fileType);
 
-    @Transactional
+        return ResponseResult.success();
+    }
+
     @GetMapping("/submit")
-    public ResponseResult submit(Integer govUserId) {
+    public ResponseResult submit(SoftInfoVo softInfoVo) {
+        uploadService.submitInfo(softInfoVo);
+        return ResponseResult.success();
 //        uploadService.updateStatus(govUserId,1);
 //        List<FileRecord> fileRecords = fileRecordService.listFileByGovUserId(govUserId);
 //        List<CompInfo> compInfos = new ArrayList<>();
@@ -115,7 +134,6 @@ public class UploadController {
 //            throw new MisMatchContentException();
 //        }
 //        return ResponseResult.success();
-        return null;
     }
 
     /**

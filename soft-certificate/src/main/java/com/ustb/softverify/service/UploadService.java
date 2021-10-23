@@ -3,6 +3,7 @@ package com.ustb.softverify.service;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.BrowserInfoVo;
+import com.ustb.softverify.entity.vo.InfoBackVo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import com.ustb.softverify.entity.vo.SubmitInfoVo;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,13 +50,7 @@ public interface UploadService {
      */
     void updateStatus(Integer govUserId, Integer status);
 
-    /**
-     * 获取显示提交页面信息对象
-     * @param govUserId 用户标识
-     * @param status 状态
-     * @return 提交对象信息
-     */
-    SubmitInfoVo getSubmitInfo(Integer govUserId, Integer status);
+
 
     /**
      * 获取浏览页面信息对象
@@ -69,5 +64,25 @@ public interface UploadService {
      * 保存上传文档和信息
      * @return
      */
-    Integer insertUploadFile(MultipartFile file,String pid,Integer fileType);
+    void uploadFile(MultipartFile file,String pid,Integer fileType);
+
+    /**
+     * 获取回显信息
+     * @param pid
+     * @return
+     */
+    InfoBackVo getInfo(String pid);
+
+    /**
+     * 删除文档
+     * @param pid
+     * @param fileType
+     */
+    void deleteFile(String pid, Integer fileType);
+
+    /**
+     * 提交软件信息
+     * @param softInfoVo
+     */
+    void submitInfo(SoftInfoVo softInfoVo);
 }
