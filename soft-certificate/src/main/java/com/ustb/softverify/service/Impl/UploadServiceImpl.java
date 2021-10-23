@@ -9,9 +9,7 @@ import com.ustb.softverify.entity.dto.SoftFileInfo;
 import com.ustb.softverify.entity.po.FileUpload;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
-import com.ustb.softverify.entity.vo.BrowserInfoVo;
-import com.ustb.softverify.entity.vo.SoftInfoVo;
-import com.ustb.softverify.entity.vo.SubmitInfoVo;
+import com.ustb.softverify.entity.vo.*;
 import com.ustb.softverify.exception.CertificateUpChainException;
 import com.ustb.softverify.exception.FileReadWriteException;
 import com.ustb.softverify.mapper.FileUploadDAO;
@@ -120,20 +118,52 @@ public class UploadServiceImpl implements UploadService {
 
 
     @Override
-    public Integer insertUploadFile(MultipartFile file,String pid,Integer fileType) {
+    public void uploadFile(MultipartFile file,String pid,Integer fileType) {
         //文档保存
         String originFileName = file.getOriginalFilename();
         String fileName = originFileName.substring(0, originFileName.lastIndexOf("."));
         String suffix = originFileName.substring(originFileName.lastIndexOf("."));
         String filePath = uploadFile(fileName,suffix, file);
-        //存数据
-        FileUpload fileUpload = new FileUpload();
-        fileUpload.setFileName(originFileName);
-        fileUpload.setFilePath(filePath);
-        fileUpload.setPid(pid);
-        fileUpload.setFileType(fileType);
-        fileUploadDAO.insertFileUpload(fileUpload);
-        return fileUpload.getFid();
+        //数据信息插入表中
+        FileUpload fileUploadDb = fileUploadDAO.getFileUpload(pid,fileType);
+        if (fileUploadDb != null) {
+            //更新
+            fileUploadDb.setFileName(originFileName);
+            fileUploadDb.setFilePath(filePath);
+            fileUploadDb.setPid(pid);
+            fileUploadDb.setFileType(fileType);
+            fileUploadDAO.updateFileUpload(fileUploadDb);
+        } else {
+            //插入
+            FileUpload fileUpload = new FileUpload();
+            fileUpload.setFileName(originFileName);
+            fileUpload.setFilePath(filePath);
+            fileUpload.setPid(pid);
+            fileUpload.setFileType(fileType);
+            fileUploadDAO.insertFileUpload(fileUpload);
+        }
+    }
+
+    @Override
+    public InfoBackVo getInfo(String pid) {
+        InfoBackVo res = new InfoBackVo();
+        //获取软件信息
+        SoftInfo softInfo = softInfoDAO.getSoftInfo(pid);
+        if (softInfo != null) {
+            BeanUtils.copyProperties(softInfo,res);
+        }
+        //获取文档列表信息
+        List<FileUpload> fileUploadList = fileUploadDAO.listFileUpload(pid);
+        List<FileUploadVo> fileUploadVoList = new ArrayList<>();
+        if (fileUploadList.size() != 0) {
+            for (FileUpload fileUpload : fileUploadList) {
+                FileUploadVo fileUploadVo = new FileUploadVo();
+                BeanUtils.copyProperties(fileUpload,fileUploadVo);
+                fileUploadVoList.add(fileUploadVo);
+            }
+        }
+        res.setFileUploadVoList(fileUploadVoList);
+        return res;
     }
 
     /**

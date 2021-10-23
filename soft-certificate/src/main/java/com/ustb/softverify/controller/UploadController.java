@@ -6,10 +6,7 @@ import com.ustb.softverify.entity.po.FileTypeEnum;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.StatusEnum;
 import com.ustb.softverify.entity.po.User;
-import com.ustb.softverify.entity.vo.BrowserInfoVo;
-import com.ustb.softverify.entity.vo.SoftInfoVo;
-import com.ustb.softverify.entity.vo.SubmitInfoVo;
-import com.ustb.softverify.entity.vo.UserUploadInfoVo;
+import com.ustb.softverify.entity.vo.*;
 import com.ustb.softverify.exception.*;
 import com.ustb.softverify.service.UploadService;
 import com.ustb.softverify.utils.ReadTxt;
@@ -58,6 +55,19 @@ public class UploadController {
         return ResponseResult.success();
     }
 
+    @GetMapping("/getInfo")
+    public ResponseResult getInfo(@RequestParam("pid") String pid) {
+        InfoBackVo infoBackVo = uploadService.getInfo(pid);
+        return ResponseResult.success().data("softInfo",infoBackVo);
+    }
+
+    /**
+     * 文件文档上传
+     * @param file
+     * @param pid
+     * @param fileType
+     * @return
+     */
     @PostMapping("/upload")
     public ResponseResult upload(@RequestParam("file") MultipartFile file,
                                  @RequestParam("pid") String pid,
@@ -70,8 +80,8 @@ public class UploadController {
             throw new CompressSizeException();
         }
         //文档信息插入数据库与文档保存
-        Integer fid = uploadService.insertUploadFile(file,pid,fileType);
-        return ResponseResult.success().data("fid",fid);
+        uploadService.uploadFile(file,pid,fileType);
+        return ResponseResult.success();
     }
 
     /**

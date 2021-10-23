@@ -3,6 +3,7 @@ package com.ustb.softverify.service;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.BrowserInfoVo;
+import com.ustb.softverify.entity.vo.InfoBackVo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import com.ustb.softverify.entity.vo.SubmitInfoVo;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,5 +70,12 @@ public interface UploadService {
      * 保存上传文档和信息
      * @return
      */
-    Integer insertUploadFile(MultipartFile file,String pid,Integer fileType);
+    void uploadFile(MultipartFile file,String pid,Integer fileType);
+
+    /**
+     * 获取回显信息
+     * @param pid
+     * @return
+     */
+    InfoBackVo getInfo(String pid);
 }
