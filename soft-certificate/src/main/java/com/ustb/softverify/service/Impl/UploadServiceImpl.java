@@ -17,6 +17,7 @@ import com.ustb.softverify.mapper.SoftInfoDAO;
 import com.ustb.softverify.mapper.UserDAO;
 import com.ustb.softverify.service.UploadService;
 import com.ustb.softverify.utils.EnvUtils;
+import com.ustb.softverify.utils.FileUtil;
 import com.ustb.softverify.utils.MD5Utils;
 import edu.ustb.shellchainapi.shellchain.command.ShellChainException;
 import org.springframework.beans.BeanUtils;
@@ -142,6 +143,15 @@ public class UploadServiceImpl implements UploadService {
             fileUpload.setFileType(fileType);
             fileUploadDAO.insertFileUpload(fileUpload);
         }
+    }
+
+    @Override
+    public void deleteFile(String pid, Integer fileType) {
+        //删除本地文件
+        FileUpload fileUpload = fileUploadDAO.getFileUpload(pid, fileType);
+        FileUtil.delete(fileUpload.getFilePath());
+        //删除表数据
+        fileUploadDAO.deleteFileUpload(pid,fileType);
     }
 
     @Override

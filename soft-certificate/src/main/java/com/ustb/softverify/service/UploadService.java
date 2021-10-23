@@ -78,4 +78,11 @@ public interface UploadService {
      * @return
      */
     InfoBackVo getInfo(String pid);
+
+    /**
+     * 删除文档
+     * @param pid
+     * @param fileType
+     */
+    void deleteFile(String pid, Integer fileType);
 }

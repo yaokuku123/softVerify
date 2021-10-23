@@ -33,4 +33,11 @@ public interface FileUploadDAO {
      * @param fileUploadDb
      */
     void updateFileUpload(FileUpload fileUploadDb);
+
+    /**
+     * 删除表数据
+     * @param pid
+     * @param fileType
+     */
+    void deleteFileUpload(@Param("pid") String pid,@Param("fileType") Integer fileType);
 }

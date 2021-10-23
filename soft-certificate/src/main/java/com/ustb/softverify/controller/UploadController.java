@@ -55,6 +55,11 @@ public class UploadController {
         return ResponseResult.success();
     }
 
+    /**
+     * 获取数据信息
+     * @param pid
+     * @return
+     */
     @GetMapping("/getInfo")
     public ResponseResult getInfo(@RequestParam("pid") String pid) {
         InfoBackVo infoBackVo = uploadService.getInfo(pid);
@@ -85,13 +90,17 @@ public class UploadController {
     }
 
     /**
-     * 根据用户标识删除软件关联的文档字段
-     * @param govUserId
+     * 删除上传文件
+     * @param pid
+     * @param fileType
      * @return
      */
-    @GetMapping("/deleteInfo")
-    public ResponseResult deleteInfo(@RequestParam("govUserId") Integer govUserId) {
+    @GetMapping("/deleteFile")
+    public ResponseResult deleteInfo(@RequestParam("pid") String pid,
+                                     @RequestParam("fileType") Integer fileType) {
         //删除软件文档信息
+        uploadService.deleteFile(pid,fileType);
+
         return ResponseResult.success();
     }
 
