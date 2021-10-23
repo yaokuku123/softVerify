@@ -43,11 +43,11 @@
 
 
     <insert id="insertSoft" useGeneratedKeys="true" keyProperty="sid">
-        insert into t_soft (com_name,pro_name,status,zip_password,pid) values (#{comName},#{proName},1,#{zipPassword},#{pid})
+        insert into t_soft (com_name,pro_name,status,upload_password,pid) values (#{comName},#{proName},1,#{uploadPassword},#{pid})
     </insert>
 
     <update id="updateSoft" >
-        update t_soft set com_name=#{comName},pro_name=#{proName},zip_password=#{zipPassword} where pid=#{pid}
+        update t_soft set com_name=#{comName},pro_name=#{proName},upload_password=#{uploadPassword} where pid=#{pid}
     </update>
 
 

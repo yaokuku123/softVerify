@@ -64,7 +64,7 @@ public class UploadServiceImpl implements UploadService {
 
     @Override
     public Integer insertSoft(SoftInfoVo softInfoVo) {
-        softInfoVo.setZipPassword(MD5Utils.code(softInfoVo.getZipPassword()));
+        softInfoVo.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
         SoftInfo softInfo = new SoftInfo();
         BeanUtils.copyProperties(softInfoVo,softInfo);
         softInfoDAO.insertSoft(softInfo);
@@ -73,7 +73,7 @@ public class UploadServiceImpl implements UploadService {
 
     @Override
     public void updateSoft(SoftInfoVo softInfoVo) {
-        softInfoVo.setZipPassword(MD5Utils.code(softInfoVo.getZipPassword()));
+        softInfoVo.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
         SoftInfo softInfo = new SoftInfo();
         BeanUtils.copyProperties(softInfoVo,softInfo);
         softInfoDAO.updateSoft(softInfo);

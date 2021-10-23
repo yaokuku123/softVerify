@@ -21,6 +21,6 @@ public class SoftInfoVo implements Serializable {
     private static final long serialVersionUID = 1L;
     private String comName;
     private String proName;
-    private String zipPassword;
+    private String uploadPassword;
     private String pid;
 }
