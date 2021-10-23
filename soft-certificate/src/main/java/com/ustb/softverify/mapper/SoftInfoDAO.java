@@ -42,7 +42,7 @@ public interface SoftInfoDAO {
      * @param pid
      * @return
      */
-    List<SignFileInfo> SignFileInfos(@Param("pid") Integer pid);
+    List<SignFileInfo> SignFileInfos(@Param("pid") String pid);
 
     /**
      * 根据用户标识获取软件列表
@@ -62,14 +62,14 @@ public interface SoftInfoDAO {
      * @param pid
      * @return
      */
-    String findSoftName(@Param("pid") Integer pid);
+    String findSoftName(@Param("pid") String pid);
 
     /**
      * 归档文件改变status
      * @param pid
      * @return
      */
-    void changeStatus(@Param("pid") Integer pdi);
+    void changeStatus(@Param("pid") String pid);
 
     /**
      * 根据用户标识获取
@@ -84,7 +84,7 @@ public interface SoftInfoDAO {
 
     List<SignFile> getTxid(@Param("sid") Integer sid);
 
-    SoftInfo getSoftInfo(@Param("sid") Integer sid);
+    SoftInfo getSoftInfo(@Param("pid") String pid);
 
     /**
      * 更新软件信息
@@ -100,7 +100,7 @@ public interface SoftInfoDAO {
     void updateStatus(@Param("govUserId") Integer govUserId,@Param("status") Integer status);
 
 
-    void insertPath(@Param("softName")String softName,@Param("pid")Integer pid,@Param("path")String path,@Param("zipName")String zipName);
+    void insertPath(@Param("pid")String pid,@Param("path")String path,@Param("zipName")String zipName);
 
     /**
      * 根据govUserId和状态信息查询软件
@@ -110,11 +110,13 @@ public interface SoftInfoDAO {
      */
     SoftInfo getSoftInfoByGovUserId(@Param("govUserId") Integer govUserId,@Param("status") Integer status);
 
-    SoftInfo getSoftDetail(@Param("pid") Integer pid);
+    SoftInfo getSoftDetail(@Param("pid") String pid);
 
-    void insertTxid(@Param("pid") Integer pid, @Param("txid") String txid);
+    void insertTxid(@Param("pid") String pid, @Param("txid") String txid);
 
-    List<SignFileInfo> softFileRecords(@Param("govUserId") Integer govUserId);
+    List<SignFileInfo> softFileRecords(@Param("pid") String pid);
 
-    Integer getSid(@Param("pid")Integer pid);
+    Integer getSid(@Param("pid")String pid);
+
+    void insertZipPwd(@Param("pid")String pid,@Param("zipPassword") String zipPassword);
 }

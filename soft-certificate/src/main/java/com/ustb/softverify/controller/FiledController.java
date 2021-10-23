@@ -96,11 +96,11 @@ public class FiledController {
      */
 
     @GetMapping("/filed")
-    public ResponseResult file(@RequestParam("pid")Integer pid){
+    public ResponseResult file(@RequestParam("pid")String pid){
 
         String softName = softInfoService.findSoftName(pid);
 
-        // 根据pid sid 查询软件列表的路径
+        // 根据pid  查询软件列表的路径
         List<SignFileInfo> signFileInfos = softInfoService.SignFileInfos(pid);
         String signFilePath = EnvUtils.CERT_PATH +softName + ".bin";
         File signFile = new File(signFilePath);
@@ -110,7 +110,7 @@ public class FiledController {
             e.printStackTrace();
         }
         for (SignFileInfo signFileInfo : signFileInfos){
-            String localPath = signFileInfo.getServerLocalPath();
+            String localPath = signFileInfo.getFilePath();
             try {
                 FileUtil.append(signFilePath,FileUtil.read(localPath));
             } catch (Exception e) {
@@ -158,23 +158,23 @@ public class FiledController {
 
         List<SignFileInfo> fileRecords = softInfoService.softFileRecords(pid);
         for (SignFileInfo signFileInfo : fileRecords ){
-            String split = signFileInfo.getServerLocalName().split("\\.")[0] + ".bin";
-            String s = "(" + signFileInfo.getServerLocalName().split("\\.")[1] +")";
-            FileUtil.copyFile(signFileInfo.getServerLocalPath(), EnvUtils.ROOT_PATH + split + s);
+            String fileName = signFileInfo.getFileName() +"(bin)";
+            FileUtil.copyFile(signFileInfo.getFilePath(), EnvUtils.ROOT_PATH + fileName);
         }
 
         // 根据pid
         String zipName = pid + "-" + softName + "-" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".zip";
         Random random = new Random();
-        String password = String.valueOf(random.nextLong());
-        // ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName);
-        ZipDe.zipFile(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName,"password");
+        String password = String.valueOf(random.nextInt(1000000));
+        System.out.println(password);
+        softInfoService.insertZipPwd(pid,MD5Utils.md5Hex(password));
+        ZipDe.zipFile(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName,password);
 
         //改变status
         softInfoService.changeStatus(pid);
         String remotePath = "/root/softStore/";
         ScpUtil.putFile(EnvUtils.ROOT_PATH + "/" + zipName,remotePath);
-        softInfoService.insertPath(softName,pid,remotePath,zipName);
+        softInfoService.insertPath(pid,remotePath,zipName);
         //删除
         FileUtil.deleteDir(EnvUtils.ROOT_PATH);
         return ResponseResult.success();
@@ -260,9 +260,8 @@ public class FiledController {
 
 
     @GetMapping(value = "/zipSoftDownload",produces = "application/json;charset=UTF-8")
-    public ResponseResult zipDownload(@RequestParam("pid")Integer pid, HttpServletResponse response){
-        Integer sid = softInfoService.getSid(pid);
-        SoftInfo softInfo = softInfoService.getSoftInfo(sid);
+    public ResponseResult zipDownload(@RequestParam("pid")String pid, HttpServletResponse response){
+        SoftInfo softInfo = softInfoService.getSoftInfo(pid);
 
         File fileP = new File(EnvUtils.CERT_PATH);
         if (!fileP.exists()){
@@ -298,7 +297,5 @@ public class FiledController {
         }
         return ResponseResult.error().message("下载失败");
     }
-
-
 
 }

@@ -37,18 +37,18 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     }
 
     @Override
-    public List<SignFileInfo> SignFileInfos(Integer pid) {
+    public List<SignFileInfo> SignFileInfos(String pid) {
         return softInfoDAO.SignFileInfos(pid);
     }
 
     @Override
-    public String findSoftName(Integer pid) {
+    public String findSoftName(String pid) {
         return softInfoDAO.findSoftName(pid);
     }
 
     @Override
-    public void changeStatus(Integer govUserId) {
-        softInfoDAO.changeStatus(govUserId);
+    public void changeStatus(String pid) {
+        softInfoDAO.changeStatus(pid);
     }
 
     @Override
@@ -67,32 +67,37 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     }
 
     @Override
-    public SoftInfo getSoftInfo(Integer sid) {
-        return softInfoDAO.getSoftInfo(sid);
+    public SoftInfo getSoftInfo(String pid) {
+        return softInfoDAO.getSoftInfo(pid);
     }
 
     @Override
-    public void insertPath(String softName, Integer pid,String path,String zipName) {
-        softInfoDAO.insertPath(softName,pid,path,zipName);
+    public void insertPath(String pid,String path,String zipName) {
+        softInfoDAO.insertPath(pid,path,zipName);
     }
 
     @Override
-    public SoftInfo getSoftDetail(Integer pid) {
+    public SoftInfo getSoftDetail(String pid) {
         return softInfoDAO.getSoftDetail(pid);
     }
 
     @Override
-    public void insertTxid(Integer govUserId, String txid) {
+    public void insertTxid(String govUserId, String txid) {
         softInfoDAO.insertTxid(govUserId,txid);
     }
 
     @Override
-    public List<SignFileInfo> softFileRecords(Integer govUserId) {
-        return softInfoDAO.softFileRecords(govUserId);
+    public List<SignFileInfo> softFileRecords(String pid) {
+        return softInfoDAO.softFileRecords(pid);
     }
 
     @Override
-    public Integer getSid(Integer pid) {
+    public Integer getSid(String pid) {
         return softInfoDAO.getSid(pid);
+    }
+
+    @Override
+    public void insertZipPwd(String pid, String zipPassword) {
+        softInfoDAO.insertZipPwd(pid,zipPassword);
     }
 }

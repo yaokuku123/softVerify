@@ -34,7 +34,7 @@
     
     <select id="SignFileInfos" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
         select file_name, file_path from t_file_upload
-        where pid=#{pid} and file_type not in (0,2)
+        where pid=#{pid} and file_type not in (1,3)
     </select>
 
     <select id="listSoft"  resultType="com.ustb.softverify.entity.po.SoftInfo">
@@ -75,7 +75,7 @@
     </select>
 
     <select id="getSoftInfo" resultType="SoftInfo">
-        select * from t_soft where sid = #{sid};
+        select * from t_soft where pid = #{pid};
     </select>
 
     <update id="updateStatus" >
@@ -84,7 +84,7 @@
 
     <update id="insertPath">
         update t_soft set soft_remote_path = #{path},zip_name = #{zipName}
-        where soft_name = #{softName} and gov_user_id = #{govUserId}
+        where pid = #{pid}
     </update>
 
 
@@ -101,12 +101,17 @@
     </update>
 
     <select id="softFileRecords" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
-        select server_local_name, server_local_path from sys_file_record
-        where gov_user_id=#{govUserId}
+        select file_name, file_path from t_file_upload
+        where pid=#{pid}
     </select>
 
     <select id="getSid" resultType="Integer">
         select sid from t_soft where pid = #{pid}
     </select>
+
+    <update id="insertZipPwd" >
+        update t_soft set zip_password = #{zipPassword}
+        where pid = #{pid}
+    </update>
 
 </mapper>

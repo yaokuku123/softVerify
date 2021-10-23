@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 @Aspect
-//@Component
+@Component
 public class FileUploadControllerAcpect {
 
     private Logger logger = LoggerFactory.getLogger(FileUploadControllerAcpect.class);

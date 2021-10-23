@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class SignFileInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private String serverLocalName;
-    private String serverLocalPath;
+    private String fileName;
+    private String filePath;
 
 }
