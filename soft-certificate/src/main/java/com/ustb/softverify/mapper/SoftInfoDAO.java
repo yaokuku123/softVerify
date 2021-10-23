@@ -1,6 +1,7 @@
 package com.ustb.softverify.mapper;
 
 import com.ustb.softverify.entity.dto.SignFileInfo;
+import com.ustb.softverify.entity.po.FileUpload;
 import com.ustb.softverify.entity.po.SignFile;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
@@ -55,7 +56,7 @@ public interface SoftInfoDAO {
      * 插入软件信息
      * @param softInfo
      */
-    void insertSoft(SoftInfo softInfo);
+    Integer insertSoft(SoftInfo softInfo);
 
     /**
      * 根据用户标识获取
@@ -117,4 +118,5 @@ public interface SoftInfoDAO {
     List<SignFileInfo> softFileRecords(@Param("govUserId") Integer govUserId);
 
     Integer getSid(@Param("pid")Integer pid);
+
 }
