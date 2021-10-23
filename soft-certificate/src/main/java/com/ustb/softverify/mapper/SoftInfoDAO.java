@@ -39,10 +39,10 @@ public interface SoftInfoDAO {
 
     /**
      * 根据参数获取待签名文件路径
-     * @param govUserId
+     * @param pid
      * @return
      */
-    List<SignFileInfo> SignFileInfos(@Param("govUserId") Integer govUserId);
+    List<SignFileInfo> SignFileInfos(@Param("pid") Integer pid);
 
     /**
      * 根据用户标识获取软件列表
@@ -59,17 +59,17 @@ public interface SoftInfoDAO {
 
     /**
      * 根据用户标识获取
-     * @param govUserId
+     * @param pid
      * @return
      */
-    String findSoftName(@Param("govUserId") Integer govUserId);
+    String findSoftName(@Param("pid") Integer pid);
 
     /**
      * 归档文件改变status
-     * @param govUserId
+     * @param pid
      * @return
      */
-    void changeStatus(@Param("govUserId") Integer govUserId);
+    void changeStatus(@Param("pid") Integer pdi);
 
     /**
      * 根据用户标识获取
@@ -100,7 +100,7 @@ public interface SoftInfoDAO {
     void updateStatus(@Param("govUserId") Integer govUserId,@Param("status") Integer status);
 
 
-    void insertPath(@Param("softName")String softName,@Param("govUserId")Integer govUserId,@Param("path")String path,@Param("zipName")String zipName);
+    void insertPath(@Param("softName")String softName,@Param("pid")Integer pid,@Param("path")String path,@Param("zipName")String zipName);
 
     /**
      * 根据govUserId和状态信息查询软件
@@ -110,11 +110,11 @@ public interface SoftInfoDAO {
      */
     SoftInfo getSoftInfoByGovUserId(@Param("govUserId") Integer govUserId,@Param("status") Integer status);
 
-    SoftInfo getSoftDetail(@Param("govUserId") Integer govUserId);
+    SoftInfo getSoftDetail(@Param("pid") Integer pid);
 
-    void insertTxid(@Param("govUserId") Integer govUserId, @Param("txid") String txid);
+    void insertTxid(@Param("pid") Integer pid, @Param("txid") String txid);
 
     List<SignFileInfo> softFileRecords(@Param("govUserId") Integer govUserId);
 
-    Integer getSid(Integer govUserId);
+    Integer getSid(@Param("pid")Integer pid);
 }

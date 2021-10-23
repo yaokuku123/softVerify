@@ -96,12 +96,12 @@ public class FiledController {
      */
 
     @GetMapping("/filed")
-    public ResponseResult file(@RequestParam("govUserId")Integer govUserId){
+    public ResponseResult file(@RequestParam("pid")Integer pid){
 
-        String softName = softInfoService.findSoftName(govUserId);
+        String softName = softInfoService.findSoftName(pid);
 
-        // 根据gov sid 查询软件列表的路径
-        List<SignFileInfo> signFileInfos = softInfoService.SignFileInfos(govUserId);
+        // 根据pid sid 查询软件列表的路径
+        List<SignFileInfo> signFileInfos = softInfoService.SignFileInfos(pid);
         String signFilePath = EnvUtils.CERT_PATH +softName + ".bin";
         File signFile = new File(signFilePath);
         try {
@@ -151,30 +151,30 @@ public class FiledController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        SoftInfo softDetail = softInfoService.getSoftDetail(govUserId);
+        SoftInfo softDetail = softInfoService.getSoftDetail(pid);
         CertificateInfo certificateInfo = new CertificateInfo(publicKeyStr, softDetail);
         String txid = upChain(certificateInfo);
-        softInfoService.insertTxid(govUserId,txid);
+        softInfoService.insertTxid(pid,txid);
 
-        List<SignFileInfo> fileRecords = softInfoService.softFileRecords(govUserId);
+        List<SignFileInfo> fileRecords = softInfoService.softFileRecords(pid);
         for (SignFileInfo signFileInfo : fileRecords ){
             String split = signFileInfo.getServerLocalName().split("\\.")[0] + ".bin";
             String s = "(" + signFileInfo.getServerLocalName().split("\\.")[1] +")";
             FileUtil.copyFile(signFileInfo.getServerLocalPath(), EnvUtils.ROOT_PATH + split + s);
         }
 
-        // 根据govId
-        String zipName = govUserId + "-" + softName + "-" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".zip";
+        // 根据pid
+        String zipName = pid + "-" + softName + "-" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".zip";
         Random random = new Random();
         String password = String.valueOf(random.nextLong());
         // ZipDe.zip(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName);
         ZipDe.zipFile(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName,"password");
 
         //改变status
-        softInfoService.changeStatus(govUserId);
+        softInfoService.changeStatus(pid);
         String remotePath = "/root/softStore/";
         ScpUtil.putFile(EnvUtils.ROOT_PATH + "/" + zipName,remotePath);
-        softInfoService.insertPath(softName,govUserId,remotePath,zipName);
+        softInfoService.insertPath(softName,pid,remotePath,zipName);
         //删除
         FileUtil.deleteDir(EnvUtils.ROOT_PATH);
         return ResponseResult.success();
@@ -260,8 +260,8 @@ public class FiledController {
 
 
     @GetMapping(value = "/zipSoftDownload",produces = "application/json;charset=UTF-8")
-    public ResponseResult zipDownload(@RequestParam("govUserId")Integer govUserId, HttpServletResponse response){
-        Integer sid = softInfoService.getSid(govUserId);
+    public ResponseResult zipDownload(@RequestParam("pid")Integer pid, HttpServletResponse response){
+        Integer sid = softInfoService.getSid(pid);
         SoftInfo softInfo = softInfoService.getSoftInfo(sid);
 
         File fileP = new File(EnvUtils.CERT_PATH);

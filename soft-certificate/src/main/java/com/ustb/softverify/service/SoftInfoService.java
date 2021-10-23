@@ -20,9 +20,9 @@ public interface SoftInfoService {
 
     List<SoftInfoVo> getAllUploadInfo();
 
-    List<SignFileInfo> SignFileInfos(Integer govUserId);
+    List<SignFileInfo> SignFileInfos(Integer pid);
 
-    String findSoftName(Integer govUserId);
+    String findSoftName(Integer pid);
 
     void changeStatus(Integer govUserId);
 
@@ -34,13 +34,13 @@ public interface SoftInfoService {
 
     SoftInfo getSoftInfo(Integer sid);
 
-    void insertPath(String softName,Integer govUserId,String path,String zipName);
+    void insertPath(String softName,Integer pid,String path,String zipName);
 
-    SoftInfo getSoftDetail(Integer govUserId);
+    SoftInfo getSoftDetail(Integer pid);
 
     void insertTxid( Integer govUserId, String txid);
 
     List<SignFileInfo> softFileRecords(Integer govUserId);
 
-    Integer getSid(Integer govUserId);
+    Integer getSid(Integer pid);
 }

@@ -33,8 +33,8 @@
 </select>
     
     <select id="SignFileInfos" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
-        select server_local_name, server_local_path from sys_file_record
-        where gov_user_id=#{govUserId} and soft_file_type not in (0,2)
+        select file_name, file_path from t_file_upload
+        where pid=#{pid} and file_type not in (0,2)
     </select>
 
     <select id="listSoft"  resultType="com.ustb.softverify.entity.po.SoftInfo">
@@ -53,12 +53,12 @@
 
     <select id="findSoftName" resultType="String">
         select soft_name from t_soft
-        where gov_user_id = #{govUserId} and status = 2
+        where pid = #{pid} and status = 2
     </select>
 
     <update id="changeStatus" >
-        update t_soft set status = 3
-        where gov_user_id = #{govUserId} and status = 2
+        update t_soft set status = 2
+        where pid = #{pid} and status = 1
     </update>
 
     <select id="findSoftId" resultType="Integer">
@@ -93,11 +93,11 @@
     </select>
 
     <select id="getSoftDetail" resultType="SoftInfo">
-        select * from t_soft where gov_user_id = #{govUserId}
+        select * from t_soft where pid = #{pid}
     </select>
 
     <update id="insertTxid">
-        update t_soft set txid = #{txid} where gov_user_id=#{govUserId}
+        update t_soft set txid = #{txid} where pid=#{pid}
     </update>
 
     <select id="softFileRecords" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
@@ -106,7 +106,7 @@
     </select>
 
     <select id="getSid" resultType="Integer">
-        select sid from t_soft where gov_user_id = #{govUserId}
+        select sid from t_soft where pid = #{pid}
     </select>
 
 </mapper>

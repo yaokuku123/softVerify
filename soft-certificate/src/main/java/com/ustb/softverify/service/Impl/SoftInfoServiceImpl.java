@@ -37,13 +37,13 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     }
 
     @Override
-    public List<SignFileInfo> SignFileInfos(Integer govUserId) {
-        return softInfoDAO.SignFileInfos(govUserId);
+    public List<SignFileInfo> SignFileInfos(Integer pid) {
+        return softInfoDAO.SignFileInfos(pid);
     }
 
     @Override
-    public String findSoftName(Integer govUserId) {
-        return softInfoDAO.findSoftName(govUserId);
+    public String findSoftName(Integer pid) {
+        return softInfoDAO.findSoftName(pid);
     }
 
     @Override
@@ -72,13 +72,13 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     }
 
     @Override
-    public void insertPath(String softName, Integer govUserId,String path,String zipName) {
-        softInfoDAO.insertPath(softName,govUserId,path,zipName);
+    public void insertPath(String softName, Integer pid,String path,String zipName) {
+        softInfoDAO.insertPath(softName,pid,path,zipName);
     }
 
     @Override
-    public SoftInfo getSoftDetail(Integer govUserId) {
-        return softInfoDAO.getSoftDetail(govUserId);
+    public SoftInfo getSoftDetail(Integer pid) {
+        return softInfoDAO.getSoftDetail(pid);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     }
 
     @Override
-    public Integer getSid(Integer govUserId) {
-        return softInfoDAO.getSid(govUserId);
+    public Integer getSid(Integer pid) {
+        return softInfoDAO.getSid(pid);
     }
 }
