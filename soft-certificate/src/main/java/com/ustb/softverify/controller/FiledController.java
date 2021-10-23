@@ -267,14 +267,22 @@ public class FiledController {
         if (!fileP.exists()){
             fileP.mkdirs();
         }
-        if (MD5Utils.md5Hex(uploadPassword).equals(softInfo.get))
-
+        if (!MD5Utils.md5Hex(uploadPassword).equals(softInfo.getUploadPassword())){
+            return ResponseResult.error().message("密码错误，请重新输入");
+        }
 
 
         ScpUtil.getFile(softInfo.getSoftRemotePath() + softInfo.getZipName(),EnvUtils.CERT_PATH);
 
         //下载软件
         File file = new File(EnvUtils.CERT_PATH + softInfo.getZipName() );
+
+        ZipDe.unZipFile(EnvUtils.CERT_PATH + softInfo.getZipName(),EnvUtils.CERT_PATH,softInfo.getZipPassword());
+        file.delete();
+        ZipDe.zip(EnvUtils.CERT_PATH,EnvUtils.CERT_PATH + softInfo.getZipName());
+
+
+
         // 设置下载软件文件名
         String fileName = (EnvUtils.CERT_PATH + softInfo.getZipName()).substring(EnvUtils.CERT_PATH.lastIndexOf("/") + 1);
         response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
@@ -288,6 +296,7 @@ public class FiledController {
                 os.write(buffer, 0, i);
                 i = bis.read(buffer);
             }
+
             return ResponseResult.success().message("下载成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -297,6 +306,7 @@ public class FiledController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            FileUtil.deleteDir(EnvUtils.CERT_PATH);
         }
         return ResponseResult.error().message("下载失败");
     }

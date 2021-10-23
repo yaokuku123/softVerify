@@ -12,7 +12,8 @@ import java.util.Random;
  */
 public class MD5Utils {
     public static void main(String[] args) {
-        System.out.println(md5Hex("192.168.1.1"));
+        System.out.println(code("192.168.1.1"));
+        System.out.println(code("192.168.1.1").equals("66efff4c945d3c3b87fc271b47d456db"));
     }
 
     public static String code(String str){
