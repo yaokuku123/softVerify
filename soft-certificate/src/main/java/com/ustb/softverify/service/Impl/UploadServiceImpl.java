@@ -5,13 +5,17 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ustb.softverify.entity.dto.CertificateInfo;
+import com.ustb.softverify.entity.dto.CompInfo;
 import com.ustb.softverify.entity.dto.SoftFileInfo;
+import com.ustb.softverify.entity.po.FileTypeEnum;
 import com.ustb.softverify.entity.po.FileUpload;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.*;
 import com.ustb.softverify.exception.CertificateUpChainException;
+import com.ustb.softverify.exception.CoreFileMisException;
 import com.ustb.softverify.exception.FileReadWriteException;
+import com.ustb.softverify.exception.MisMatchContentException;
 import com.ustb.softverify.mapper.FileUploadDAO;
 import com.ustb.softverify.mapper.SoftInfoDAO;
 import com.ustb.softverify.mapper.UserDAO;
@@ -19,6 +23,7 @@ import com.ustb.softverify.service.UploadService;
 import com.ustb.softverify.utils.EnvUtils;
 import com.ustb.softverify.utils.FileUtil;
 import com.ustb.softverify.utils.MD5Utils;
+import com.ustb.softverify.utils.ReadTxt;
 import edu.ustb.shellchainapi.shellchain.command.ShellChainException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -111,23 +117,23 @@ public class UploadServiceImpl implements UploadService {
     public void uploadFile(MultipartFile file,String pid,Integer fileType) {
         //文档保存
         String originFileName = file.getOriginalFilename();
-        String fileName = originFileName.substring(0, originFileName.lastIndexOf("."));
-        String suffix = originFileName.substring(originFileName.lastIndexOf("."));
-        String filePath = uploadFile(fileName,suffix, file);
+        File tmpFile = uploadFile(originFileName,pid,file);
         //数据信息插入表中
         FileUpload fileUploadDb = fileUploadDAO.getFileUpload(pid,fileType);
         if (fileUploadDb != null) {
             //更新
+            fileUploadDb.setFileSize(tmpFile.length());
             fileUploadDb.setFileName(originFileName);
-            fileUploadDb.setFilePath(filePath);
+            fileUploadDb.setFilePath(tmpFile.getAbsolutePath());
             fileUploadDb.setPid(pid);
             fileUploadDb.setFileType(fileType);
             fileUploadDAO.updateFileUpload(fileUploadDb);
         } else {
             //插入
             FileUpload fileUpload = new FileUpload();
+            fileUpload.setFileSize(tmpFile.length());
             fileUpload.setFileName(originFileName);
-            fileUpload.setFilePath(filePath);
+            fileUpload.setFilePath(tmpFile.getAbsolutePath());
             fileUpload.setPid(pid);
             fileUpload.setFileType(fileType);
             fileUploadDAO.insertFileUpload(fileUpload);
@@ -169,26 +175,23 @@ public class UploadServiceImpl implements UploadService {
      * 保存上传文档
      *
      * @param fileName 上传文件的名称
-     * @param suffix 文件后缀
+     *
      * @param file 被测软件
      * @return 上传的文档路径
      */
-    private String uploadFile(String fileName,String suffix, MultipartFile file) {
-        //拼接文件名，添加uuid
-        fileName = fileName + UUID.randomUUID().toString().replaceAll("-","");
-        fileName = fileName + suffix;
-        //创建文件夹
-        File fileDir = new File(EnvUtils.ROOT_PATH );
-        if (!fileDir.exists()){
-            fileDir.mkdir();
-        }
+    private File uploadFile(String fileName,String pid, MultipartFile file) {
         //拼接路径
-        String destPath = EnvUtils.ROOT_PATH + fileName;
+        String destPath = EnvUtils.ROOT_PATH + Calendar.getInstance().get(Calendar.YEAR) + File.separator + pid
+                + File.separator + "origin" + File.separator + fileName;
+        //创建文件夹
         File destFile = new File(destPath);
+        if (!destFile.getParentFile().exists()) { // 如果父目录不存在，创建父目录
+            destFile.getParentFile().mkdirs();
+        }
         try {
             //将被测软件保存至本地
             file.transferTo(destFile);
-            return destPath;
+            return destFile;
         } catch (IOException e) {
             throw new FileReadWriteException();
         }
@@ -210,7 +213,7 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public void submitInfo(SoftInfoVo softInfoVo) {
+    public boolean submitInfo(SoftInfoVo softInfoVo) {
         SoftInfo softInfoDb = softInfoDAO.getSoftInfo(softInfoVo.getPid());
         softInfoVo.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
         SoftInfo softInfo = new SoftInfo();
@@ -222,7 +225,29 @@ public class UploadServiceImpl implements UploadService {
             //更新
             softInfoDAO.updateSoft(softInfo);
         }
-        //TODO
+        //验证路径信息
+        String filePath = null;
+        List<FileUpload> fileUploadList = fileUploadDAO.listFileUpload(softInfo.getPid());
+        List<CompInfo> compInfos = new ArrayList<>();
+        for (FileUpload fileUpload : fileUploadList) {
+            //目录文件，提取目录的存放路径
+            if (fileUpload.getFileType().equals(FileTypeEnum.DIR_FILE.getCode())) {
+                filePath = fileUpload.getFilePath();
+            }
+            //重要文件获取，将名称和大小提取至用于对比的对象中
+            if (!fileUpload.getFileType().equals(FileTypeEnum.DIR_FILE.getCode()) &&
+                    !fileUpload.getFileType().equals(FileTypeEnum.CONFIG_FILE.getCode())  ) {
+                CompInfo compInfo = new CompInfo();
+                compInfo.setOrgName(fileUpload.getFileName());
+                compInfo.setFileSize(fileUpload.getFileSize());
+                compInfos.add(compInfo);
+            }
+        }
+        if (filePath == null){
+            return false;
+        }
+        boolean flag = ReadTxt.comp2txt(filePath, compInfos);
+        return flag;
     }
 
 }

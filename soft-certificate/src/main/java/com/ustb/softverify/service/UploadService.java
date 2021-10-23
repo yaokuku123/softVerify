@@ -64,7 +64,7 @@ public interface UploadService {
      * 保存上传文档和信息
      * @return
      */
-    void uploadFile(MultipartFile file,String pid,Integer fileType);
+     void uploadFile(MultipartFile file,String pid,Integer fileType);
 
     /**
      * 获取回显信息
@@ -84,5 +84,5 @@ public interface UploadService {
      * 提交软件信息
      * @param softInfoVo
      */
-    void submitInfo(SoftInfoVo softInfoVo);
+    boolean submitInfo(SoftInfoVo softInfoVo);
 }

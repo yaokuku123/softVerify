@@ -3,7 +3,7 @@
 
 <mapper namespace="com.ustb.softverify.mapper.FileUploadDAO">
     <insert id="insertFileUpload" useGeneratedKeys="true" keyProperty="fid">
-        insert into t_file_upload (file_name,file_path,file_type,pid) values (#{fileName},#{filePath},#{fileType},#{pid})
+        insert into t_file_upload (file_name,file_path,file_type,file_size,pid) values (#{fileName},#{filePath},#{fileType},#{fileSize},#{pid})
     </insert>
 
     <select id="listFileUpload" resultType="com.ustb.softverify.entity.po.FileUpload">
@@ -15,7 +15,7 @@
     </select>
 
     <update id="updateFileUpload">
-        update t_file_upload set file_name = #{fileName},file_path = #{filePath} where fid = #{fid}
+        update t_file_upload set file_name = #{fileName},file_path = #{filePath},file_size = #{fileSize} where fid = #{fid}
     </update>
 
     <delete id="deleteFileUpload" >

@@ -106,34 +106,8 @@ public class UploadController {
 
     @GetMapping("/submit")
     public ResponseResult submit(SoftInfoVo softInfoVo) {
-        uploadService.submitInfo(softInfoVo);
-        return ResponseResult.success();
-//        uploadService.updateStatus(govUserId,1);
-//        List<FileRecord> fileRecords = fileRecordService.listFileByGovUserId(govUserId);
-//        List<CompInfo> compInfos = new ArrayList<>();
-//        String filePath = null;
-//        for (FileRecord fileRecord : fileRecords) {
-//            //目录文件，提取目录的存放路径
-//            if (fileRecord.getSoftFileType().equals(FileTypeEnum.DIR_FILE.getCode())) {
-//                filePath = fileRecord.getServerLocalPath();
-//            }
-//            //重要文件获取，将名称和大小提取至用于对比的对象中
-//            if (!fileRecord.getSoftFileType().equals(FileTypeEnum.DIR_FILE.getCode()) &&
-//                    !fileRecord.getSoftFileType().equals(FileTypeEnum.CONFIG_FILE.getCode())  ) {
-//                CompInfo compInfo = new CompInfo();
-//                compInfo.setOrgName(fileRecord.getOrgName());
-//                compInfo.setFileSize(fileRecord.getFileSize());
-//                compInfos.add(compInfo);
-//            }
-//        }
-//        if (filePath == null){
-//            throw new CoreFileMisException();
-//        }
-//        boolean flag = ReadTxt.comp2txt(filePath, compInfos);
-//        if (!flag) {
-//            throw new MisMatchContentException();
-//        }
-//        return ResponseResult.success();
+        boolean flag = uploadService.submitInfo(softInfoVo);
+        return ResponseResult.success().data("flag",flag);
     }
 
     /**
@@ -141,12 +115,12 @@ public class UploadController {
      * @param govUserId
      * @return
      */
-    @GetMapping("/submitSoftInfo")
-    public ResponseResult submitSoftInfo(@RequestParam("govUserId") Integer govUserId) {
-        //根据用户标识和状态信息获取数据（用户数据，软件数据，上传文件数据）
-        SubmitInfoVo submitInfo = uploadService.getSubmitInfo(govUserId, StatusEnum.SUMMIT.getCode());
-        return ResponseResult.success().data("submitInfo",submitInfo);
-    }
+//    @GetMapping("/submitSoftInfo")
+//    public ResponseResult submitSoftInfo(@RequestParam("govUserId") Integer govUserId) {
+//        //根据用户标识和状态信息获取数据（用户数据，软件数据，上传文件数据）
+//        SubmitInfoVo submitInfo = uploadService.getSubmitInfo(govUserId, StatusEnum.SUMMIT.getCode());
+//        return ResponseResult.success().data("submitInfo",submitInfo);
+//    }
 
     @GetMapping("/browseSoftInfo")
     public ResponseResult browserSoftInfo(@RequestParam("govUserId") Integer govUserId) {
