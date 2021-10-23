@@ -50,13 +50,7 @@ public interface UploadService {
      */
     void updateStatus(Integer govUserId, Integer status);
 
-    /**
-     * 获取显示提交页面信息对象
-     * @param govUserId 用户标识
-     * @param status 状态
-     * @return 提交对象信息
-     */
-    SubmitInfoVo getSubmitInfo(Integer govUserId, Integer status);
+
 
     /**
      * 获取浏览页面信息对象
@@ -85,4 +79,10 @@ public interface UploadService {
      * @param fileType
      */
     void deleteFile(String pid, Integer fileType);
+
+    /**
+     * 提交软件信息
+     * @param softInfoVo
+     */
+    void submitInfo(SoftInfoVo softInfoVo);
 }

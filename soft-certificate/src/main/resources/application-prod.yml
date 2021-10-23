@@ -16,25 +16,16 @@ spring:
       max-file-size: 512MB #设置单个文件最大长度
 
 mybatis:
-  type-aliases-package: com.ustb.zerotrust.entity
+  type-aliases-package: com.ustb.softverify.entity
   configuration:
     map-underscore-to-camel-case: true
-  mapper-locations: classpath:com/ustb/zerotrust/mapper/xml/*.xml # xml所在路径
+  mapper-locations: classpath:com/ustb/softverify/mapper/xml/*.xml # xml所在路径
 eureka:
   client:
     serviceUrl: # eureka server的路径
       defaultZone: http://192.168.179.91:7001/eureka/
   instance:
     prefer-ip-address: true #使用ip注册
-feign:
-  client:
-    config:
-      default:
-        connectTimeout: 50000  #单位毫秒
-        readTimeout: 50000
-logging:
-  level:
-    com.ustb: debug
 
 #chainobj.address: 1Wkg9jF48VeM16rUE9MSTu4dfyvJv4dAb5X1v
 chainobj.address: 1MwnMpYGXy5TKJHMqiDy6MXorkQ5Nh6UoWCFEs

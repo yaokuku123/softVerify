@@ -88,18 +88,7 @@ public class UploadServiceImpl implements UploadService {
         softInfoDAO.updateStatus(govUserId,status);
     }
 
-    @Override
-    public SubmitInfoVo getSubmitInfo(Integer govUserId, Integer status) {
-        //获取用户信息
-        User user = userDAO.getUser(govUserId);
-        //获取软件信息
-        SoftInfo softInfo = softInfoDAO.getSoftInfoByGovUserId(govUserId, status);
-        //获取文档信息
 
-        //设置数据
-
-        return null;
-    }
 
     @Override
     public BrowserInfoVo getBrowseInfo(Integer govUserId, Integer status) {
@@ -220,5 +209,20 @@ public class UploadServiceImpl implements UploadService {
         }
     }
 
+    @Override
+    public void submitInfo(SoftInfoVo softInfoVo) {
+        SoftInfo softInfoDb = softInfoDAO.getSoftInfo(softInfoVo.getPid());
+        softInfoVo.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
+        SoftInfo softInfo = new SoftInfo();
+        BeanUtils.copyProperties(softInfoVo,softInfo);
+        if (softInfoDb == null) {
+            //插入
+            softInfoDAO.insertSoft(softInfo);
+        } else {
+            //更新
+            softInfoDAO.updateSoft(softInfo);
+        }
+        //TODO
+    }
 
 }

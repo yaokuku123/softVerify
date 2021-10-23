@@ -104,10 +104,10 @@ public class UploadController {
         return ResponseResult.success();
     }
 
-
-    @Transactional
     @GetMapping("/submit")
-    public ResponseResult submit(Integer govUserId) {
+    public ResponseResult submit(SoftInfoVo softInfoVo) {
+        uploadService.submitInfo(softInfoVo);
+        return ResponseResult.success();
 //        uploadService.updateStatus(govUserId,1);
 //        List<FileRecord> fileRecords = fileRecordService.listFileByGovUserId(govUserId);
 //        List<CompInfo> compInfos = new ArrayList<>();
@@ -134,7 +134,6 @@ public class UploadController {
 //            throw new MisMatchContentException();
 //        }
 //        return ResponseResult.success();
-        return null;
     }
 
     /**
