@@ -25,6 +25,7 @@ public class LZWEncoder {
 	 * @return
 	 */
 	public static byte[] calcCompressedRatio(String fileStream, int byteArrLen) {
+		Bit_Length = byteArrLen;
 		double compressedRatio = Encode_string(fileStream, Bit_Length);
 		// 二进制化
 		byte[] ans = new byte[byteArrLen];
