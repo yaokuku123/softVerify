@@ -32,8 +32,8 @@
     </select>
     
     <select id="SignFileInfos" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
-        select file_name, file_path from t_file_upload
-        where pid=#{pid} and file_type not in (1,3)
+        select file_name, file_path ,file_type from t_file_upload
+        where pid=#{pid} and file_type in (1,3)
     </select>
 
     <select id="listSoft"  resultType="com.ustb.softverify.entity.po.SoftInfo">
@@ -120,5 +120,9 @@
     <select id="getAllSoft" resultType="SoftInfo">
         select * from t_soft where status = 2
     </select>
+
+    <update id="insertFingerCode" >
+        update t_soft set verification_code = #{fingerCode} where pid = #{pid}
+    </update>
 
 </mapper>

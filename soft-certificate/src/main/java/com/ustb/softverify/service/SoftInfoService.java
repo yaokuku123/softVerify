@@ -47,4 +47,6 @@ public interface SoftInfoService {
     void insertZipPwd(String pid,String zipPassword);
 
     List<SoftInfo> getAllSoft();
+
+    void insertFingerCode(String pid,String fingerCode);
 }

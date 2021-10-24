@@ -105,4 +105,9 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     public List<SoftInfo> getAllSoft() {
         return softInfoDAO.getAllSoft();
     }
+
+    @Override
+    public void insertFingerCode(String pid, String fingerCode) {
+        softInfoDAO.insertFingerCode(pid,fingerCode);
+    }
 }
