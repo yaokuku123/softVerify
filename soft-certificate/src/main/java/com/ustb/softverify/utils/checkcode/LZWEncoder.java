@@ -35,7 +35,8 @@ public class LZWEncoder {
 				setBit(ans, i, 1);
 				approx += base/2;
 			} else {
-				break;
+				setBit(ans, Math.max(i-1,0), 0);
+				approx -= base/2;
 			}
 			base /= 2;
 		}
@@ -148,10 +149,14 @@ public class LZWEncoder {
 				setBit(ans, i, 1);
 				approx += base/2;
 			} else {
-				break;
+				setBit(ans, Math.max(i-1,0), 0);
+				approx -= base/2;
 			}
 			base /= 2;
 		}
 		System.out.println(ans);
+		for(int i = 0; i < byteArrLen; ++i) {
+			System.out.println(ByteAndBitUtils.byte2String(ans[i]));
+		}
 	}
 }
