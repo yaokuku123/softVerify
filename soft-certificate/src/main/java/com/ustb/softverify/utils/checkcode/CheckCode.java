@@ -27,6 +27,8 @@ public class CheckCode {
             //第三个文件转换
             byte[] file3 = HmacUtils.encryptHMAC(FileUtil.read(filePath3));
             byte[] fixBytesFile3 = ByteAndBitUtils.getFixBytes(file3, 2);
+            //统计量转换
+            byte[] lzwBytes = LZWEncoder.calcCompressedRatio(FileUtil.read(filePath1), 2);
             //txid交易地址转换
             byte[] txid = HexUtils.hex2Bytes(txidStr);
             byte[] fixBytesTxid = ByteAndBitUtils.getFixBytes(txid, 3);
@@ -41,13 +43,13 @@ public class CheckCode {
             byte fileNumAndTxidVersionByte = (byte) (fileNumByte | txidVersionByte);
 
             //获取sm3 hash校验码 4位
-            byte[] unValid = CheckCode.getCheckCode3(fileNumAndTxidVersionByte,fixBytesFile1, fixBytesFile2, fixBytesFile3, new byte[2], new byte[2], fixBytesTxid);
+            byte[] unValid = CheckCode.getCheckCode3(fileNumAndTxidVersionByte,fixBytesFile1, fixBytesFile2, fixBytesFile3, new byte[2], lzwBytes, fixBytesTxid);
             byte[] sm3EncryptByte = SM3Algorithm.SM3Encrypt(unValid);
             byte fixBytes = (byte) (ByteAndBitUtils.getFixBytes(sm3EncryptByte, 1)[0] & ByteAndBitUtils.bit2byte("11110000"));
             //拼接第一个字节
             byte valid = (byte)(fixBytes | fileNumAndTxidVersionByte);
             //结果
-            byte[] res = CheckCode.getCheckCode3(valid, fixBytesFile1, fixBytesFile2, fixBytesFile3, new byte[2], new byte[2], fixBytesTxid);
+            byte[] res = CheckCode.getCheckCode3(valid, fixBytesFile1, fixBytesFile2, fixBytesFile3, new byte[2], lzwBytes, fixBytesTxid);
             System.out.println(HexUtils.bytes2Hex(res));
             return HexUtils.bytes2Hex(res);
         } catch (Exception e) {
@@ -71,6 +73,8 @@ public class CheckCode {
             //第二个文件转换
             byte[] file2 = HmacUtils.encryptHMAC(FileUtil.read(filePath2));
             byte[] fixBytesFile2 = ByteAndBitUtils.getFixBytes(file2, 4);
+            //统计量转换
+            byte[] lzwBytes = LZWEncoder.calcCompressedRatio(FileUtil.read(filePath1), 2);
             //txid交易地址转换
             byte[] txid = HexUtils.hex2Bytes(txidStr);
             byte[] fixBytesTxid = ByteAndBitUtils.getFixBytes(txid, 3);
@@ -85,13 +89,13 @@ public class CheckCode {
             byte fileNumAndTxidVersionByte = (byte) (fileNumByte | txidVersionByte);
 
             //获取sm3 hash校验码 4位
-            byte[] unValid = CheckCode.getCheckCode2(fileNumAndTxidVersionByte,fixBytesFile1, fixBytesFile2, new byte[2], new byte[2], fixBytesTxid);
+            byte[] unValid = CheckCode.getCheckCode2(fileNumAndTxidVersionByte,fixBytesFile1, fixBytesFile2, new byte[2], lzwBytes, fixBytesTxid);
             byte[] sm3EncryptByte = SM3Algorithm.SM3Encrypt(unValid);
             byte fixBytes = (byte) (ByteAndBitUtils.getFixBytes(sm3EncryptByte, 1)[0] & ByteAndBitUtils.bit2byte("11110000"));
             //拼接第一个字节
             byte valid = (byte)(fixBytes | fileNumAndTxidVersionByte);
             //结果
-            byte[] res = CheckCode.getCheckCode2(valid, fixBytesFile1, fixBytesFile2, new byte[2], new byte[2], fixBytesTxid);
+            byte[] res = CheckCode.getCheckCode2(valid, fixBytesFile1, fixBytesFile2, new byte[2], lzwBytes, fixBytesTxid);
             System.out.println(HexUtils.bytes2Hex(res));
             return HexUtils.bytes2Hex(res);
         } catch (Exception e) {
@@ -111,6 +115,8 @@ public class CheckCode {
             //第一个文件转换
             byte[] file1 = HmacUtils.encryptHMAC(FileUtil.read(filePath1));
             byte[] fixBytesFile1 = ByteAndBitUtils.getFixBytes(file1, 8);
+            //统计量转换
+            byte[] lzwBytes = LZWEncoder.calcCompressedRatio(FileUtil.read(filePath1), 2);
             //txid交易地址转换
             byte[] txid = HexUtils.hex2Bytes(txidStr);
             byte[] fixBytesTxid = ByteAndBitUtils.getFixBytes(txid, 3);
@@ -125,13 +131,13 @@ public class CheckCode {
             byte fileNumAndTxidVersionByte = (byte) (fileNumByte | txidVersionByte);
 
             //获取sm3 hash校验码 4位
-            byte[] unValid = CheckCode.getCheckCode1(fileNumAndTxidVersionByte,fixBytesFile1, new byte[2], new byte[2], fixBytesTxid);
+            byte[] unValid = CheckCode.getCheckCode1(fileNumAndTxidVersionByte,fixBytesFile1, new byte[2], lzwBytes, fixBytesTxid);
             byte[] sm3EncryptByte = SM3Algorithm.SM3Encrypt(unValid);
             byte fixBytes = (byte) (ByteAndBitUtils.getFixBytes(sm3EncryptByte, 1)[0] & ByteAndBitUtils.bit2byte("11110000"));
             //拼接第一个字节
             byte valid = (byte)(fixBytes | fileNumAndTxidVersionByte);
             //结果
-            byte[] res = CheckCode.getCheckCode1(valid, fixBytesFile1, new byte[2], new byte[2], fixBytesTxid);
+            byte[] res = CheckCode.getCheckCode1(valid, fixBytesFile1, new byte[2], lzwBytes, fixBytesTxid);
             System.out.println(HexUtils.bytes2Hex(res));
             return HexUtils.bytes2Hex(res);
         } catch (Exception e) {

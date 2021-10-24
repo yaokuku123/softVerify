@@ -1,4 +1,4 @@
-package com.ustb.softverify.utils;
+package com.ustb.softverify.utils.checkcode;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
