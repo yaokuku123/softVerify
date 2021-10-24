@@ -416,7 +416,7 @@ public class FiledController {
         pdfTemplete.setCertId(random.nextInt(10000))
                 .setAppName(soft.getComName()).setSoftName(soft.getProName())
                 .setSoftVersion("1.0").setDate(new SimpleDateFormat("yyyy 年 MM 月 dd 日").format(new Date()))
-                .setSoftUi(pid);
+                .setSoftUi(soft.getVerificationCode());
 
         String saveName = EnvUtils.CSVTmp;
         File file = new File(saveName);
