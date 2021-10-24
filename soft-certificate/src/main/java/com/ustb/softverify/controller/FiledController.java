@@ -11,6 +11,7 @@ import com.ustb.softverify.domain.vo.PublicKeyStr;
 
 import com.ustb.softverify.entity.dto.CertificateInfo;
 import com.ustb.softverify.entity.dto.CheckPwd;
+import com.ustb.softverify.entity.dto.PdfTemplete;
 import com.ustb.softverify.entity.dto.SignFileInfo;
 import com.ustb.softverify.entity.po.SignFile;
 import com.ustb.softverify.entity.po.SoftInfo;
@@ -23,6 +24,8 @@ import com.ustb.softverify.service.SoftInfoService;
 import com.ustb.softverify.utils.*;
 import edu.ustb.shellchainapi.shellchain.command.ShellChainException;
 import it.unisa.dia.gas.jpbc.Element;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -350,4 +353,44 @@ public class FiledController {
         }
         return ResponseResult.success().data("result",true);
     }
+
+
+
+    @PostMapping("/generatePDF")
+    public ResponseResult generatePDF(@RequestParam("pid") String pid) throws Exception {
+
+        SoftInfo soft = softInfoService.getSoftDetail(pid);
+        PdfTemplete pdfTemplete = new PdfTemplete();
+        Random random = new Random();
+
+        pdfTemplete.setCertId(random.nextInt(10000)).setSoftId(random.nextInt(10000))
+                .setAppName(soft.getComName()).setSoftName(soft.getProName())
+                .setSoftVersion("1.0").setDate(new SimpleDateFormat("yyyy 年 MM 月 D 日").format(new Date()))
+                .setSoftUi(pid).setSoftFi(String.valueOf(random.nextInt(100000)));
+
+        String saveName = EnvUtils.CSVTmp;
+        File file = new File(saveName);
+        if (!file.exists()){
+            file.mkdir();
+        }
+        FileOutputStream fos = new FileOutputStream(saveName+ "templetedata.csv");
+        OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+        CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader("cert-ID", "soft-ID", "app-name","soft-name","soft-version","date","soft-ui","soft-fi");
+        CSVPrinter csvPrinter = new CSVPrinter(osw, csvFormat);
+
+        csvPrinter.printRecord(pdfTemplete.getCertId(), pdfTemplete.getSoftId(), pdfTemplete.getAppName(),pdfTemplete.getSoftName()
+                ,pdfTemplete.getSoftVersion(),pdfTemplete.getDate(),pdfTemplete.getSoftUi(),pdfTemplete.getSoftFi());
+
+        csvPrinter.flush();
+        csvPrinter.close();
+
+        ScpUtil.putFile(saveName+"templetedata.csv" ,"/root/Certificat/");
+
+
+
+        return ResponseResult.success();
+    }
+
+
+
 }
