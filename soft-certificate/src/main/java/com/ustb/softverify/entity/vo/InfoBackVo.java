@@ -16,6 +16,7 @@ public class InfoBackVo implements Serializable {
     private String pid;
     private String comName;
     private String proName;
+    private String verificationCode;
     private Integer status;
 
     private List<FileUploadVo> fileUploadVoList;
