@@ -119,4 +119,10 @@ public interface SoftInfoDAO {
     Integer getSid(@Param("pid")String pid);
 
     void insertZipPwd(@Param("pid")String pid,@Param("zipPassword") String zipPassword);
+
+    /**
+     * 更新软件状态信息为已提交状态
+     * @param pid
+     */
+    void updateStatusToSubmit(String pid);
 }

@@ -114,4 +114,8 @@
         where pid = #{pid}
     </update>
 
+    <update id="updateStatusToSubmit" >
+        update t_soft set status = 2 where pid = #{pid}
+    </update>
+
 </mapper>
