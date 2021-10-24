@@ -356,7 +356,7 @@ public class FiledController {
 
 
 
-    @PostMapping("/generatePDF")
+    @GetMapping("/generatePDF")
     public ResponseResult generatePDF(@RequestParam("pid") String pid,HttpServletResponse response) throws Exception {
 
         SoftInfo soft = softInfoService.getSoftDetail(pid);
