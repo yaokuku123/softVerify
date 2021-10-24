@@ -5,10 +5,14 @@ import com.ustb.softverify.entity.dto.CompInfo;
 import com.ustb.softverify.service.Impl.ShellTools;
 import com.ustb.softverify.utils.*;
 import net.lingala.zip4j.exception.ZipException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +84,25 @@ public class UtilsTest {
         String path = "D:\\file";
         Connection conn = shellTools.getConn("123.56.246.148", "root", "chainNode202");
         shellTools.scpRemoteFile(conn,"/root/test/",path);
-
-
     }
+
+    @Test
+    public void testWrite() throws Exception {
+        FileOutputStream fos = new FileOutputStream("D:\\abc.csv");
+        OutputStreamWriter osw = new OutputStreamWriter(fos, "GBK");
+
+        CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader("姓名", "年龄", "家乡");
+        CSVPrinter csvPrinter = new CSVPrinter(osw, csvFormat);
+
+//        csvPrinter = CSVFormat.DEFAULT.withHeader("姓名", "年龄", "家乡").print(osw);
+
+        for (int i = 0; i < 10; i++) {
+            csvPrinter.printRecord("张三", 20, "湖北");
+        }
+
+        csvPrinter.flush();
+        csvPrinter.close();
+    }
+
+
 }

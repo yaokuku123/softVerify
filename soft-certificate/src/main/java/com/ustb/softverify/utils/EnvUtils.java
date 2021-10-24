@@ -14,6 +14,14 @@ public class EnvUtils {
 
 
 
+    public static final String TmpFile = System.getProperty("user.dir") + "/data/tmp/";
+
+
+
+    public static final String CSVTmp = System.getProperty("user.dir") + "/data/csv/";
+
+
+
 
 
 

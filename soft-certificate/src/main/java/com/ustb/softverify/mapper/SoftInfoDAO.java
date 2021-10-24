@@ -125,4 +125,6 @@ public interface SoftInfoDAO {
      * @param pid
      */
     void updateStatusToSubmit(String pid);
+
+    List<SoftInfo> getAllSoft();
 }

@@ -10,6 +10,8 @@ import com.ustb.softverify.domain.ResponseResult;
 import com.ustb.softverify.domain.vo.PublicKeyStr;
 
 import com.ustb.softverify.entity.dto.CertificateInfo;
+import com.ustb.softverify.entity.dto.CheckPwd;
+import com.ustb.softverify.entity.dto.PdfTemplete;
 import com.ustb.softverify.entity.dto.SignFileInfo;
 import com.ustb.softverify.entity.po.SignFile;
 import com.ustb.softverify.entity.po.SoftInfo;
@@ -22,6 +24,8 @@ import com.ustb.softverify.service.SoftInfoService;
 import com.ustb.softverify.utils.*;
 import edu.ustb.shellchainapi.shellchain.command.ShellChainException;
 import it.unisa.dia.gas.jpbc.Element;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -68,20 +72,19 @@ public class FiledController {
 
 
     /**
-     * 已归档软件信息列表   status = 3
+     * 已归档软件信息列表   status = 2
      * @param
      * @return
      */
     @GetMapping("/fileInfos")
     public ResponseResult getAllUploadInfo(){
-        List<SoftInfoVo> uploadInfo = softInfoService.getAllUploadInfo();
-
-        return ResponseResult.success().data("softInfo",uploadInfo);
+        List<SoftInfo> allSoft = softInfoService.getAllSoft();
+        return ResponseResult.success().data("softInfo",allSoft);
 
     }
 
     /**
-     * 文件保存待归档软件信息列表  status = 2
+     *
      * @param
      * @return
      */
@@ -105,7 +108,7 @@ public class FiledController {
 
         // 根据pid  查询软件列表的路径
         List<SignFileInfo> signFileInfos = softInfoService.SignFileInfos(pid);
-        String signFilePath = EnvUtils.CERT_PATH +softName + ".bin";
+        String signFilePath = EnvUtils.TmpFile +softName + ".bin";
         File signFile = new File(signFilePath);
         try {
             signFile.createNewFile();
@@ -191,12 +194,14 @@ public class FiledController {
         String zipOriginName = pid + "_o.zip";
         String zipArchiveName = pid + "_a.zip";
         Random random = new Random();
-        String password = String.valueOf(random.nextInt(1000000));
-        System.out.println(password);
+        int math = random.nextInt(1000000);
+        //System.out.println(math);
+        int i = math ^ 1010;
+        String password = String.valueOf(i);
         softInfoService.insertZipPwd(pid,password);
 
-        ZipDe.zipFile(localOriginPath,localPath+"/"+zipOriginName,password);
-        ZipDe.zipFile(localArchivePath,localPath+"/"+zipArchiveName,password);
+        ZipDe.zipFile(localOriginPath,localPath+"/"+zipOriginName,String.valueOf(math));
+        ZipDe.zipFile(localArchivePath,localPath+"/"+zipArchiveName,String.valueOf(math));
 
         ScpUtil.putFile(localPath+"/"+zipOriginName ,zipPath);
         ScpUtil.putFile(localPath+"/"+zipArchiveName ,zipPath);
@@ -287,16 +292,16 @@ public class FiledController {
 
 
     @GetMapping(value = "/zipSoftDownload",produces = "application/json;charset=UTF-8")
-    public ResponseResult zipDownload(@RequestParam("pid")String pid, @RequestParam("uploadPassword")String uploadPassword, HttpServletResponse response){
+    public ResponseResult zipDownload(@RequestParam("pid")String pid, HttpServletResponse response){
         SoftInfo softInfo = softInfoService.getSoftInfo(pid);
 
         File fileP = new File(EnvUtils.CERT_PATH);
         if (!fileP.exists()){
             fileP.mkdirs();
         }
-        if (!MD5Utils.md5Hex(uploadPassword).equals(softInfo.getUploadPassword())){
-            return ResponseResult.error().message("密码错误，请重新输入");
-        }
+//        if (!MD5Utils.md5Hex(uploadPassword).equals(softInfo.getUploadPassword())){
+//            return ResponseResult.error().message("密码错误，请重新输入");
+//        }
 
 
         ScpUtil.getFile(softInfo.getSoftRemotePath() ,EnvUtils.CERT_PATH);
@@ -304,7 +309,8 @@ public class FiledController {
         //下载软件
         File file = new File(EnvUtils.CERT_PATH + softInfo.getZipName() );
 
-        ZipDe.unZipFile(EnvUtils.CERT_PATH + softInfo.getZipName(),EnvUtils.CERT_PATH,softInfo.getZipPassword());
+        int decode = Integer.parseInt(softInfo.getZipPassword()) ^ 1010;
+        ZipDe.unZipFile(EnvUtils.CERT_PATH + softInfo.getZipName(),EnvUtils.CERT_PATH,String.valueOf(decode));
         file.delete();
         ZipDe.zip(EnvUtils.CERT_PATH,EnvUtils.CERT_PATH + softInfo.getZipName());
 
@@ -337,5 +343,84 @@ public class FiledController {
         }
         return ResponseResult.error().message("下载失败");
     }
+
+    @PostMapping("/check")
+    public ResponseResult checkPwd(@RequestBody CheckPwd checkPwd){
+        SoftInfo softInfo = softInfoService.getSoftInfo(checkPwd.getPid());
+        if (!MD5Utils.md5Hex(checkPwd.getPassword()).equals(softInfo.getUploadPassword())){
+
+            return ResponseResult.error().data("result",false);
+        }
+        return ResponseResult.success().data("result",true);
+    }
+
+
+
+    @PostMapping("/generatePDF")
+    public ResponseResult generatePDF(@RequestParam("pid") String pid,HttpServletResponse response) throws Exception {
+
+        SoftInfo soft = softInfoService.getSoftDetail(pid);
+        PdfTemplete pdfTemplete = new PdfTemplete();
+        Random random = new Random();
+
+        pdfTemplete.setCertId(random.nextInt(10000)).setSoftId(random.nextInt(10000))
+                .setAppName(soft.getComName()).setSoftName(soft.getProName())
+                .setSoftVersion("1.0").setDate(new SimpleDateFormat("yyyy 年 MM 月 D 日").format(new Date()))
+                .setSoftUi(pid).setSoftFi(String.valueOf(random.nextInt(100000)));
+
+        String saveName = EnvUtils.CSVTmp;
+        File file = new File(saveName);
+        if (!file.exists()){
+            file.mkdir();
+        }
+        FileOutputStream fos = new FileOutputStream(saveName+ "templetedata.csv");
+        OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+        CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader("cert-ID", "soft-ID", "app-name","soft-name","soft-version","date","soft-ui","soft-fi");
+        CSVPrinter csvPrinter = new CSVPrinter(osw, csvFormat);
+
+        csvPrinter.printRecord(pdfTemplete.getCertId(), pdfTemplete.getSoftId(), pdfTemplete.getAppName(),pdfTemplete.getSoftName()
+                ,pdfTemplete.getSoftVersion(),pdfTemplete.getDate(),pdfTemplete.getSoftUi(),pdfTemplete.getSoftFi());
+
+        csvPrinter.flush();
+        csvPrinter.close();
+
+        ScpUtil.putFile(saveName+"templetedata.csv" ,"/root/Certificat/");
+
+        RemoteUtil.generatePdf(pid);
+
+        ScpUtil.getFile("/root/Certificat/Certificat.pdf" ,EnvUtils.TmpFile);
+
+        File file1 = new File(EnvUtils.TmpFile + "Certificat.pdf");
+        // 设置下载软件文件名
+        String fileName = ("Certificat.pdf");
+        response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
+        OutputStream os = null;
+        try (FileInputStream fis = new FileInputStream(file1);
+             BufferedInputStream bis = new BufferedInputStream(fis)) {
+            os = response.getOutputStream();
+            byte[] buffer = new byte[1024];
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+
+            return ResponseResult.success().message("下载成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            FileUtil.deleteDir(EnvUtils.CERT_PATH);
+        }
+        return ResponseResult.error().message("下载失败");
+
+       // return ResponseResult.success();
+    }
+
+
 
 }
