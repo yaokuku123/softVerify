@@ -192,12 +192,16 @@ public class FiledController {
         String zipOriginName = pid + "_o.zip";
         String zipArchiveName = pid + "_a.zip";
         Random random = new Random();
-        String password = String.valueOf(random.nextInt(1000000));
-        System.out.println(password);
+        int math = random.nextInt(1000000);
+        System.out.println(math);
+
+        int i = math ^ 1010;
+        System.out.println(i^1010);
+        String password = String.valueOf(i);
         softInfoService.insertZipPwd(pid,password);
 
-        ZipDe.zipFile(localOriginPath,localPath+"/"+zipOriginName,password);
-        ZipDe.zipFile(localArchivePath,localPath+"/"+zipArchiveName,password);
+        ZipDe.zipFile(localOriginPath,localPath+"/"+zipOriginName,String.valueOf(math));
+        ZipDe.zipFile(localArchivePath,localPath+"/"+zipArchiveName,String.valueOf(math));
 
         ScpUtil.putFile(localPath+"/"+zipOriginName ,zipPath);
         ScpUtil.putFile(localPath+"/"+zipArchiveName ,zipPath);
@@ -288,7 +292,7 @@ public class FiledController {
 
 
     @GetMapping(value = "/zipSoftDownload",produces = "application/json;charset=UTF-8")
-    public ResponseResult zipDownload(@RequestParam("pid")String pid, @RequestParam("uploadPassword")String uploadPassword, HttpServletResponse response){
+    public ResponseResult zipDownload(@RequestParam("pid")String pid, HttpServletResponse response){
         SoftInfo softInfo = softInfoService.getSoftInfo(pid);
 
         File fileP = new File(EnvUtils.CERT_PATH);
@@ -305,7 +309,8 @@ public class FiledController {
         //下载软件
         File file = new File(EnvUtils.CERT_PATH + softInfo.getZipName() );
 
-        ZipDe.unZipFile(EnvUtils.CERT_PATH + softInfo.getZipName(),EnvUtils.CERT_PATH,softInfo.getZipPassword());
+        int decode = Integer.parseInt(softInfo.getZipPassword()) ^ 1010;
+        ZipDe.unZipFile(EnvUtils.CERT_PATH + softInfo.getZipName(),EnvUtils.CERT_PATH,String.valueOf(decode));
         file.delete();
         ZipDe.zip(EnvUtils.CERT_PATH,EnvUtils.CERT_PATH + softInfo.getZipName());
 
