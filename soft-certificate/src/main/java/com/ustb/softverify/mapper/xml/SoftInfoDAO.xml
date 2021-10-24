@@ -101,7 +101,7 @@
     </update>
 
     <select id="softFileRecords" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
-        select file_name, file_path from t_file_upload
+        select file_name, file_path, file_type from t_file_upload
         where pid=#{pid}
     </select>
 

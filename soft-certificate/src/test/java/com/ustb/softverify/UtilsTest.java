@@ -1,16 +1,23 @@
 package com.ustb.softverify;
 
+import ch.ethz.ssh2.Connection;
 import com.ustb.softverify.entity.dto.CompInfo;
+import com.ustb.softverify.service.Impl.ShellTools;
 import com.ustb.softverify.utils.*;
 import net.lingala.zip4j.exception.ZipException;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class UtilsTest {
+
+    @Autowired
+    private ShellTools shellTools;
 
     @Test
     public void testZipDe() {
@@ -48,8 +55,8 @@ public class UtilsTest {
         ScpUtil scpUtil = new ScpUtil();
 
         try {
-            scpUtil.getFile("/root/scpTest/BAKA.txt", "D:\\WORK\\TargetField");
-            scpUtil.putFile("D:\\WORK\\TargetField\\CoreFiles.txt", "/root/scpTest");
+            //scpUtil.getFile("/root/scpTest/BAKA.txt", "D:\\WORK\\TargetField");
+            scpUtil.putFile("D:\\file\\a.txt", "/root/test/");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,5 +73,14 @@ public class UtilsTest {
     public void zipTest1(){
 
         FileUtil.deleteDir("D:\\file");
+    }
+
+    @Test
+    public void scpTest1() throws IOException {
+        String path = "D:\\file";
+        Connection conn = shellTools.getConn("123.56.246.148", "root", "chainNode202");
+        shellTools.scpRemoteFile(conn,"/root/test/",path);
+
+
     }
 }

@@ -1,5 +1,6 @@
 package com.ustb.softverify.controller;
 
+import ch.ethz.ssh2.Connection;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonObject;
 import com.ustb.softverify.algorithm.blind.BlindAlgorithm;
@@ -16,6 +17,7 @@ import com.ustb.softverify.entity.vo.SoftInfoVo;
 import com.ustb.softverify.exception.CertificateUpChainException;
 import com.ustb.softverify.exception.FileReadWriteException;
 import com.ustb.softverify.service.Impl.ChainService;
+import com.ustb.softverify.service.Impl.ShellTools;
 import com.ustb.softverify.service.SoftInfoService;
 import com.ustb.softverify.utils.*;
 import edu.ustb.shellchainapi.shellchain.command.ShellChainException;
@@ -49,6 +51,9 @@ public class FiledController {
 
     @Value("${chainobj.address}")
     private String chainAddresses;
+
+    @Autowired
+    private ShellTools shellTools;
 
 
     /**
@@ -96,7 +101,7 @@ public class FiledController {
      */
 
     @GetMapping("/filed")
-    public ResponseResult file(@RequestParam("pid")String pid){
+    public ResponseResult file(@RequestParam("pid")String pid) throws IOException {
 
         String softName = softInfoService.findSoftName(pid);
 
@@ -125,7 +130,7 @@ public class FiledController {
         ArrayList<Element> signList = algorithm.sign(signFilePath, publicKey,
                 (Element) keyMap.get(BlindAlgorithm.PRIVATE_KEY));
 
-        signFile.delete();
+        //signFile.delete();
 
         //保存签名文件   签名列表格式转换
         List<String> signStringList = new ArrayList<>();
@@ -135,7 +140,7 @@ public class FiledController {
             signStringList.add(new String(signByte, StandardCharsets.UTF_8));
         }
         // 指定文件路径
-        String signFileName = softName + ".sign";
+        String signFileName = pid + ".sign";
         String signFilePathDes = EnvUtils.ROOT_PATH + signFileName;
         //将list集合变为String字符串后存储至指定路径下
         try {
@@ -157,26 +162,50 @@ public class FiledController {
         softInfoService.insertTxid(pid,txid);
 
         List<SignFileInfo> fileRecords = softInfoService.softFileRecords(pid);
+        //根据pid创建文件夹 相应两个文件夹
+        String localPath = EnvUtils.TmpSoftware + "/data/" + new SimpleDateFormat("yyyy").format(new Date()) + "/" + pid;
+        String localOriginPath = localPath + "/original/";
+        String localArchivePath = localPath + "/archive/";
+        File originFile = new File(localOriginPath);
+        File archiveFile = new File(localArchivePath);
+        if (!originFile.exists()){
+            originFile.mkdirs();
+        }
+        if (!archiveFile.exists()){
+            archiveFile.mkdirs();
+        }
+
+        RemoteUtil.makeDir(pid);
+        String path = "/root/TmpSoftware/";
+        String zipPath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid;
+        String remoteOriginPath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid + "/original/";
+        String remoteArchivePath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid + "/archive/";
+
         for (SignFileInfo signFileInfo : fileRecords ){
-            String fileName = signFileInfo.getFileName() +"(bin)";
-            FileUtil.copyFile(signFileInfo.getFilePath(), EnvUtils.ROOT_PATH + fileName);
+            ScpUtil.putFile(signFileInfo.getFilePath() ,remoteOriginPath);
+            FileUtil.copyFile(signFileInfo.getFilePath(), localOriginPath + signFileInfo.getFileName());
+            String archiveName = pid + "type" + signFileInfo.getFileType();
+            FileUtil.copyFile(signFileInfo.getFilePath(), localArchivePath + archiveName);
+            ScpUtil.putFile(localArchivePath + archiveName ,remoteArchivePath);
         }
 
         // 根据pid
-        String zipName = pid + "-" + softName + "-" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".zip";
+        String zipOriginName = pid + "_o.zip";
+        String zipArchiveName = pid + "_a.zip";
         Random random = new Random();
         String password = String.valueOf(random.nextInt(1000000));
         System.out.println(password);
         softInfoService.insertZipPwd(pid,password);
-        ZipDe.zipFile(EnvUtils.ROOT_PATH,EnvUtils.ROOT_PATH + "/" + zipName,password);
+
+        ZipDe.zipFile(localOriginPath,localPath+"/"+zipOriginName,password);
+        ZipDe.zipFile(localArchivePath,localPath+"/"+zipArchiveName,password);
+
+        ScpUtil.putFile(localPath+"/"+zipOriginName ,zipPath);
+        ScpUtil.putFile(localPath+"/"+zipArchiveName ,zipPath);
 
         //改变status
         softInfoService.changeStatus(pid);
-        String remotePath = "/root/softStore/";
-        ScpUtil.putFile(EnvUtils.ROOT_PATH + "/" + zipName,remotePath);
-        softInfoService.insertPath(pid,remotePath,zipName);
-        //删除
-        FileUtil.deleteDir(EnvUtils.ROOT_PATH);
+        softInfoService.insertPath(pid,zipPath +"/"+ zipOriginName,zipOriginName);
         return ResponseResult.success().message("归档完成");
     }
 
@@ -272,7 +301,7 @@ public class FiledController {
         }
 
 
-        ScpUtil.getFile(softInfo.getSoftRemotePath() + softInfo.getZipName(),EnvUtils.CERT_PATH);
+        ScpUtil.getFile(softInfo.getSoftRemotePath() ,EnvUtils.CERT_PATH);
 
         //下载软件
         File file = new File(EnvUtils.CERT_PATH + softInfo.getZipName() );

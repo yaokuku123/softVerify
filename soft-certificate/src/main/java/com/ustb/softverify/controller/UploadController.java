@@ -136,17 +136,17 @@ public class UploadController {
 //        return ResponseResult.success();
     }
 
-    /**
-     * 获取提交软件的信息
-     * @param govUserId
-     * @return
-     */
-    @GetMapping("/submitSoftInfo")
-    public ResponseResult submitSoftInfo(@RequestParam("govUserId") Integer govUserId) {
-        //根据用户标识和状态信息获取数据（用户数据，软件数据，上传文件数据）
-        SubmitInfoVo submitInfo = uploadService.getSubmitInfo(govUserId, StatusEnum.SUMMIT.getCode());
-        return ResponseResult.success().data("submitInfo",submitInfo);
-    }
+//    /**
+//     * 获取提交软件的信息
+//     * @param govUserId
+//     * @return
+//     */
+//    @GetMapping("/submitSoftInfo")
+//    public ResponseResult submitSoftInfo(@RequestParam("govUserId") Integer govUserId) {
+//        //根据用户标识和状态信息获取数据（用户数据，软件数据，上传文件数据）
+//        SubmitInfoVo submitInfo = uploadService.getSubmitInfo(govUserId, StatusEnum.SUMMIT.getCode());
+//        return ResponseResult.success().data("submitInfo",submitInfo);
+//    }
 
     @GetMapping("/browseSoftInfo")
     public ResponseResult browserSoftInfo(@RequestParam("govUserId") Integer govUserId) {
