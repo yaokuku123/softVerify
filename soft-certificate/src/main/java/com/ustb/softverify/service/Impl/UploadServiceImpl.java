@@ -218,19 +218,23 @@ public class UploadServiceImpl implements UploadService {
     public boolean submitInfo(SoftInfoVo softInfoVo) {
         //插入或更新数据
         SoftInfo softInfoDb = softInfoDAO.getSoftInfo(softInfoVo.getPid());
-        softInfoVo.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
-        SoftInfo softInfo = new SoftInfo();
-        BeanUtils.copyProperties(softInfoVo,softInfo);
+
         if (softInfoDb == null) {
             //插入
+            softInfoVo.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
+            SoftInfo softInfo = new SoftInfo();
+            BeanUtils.copyProperties(softInfoVo,softInfo);
             softInfoDAO.insertSoft(softInfo);
         } else {
             //更新
-            softInfoDAO.updateSoft(softInfo);
+            softInfoDb.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
+            softInfoDb.setComName(softInfoVo.getComName());
+            softInfoDb.setProName(softInfoVo.getProName());
+            softInfoDAO.updateSoft(softInfoDb);
         }
         //验证路径信息
         String filePath = null;
-        List<FileUpload> fileUploadList = fileUploadDAO.listFileUpload(softInfo.getPid());
+        List<FileUpload> fileUploadList = fileUploadDAO.listFileUpload(softInfoVo.getPid());
         List<CompInfo> compInfos = new ArrayList<>();
         for (FileUpload fileUpload : fileUploadList) {
             //目录文件，提取目录的存放路径
@@ -250,10 +254,6 @@ public class UploadServiceImpl implements UploadService {
             return false;
         }
         boolean flag = ReadTxt.comp2txt(filePath, compInfos);
-        //更新状态为已提交
-        if (flag) {
-            softInfoDAO.updateStatusToSubmit(softInfoVo.getPid());
-        }
         return flag;
     }
 

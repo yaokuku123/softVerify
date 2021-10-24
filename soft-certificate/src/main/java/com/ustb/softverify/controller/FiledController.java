@@ -111,6 +111,9 @@ public class FiledController {
         List<SignFileInfo> signFileInfos = softInfoService.SignFileInfos(pid);
         String signFilePath = EnvUtils.TmpFile +softName + ".bin";
         File signFile = new File(signFilePath);
+        if (!signFile.getParentFile().exists()) { // 如果父目录不存在，创建父目录
+            signFile.getParentFile().mkdirs();
+        }
         try {
             signFile.createNewFile();
         } catch (IOException e) {

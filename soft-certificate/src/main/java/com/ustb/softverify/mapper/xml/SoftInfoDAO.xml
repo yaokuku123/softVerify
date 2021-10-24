@@ -33,7 +33,7 @@
     
     <select id="SignFileInfos" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
         select file_name, file_path from t_file_upload
-        where pid=#{pid} and file_type not in (1,3)
+        where pid=#{pid} and file_type in (1,2,3)
     </select>
 
     <select id="listSoft"  resultType="com.ustb.softverify.entity.po.SoftInfo">
