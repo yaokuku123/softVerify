@@ -53,13 +53,4 @@ public class HmacUtils {
     private static byte[] decryptBASE64(String key) throws Exception {
         return (new BASE64Decoder()).decodeBuffer(key);
     }
-
-    public static void main(String[] args) throws Exception{
-        String inputStr="这是一个测试字符串aaabbbccc1jkasjdlaksj11222333";
-        byte[] inputData = inputStr.getBytes();
-//        String key = initMacKey();
-        System.out.println(new BigInteger(encryptHMAC(inputData, key)));
-    }
-
-
 }
