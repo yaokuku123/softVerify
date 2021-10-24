@@ -10,6 +10,7 @@ import com.ustb.softverify.domain.ResponseResult;
 import com.ustb.softverify.domain.vo.PublicKeyStr;
 
 import com.ustb.softverify.entity.dto.CertificateInfo;
+import com.ustb.softverify.entity.dto.CheckPwd;
 import com.ustb.softverify.entity.dto.SignFileInfo;
 import com.ustb.softverify.entity.po.SignFile;
 import com.ustb.softverify.entity.po.SoftInfo;
@@ -338,10 +339,10 @@ public class FiledController {
         return ResponseResult.error().message("下载失败");
     }
 
-    @PostMapping("/check/{pid}/{uploadPassword}")
-    public ResponseResult checkPwd(@PathVariable("pid")String pid,@PathVariable("uploadPassword")String uploadPassword){
-        SoftInfo softInfo = softInfoService.getSoftInfo(pid);
-        if (!MD5Utils.md5Hex(uploadPassword).equals(softInfo.getUploadPassword())){
+    @PostMapping("/check")
+    public ResponseResult checkPwd(@RequestBody CheckPwd checkPwd){
+        SoftInfo softInfo = softInfoService.getSoftInfo(checkPwd.getPid());
+        if (!MD5Utils.md5Hex(checkPwd.getPassword()).equals(softInfo.getUploadPassword())){
 
             return ResponseResult.error().data("result",false);
         }
