@@ -40,4 +40,7 @@ public interface FileUploadDAO {
      * @param fileType
      */
     void deleteFileUpload(@Param("pid") String pid,@Param("fileType") Integer fileType);
+
+    void updateStatus(String pid);
+
 }

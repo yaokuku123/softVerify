@@ -104,8 +104,8 @@ public class UploadController {
         return ResponseResult.success();
     }
 
-    @GetMapping("/submit")
-    public ResponseResult submit(SoftInfoVo softInfoVo) {
+    @PostMapping("/submit")
+    public ResponseResult submit(@RequestBody SoftInfoVo softInfoVo) {
         boolean flag = uploadService.submitInfo(softInfoVo);
         return ResponseResult.success().data("flag",flag);
     }

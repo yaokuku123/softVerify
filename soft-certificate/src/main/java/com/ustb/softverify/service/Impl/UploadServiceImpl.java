@@ -121,6 +121,8 @@ public class UploadServiceImpl implements UploadService {
         //数据信息插入表中
         FileUpload fileUploadDb = fileUploadDAO.getFileUpload(pid,fileType);
         if (fileUploadDb != null) {
+            //删除原先保存的文件
+            FileUtil.delete(fileUploadDb.getFilePath());
             //更新
             fileUploadDb.setFileSize(tmpFile.length());
             fileUploadDb.setFileName(originFileName);
@@ -214,6 +216,7 @@ public class UploadServiceImpl implements UploadService {
 
     @Override
     public boolean submitInfo(SoftInfoVo softInfoVo) {
+        //插入或更新数据
         SoftInfo softInfoDb = softInfoDAO.getSoftInfo(softInfoVo.getPid());
         softInfoVo.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
         SoftInfo softInfo = new SoftInfo();
@@ -247,6 +250,10 @@ public class UploadServiceImpl implements UploadService {
             return false;
         }
         boolean flag = ReadTxt.comp2txt(filePath, compInfos);
+        //更新状态为已提交
+        if (flag) {
+            softInfoDAO.updateStatusToSubmit(softInfoVo.getPid());
+        }
         return flag;
     }
 
