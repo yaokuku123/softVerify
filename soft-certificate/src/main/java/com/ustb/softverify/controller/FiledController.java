@@ -105,7 +105,7 @@ public class FiledController {
 
         // 根据pid  查询软件列表的路径
         List<SignFileInfo> signFileInfos = softInfoService.SignFileInfos(pid);
-        String signFilePath = EnvUtils.CERT_PATH +softName + ".bin";
+        String signFilePath = EnvUtils.TmpFile +softName + ".bin";
         File signFile = new File(signFilePath);
         try {
             signFile.createNewFile();

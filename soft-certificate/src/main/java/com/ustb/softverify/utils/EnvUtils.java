@@ -14,6 +14,10 @@ public class EnvUtils {
 
 
 
+    public static final String TmpFile = System.getProperty("user.dir") + "/data/tmp/";
+
+
+
 
 
 
