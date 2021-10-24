@@ -118,7 +118,7 @@
     </update>
 
     <select id="getAllSoft" resultType="SoftInfo">
-        select * from t_soft
+        select * from t_soft where status = 2
     </select>
 
 </mapper>

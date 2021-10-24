@@ -363,10 +363,10 @@ public class FiledController {
         PdfTemplete pdfTemplete = new PdfTemplete();
         Random random = new Random();
 
-        pdfTemplete.setCertId(random.nextInt(10000)).setSoftId(random.nextInt(10000))
+        pdfTemplete.setCertId(random.nextInt(10000))
                 .setAppName(soft.getComName()).setSoftName(soft.getProName())
-                .setSoftVersion("1.0").setDate(new SimpleDateFormat("yyyy 年 MM 月 D 日").format(new Date()))
-                .setSoftUi(pid).setSoftFi(String.valueOf(random.nextInt(100000)));
+                .setSoftVersion("1.0").setDate(new SimpleDateFormat("yyyy 年 MM 月 dd 日").format(new Date()))
+                .setSoftUi(pid);
 
         String saveName = EnvUtils.CSVTmp;
         File file = new File(saveName);
@@ -375,14 +375,16 @@ public class FiledController {
         }
         FileOutputStream fos = new FileOutputStream(saveName+ "templetedata.csv");
         OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
-        CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader("cert-ID", "soft-ID", "app-name","soft-name","soft-version","date","soft-ui","soft-fi");
+        CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader("cert-ID", "app-name","soft-name","soft-version","date","soft-ui");
         CSVPrinter csvPrinter = new CSVPrinter(osw, csvFormat);
 
-        csvPrinter.printRecord(pdfTemplete.getCertId(), pdfTemplete.getSoftId(), pdfTemplete.getAppName(),pdfTemplete.getSoftName()
-                ,pdfTemplete.getSoftVersion(),pdfTemplete.getDate(),pdfTemplete.getSoftUi(),pdfTemplete.getSoftFi());
+        csvPrinter.printRecord(pid, pdfTemplete.getAppName(),pdfTemplete.getSoftName()
+                ,pdfTemplete.getSoftVersion(),pdfTemplete.getDate(),pdfTemplete.getSoftUi());
 
         csvPrinter.flush();
         csvPrinter.close();
+
+        //String csvTitle =
 
         ScpUtil.putFile(saveName+"templetedata.csv" ,"/root/Certificat/");
 
