@@ -90,13 +90,14 @@ public class RemoteUtil {
             //执行远程命令，成功
             session = conn.openSession();
             //session.execCommand("cd "+dataServerDestDir+" ; mkdir 10092 ; cd 10092 ; mkdir input ;mkdir output ");//分号隔开执行多条指令
-            session.execCommand("cd Certificat ; xelatex Certificat.tex ; xelatex Certificat.tex");//分号隔开执行多条指令
+            session.execCommand("cd Certificat ;  ./cer.sh ");//分号隔开执行多条指令
+            Thread.sleep(4000);
 
 //            }
             //获得退出状态
             System.out.println("session，ExitCode: " + session.getExitStatus());//返回0 表示命令执行成功；返回1 表示执行失败
             session.close();
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             System.out.println("文件scp到数据服务器时发生异常");
             if (conn != null) {

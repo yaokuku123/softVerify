@@ -36,6 +36,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * @author WYP
@@ -389,6 +390,8 @@ public class FiledController {
         ScpUtil.putFile(saveName+"templetedata.csv" ,"/root/Certificat/");
 
         RemoteUtil.generatePdf(pid);
+
+        //Thread.sleep(3000);
 
         ScpUtil.getFile("/root/Certificat/Certificat.pdf" ,EnvUtils.TmpFile);
 
