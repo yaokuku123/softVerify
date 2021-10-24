@@ -357,7 +357,7 @@ public class FiledController {
 
 
     @PostMapping("/generatePDF")
-    public ResponseResult generatePDF(@RequestParam("pid") String pid) throws Exception {
+    public ResponseResult generatePDF(@RequestParam("pid") String pid,HttpServletResponse response) throws Exception {
 
         SoftInfo soft = softInfoService.getSoftDetail(pid);
         PdfTemplete pdfTemplete = new PdfTemplete();
@@ -386,9 +386,39 @@ public class FiledController {
 
         ScpUtil.putFile(saveName+"templetedata.csv" ,"/root/Certificat/");
 
+        RemoteUtil.generatePdf(pid);
 
+        ScpUtil.getFile("/root/Certificat/Certificat.pdf" ,EnvUtils.TmpFile);
 
-        return ResponseResult.success();
+        File file1 = new File(EnvUtils.TmpFile + "Certificat.pdf");
+        // 设置下载软件文件名
+        String fileName = ("Certificat.pdf");
+        response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
+        OutputStream os = null;
+        try (FileInputStream fis = new FileInputStream(file1);
+             BufferedInputStream bis = new BufferedInputStream(fis)) {
+            os = response.getOutputStream();
+            byte[] buffer = new byte[1024];
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+
+            return ResponseResult.success().message("下载成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            FileUtil.deleteDir(EnvUtils.CERT_PATH);
+        }
+        return ResponseResult.error().message("下载失败");
+
+       // return ResponseResult.success();
     }
 
 
