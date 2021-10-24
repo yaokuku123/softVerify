@@ -294,9 +294,9 @@ public class FiledController {
         if (!fileP.exists()){
             fileP.mkdirs();
         }
-        if (!MD5Utils.md5Hex(uploadPassword).equals(softInfo.getUploadPassword())){
-            return ResponseResult.error().message("密码错误，请重新输入");
-        }
+//        if (!MD5Utils.md5Hex(uploadPassword).equals(softInfo.getUploadPassword())){
+//            return ResponseResult.error().message("密码错误，请重新输入");
+//        }
 
 
         ScpUtil.getFile(softInfo.getSoftRemotePath() ,EnvUtils.CERT_PATH);
@@ -338,4 +338,13 @@ public class FiledController {
         return ResponseResult.error().message("下载失败");
     }
 
+    @GetMapping("/check")
+    public ResponseResult checkPwd(@RequestParam("pid")String pid,@RequestParam("uploadPassword")String uploadPassword){
+        SoftInfo softInfo = softInfoService.getSoftInfo(pid);
+        if (!MD5Utils.md5Hex(uploadPassword).equals(softInfo.getUploadPassword())){
+
+            return ResponseResult.error().data("result",false);
+        }
+        return ResponseResult.success().data("result",true);
+    }
 }
