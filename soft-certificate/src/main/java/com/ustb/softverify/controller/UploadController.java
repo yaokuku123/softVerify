@@ -9,7 +9,7 @@ import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.*;
 import com.ustb.softverify.exception.*;
 import com.ustb.softverify.service.UploadService;
-import com.ustb.softverify.utils.ReadTxt;
+import com.ustb.softverify.utils.*;
 import edu.ustb.shellchainapi.shellchain.command.ShellChainException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +86,38 @@ public class UploadController {
         //文档信息插入数据库与文档保存
         uploadService.uploadFile(file,pid,fileType);
         return ResponseResult.success();
+    }
+
+    @GetMapping(value = "/download",produces = "application/json;charset=UTF-8")
+    public ResponseResult download(@RequestParam("pid")String pid,
+                                      @RequestParam("fileType") Integer fileType,
+                                      HttpServletResponse response){
+        //查找文档保存路径
+        String filePath = uploadService.getUploadFilePath(pid,fileType);
+        //下载软件
+        File file = new File(filePath);
+        // 设置下载软件文件名
+        response.addHeader("Content-Disposition", "attachment;fileName=" + file.getName());// 设置文件名
+        OutputStream os = null;
+        try (FileInputStream fis = new FileInputStream(file);
+             BufferedInputStream bis = new BufferedInputStream(fis)) {
+            os = response.getOutputStream();
+            byte[] buffer = new byte[1024];
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+            return ResponseResult.success().message("下载成功");
+        } catch (Exception e) {
+            throw new FileReadWriteException();
+        } finally {
+            try {
+                os.close();
+            } catch (IOException e) {
+                throw new FileReadWriteException();
+            }
+        }
     }
 
     /**

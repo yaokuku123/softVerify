@@ -257,4 +257,9 @@ public class UploadServiceImpl implements UploadService {
         return flag;
     }
 
+    @Override
+    public String getUploadFilePath(String pid, Integer fileType) {
+        return fileUploadDAO.getFileUpload(pid,fileType).getFilePath();
+    }
+
 }

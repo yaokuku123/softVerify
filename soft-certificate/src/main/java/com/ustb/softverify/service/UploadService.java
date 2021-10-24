@@ -85,4 +85,12 @@ public interface UploadService {
      * @param softInfoVo
      */
     boolean submitInfo(SoftInfoVo softInfoVo);
+
+    /**
+     * 获取文档的上传路径
+     * @param pid
+     * @param fileType
+     * @return
+     */
+    String getUploadFilePath(String pid, Integer fileType);
 }
