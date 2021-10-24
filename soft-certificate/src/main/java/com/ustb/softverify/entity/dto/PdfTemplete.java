@@ -18,11 +18,9 @@ import java.util.Date;
 public class PdfTemplete {
 
     private Integer certId;
-    private Integer softId;
     private String appName;
     private String softName;
     private String softVersion;
     private String date;
     private String softUi;
-    private String softFi;
 }
