@@ -69,7 +69,7 @@ public class FiledController {
 
 
     /**
-     * 已归档软件信息列表   status = 3
+     * 已归档软件信息列表   status = 2
      * @param
      * @return
      */
@@ -82,7 +82,7 @@ public class FiledController {
     }
 
     /**
-     * 文件保存待归档软件信息列表  status = 2
+     *
      * @param
      * @return
      */
@@ -193,10 +193,8 @@ public class FiledController {
         String zipArchiveName = pid + "_a.zip";
         Random random = new Random();
         int math = random.nextInt(1000000);
-        System.out.println(math);
-
+        //System.out.println(math);
         int i = math ^ 1010;
-        System.out.println(i^1010);
         String password = String.valueOf(i);
         softInfoService.insertZipPwd(pid,password);
 
