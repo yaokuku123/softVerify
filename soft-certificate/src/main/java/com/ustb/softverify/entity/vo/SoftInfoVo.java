@@ -23,4 +23,5 @@ public class SoftInfoVo implements Serializable {
     private String proName;
     private String uploadPassword;
     private String pid;
+    private String status;
 }

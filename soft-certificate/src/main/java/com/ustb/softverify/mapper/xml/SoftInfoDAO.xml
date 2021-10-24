@@ -7,8 +7,7 @@
         <result property="softName" column="soft_name"/>
         <result property="softDesc" column="soft_desc"/>
         <result property="status" column="status"/>
-        <result property="govUserId" column="gov_user_id"/>
-        <result property="sid" column="sid"/>
+        <result property="pid" column="pid"/>
         <collection property="signFileList" resultMap="signFileListMap"/>
     </resultMap>
 
@@ -30,7 +29,7 @@
 
     <select id="getAllUploadInfo" resultMap="UserSoftInfoResult">
     select * from t_soft s where s.status = 2
-</select>
+    </select>
     
     <select id="SignFileInfos" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
         select file_name, file_path from t_file_upload
@@ -117,5 +116,9 @@
     <update id="updateStatusToSubmit" >
         update t_soft set status = 2 where pid = #{pid}
     </update>
+
+    <select id="getAllSoft" resultType="SoftInfo">
+        select * from t_soft
+    </select>
 
 </mapper>

@@ -100,4 +100,9 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     public void insertZipPwd(String pid, String zipPassword) {
         softInfoDAO.insertZipPwd(pid,zipPassword);
     }
+
+    @Override
+    public List<SoftInfo> getAllSoft() {
+        return softInfoDAO.getAllSoft();
+    }
 }

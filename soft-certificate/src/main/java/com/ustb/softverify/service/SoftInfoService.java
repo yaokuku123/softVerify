@@ -45,4 +45,6 @@ public interface SoftInfoService {
     Integer getSid(String pid);
 
     void insertZipPwd(String pid,String zipPassword);
+
+    List<SoftInfo> getAllSoft();
 }

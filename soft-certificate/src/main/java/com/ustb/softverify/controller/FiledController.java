@@ -75,9 +75,8 @@ public class FiledController {
      */
     @GetMapping("/fileInfos")
     public ResponseResult getAllUploadInfo(){
-        List<SoftInfoVo> uploadInfo = softInfoService.getAllUploadInfo();
-
-        return ResponseResult.success().data("softInfo",uploadInfo);
+        List<SoftInfo> allSoft = softInfoService.getAllSoft();
+        return ResponseResult.success().data("softInfo",allSoft);
 
     }
 
