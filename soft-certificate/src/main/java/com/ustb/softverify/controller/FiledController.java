@@ -179,10 +179,10 @@ public class FiledController {
             String firstPath = "";
             String secondPath = "";
             for (SignFileInfo signFileInfo :signFileInfos){
-                if (signFileInfo.getFileType().equals("1")){
+                if (signFileInfo.getFileType().equals(1)){
                     firstPath = signFileInfo.getFilePath();
                 }
-                if (!signFileInfo.getFileType().equals("1")){
+                if (!signFileInfo.getFileType().equals(1)){
                     secondPath = signFileInfo.getFilePath();
                 }
             }
@@ -193,13 +193,13 @@ public class FiledController {
             String secondPath = "";
             String thirdPath = "";
             for (SignFileInfo signFileInfo :signFileInfos){
-                if (signFileInfo.getFileType().equals("1")){
+                if (signFileInfo.getFileType().equals(1)){
                     firstPath = signFileInfo.getFilePath();
                 }
-                if (signFileInfo.getFileType().equals("2")){
+                if (signFileInfo.getFileType().equals(2)){
                     secondPath = signFileInfo.getFilePath();
                 }
-                if (signFileInfo.getFileType().equals("3")){
+                if (signFileInfo.getFileType().equals(3)){
                     thirdPath = signFileInfo.getFilePath();
                 }
             }
