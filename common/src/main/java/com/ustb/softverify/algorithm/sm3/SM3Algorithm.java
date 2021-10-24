@@ -14,6 +14,19 @@ public class SM3Algorithm {
 
     /**
      *
+     * @param bytes 需要校验部分
+     * @return 哈希结果
+     */
+    public static byte[] SM3Encrypt(byte[] bytes) {
+        SM3Digest digest = new SM3Digest();
+        digest.update(bytes,0,bytes.length);
+        byte[] hash = new byte[digest.getDigestSize()];
+        digest.doFinal(hash,0);
+        return hash;
+    }
+
+    /**
+     *
      * @param filePath 文件路径
      * @return 哈希结果
      * @throws FileNotFoundException
