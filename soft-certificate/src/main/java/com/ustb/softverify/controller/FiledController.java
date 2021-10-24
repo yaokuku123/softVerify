@@ -338,8 +338,8 @@ public class FiledController {
         return ResponseResult.error().message("下载失败");
     }
 
-    @GetMapping("/check")
-    public ResponseResult checkPwd(@RequestParam("pid")String pid,@RequestParam("uploadPassword")String uploadPassword){
+    @PostMapping("/check/{pid}/{uploadPassword}")
+    public ResponseResult checkPwd(@PathVariable("pid")String pid,@PathVariable("uploadPassword")String uploadPassword){
         SoftInfo softInfo = softInfoService.getSoftInfo(pid);
         if (!MD5Utils.md5Hex(uploadPassword).equals(softInfo.getUploadPassword())){
 
