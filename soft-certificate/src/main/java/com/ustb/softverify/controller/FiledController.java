@@ -472,6 +472,40 @@ public class FiledController {
         return ResponseResult.success().data("data",1);
     }
 
+    /**
+     * 获取excel导出数据
+     * @return
+     */
+    @GetMapping(value = "/excel",produces = "application/json;charset=UTF-8")
+    public ResponseResult exportExcel(HttpServletResponse response) {
+        //获取excel文件路径
+        String excelFilePath = softInfoService.getExcel();
+        File excelFile = new File(excelFilePath);
+        // 设置下载软件文件名
+        response.addHeader("Content-Disposition", "attachment;fileName=" + excelFile.getName());// 设置文件名
+        OutputStream os = null;
+        try (FileInputStream fis = new FileInputStream(excelFile);
+             BufferedInputStream bis = new BufferedInputStream(fis)) {
+            os = response.getOutputStream();
+            byte[] buffer = new byte[1024];
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+            //删除临时excel文件
+            FileUtil.delete(excelFilePath);
+            return ResponseResult.success().message("下载成功");
+        } catch (Exception e) {
+            throw new FileReadWriteException();
+        } finally {
+            try {
+                os.close();
+            } catch (IOException e) {
+                throw new FileReadWriteException();
+            }
+        }
+    }
 
 
 }

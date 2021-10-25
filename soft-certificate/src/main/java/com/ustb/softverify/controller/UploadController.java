@@ -88,6 +88,13 @@ public class UploadController {
         return ResponseResult.success();
     }
 
+    /**
+     * 下载文件
+     * @param pid
+     * @param fileType
+     * @param response
+     * @return
+     */
     @GetMapping(value = "/download",produces = "application/json;charset=UTF-8")
     public ResponseResult download(@RequestParam("pid")String pid,
                                       @RequestParam("fileType") Integer fileType,
@@ -135,24 +142,14 @@ public class UploadController {
         return ResponseResult.success();
     }
 
+    /**
+     * 提交数据请求
+     * @param softInfoVo
+     * @return
+     */
     @PostMapping("/submit")
     public ResponseResult submit(@RequestBody SoftInfoVo softInfoVo) {
         boolean flag = uploadService.submitInfo(softInfoVo);
         return ResponseResult.success().data("flag",flag);
     }
-
-    /**
-     * 获取提交软件的信息
-     * @param govUserId
-     * @return
-     */
-
-
-    @GetMapping("/browseSoftInfo")
-    public ResponseResult browserSoftInfo(@RequestParam("govUserId") Integer govUserId) {
-        //根据用户标识和状态信息获取数据（用户数据，软件数据，上传文件数据），获取链上的证书数据
-        BrowserInfoVo browseInfo = uploadService.getBrowseInfo(govUserId, StatusEnum.FILED.getCode());
-        return ResponseResult.success().data("broseInfo",browseInfo);
-    }
-
 }
