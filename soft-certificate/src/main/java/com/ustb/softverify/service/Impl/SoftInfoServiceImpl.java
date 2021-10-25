@@ -1,14 +1,19 @@
 package com.ustb.softverify.service.Impl;
 
+import com.ustb.softverify.entity.dto.FileEntity;
 import com.ustb.softverify.entity.dto.SignFileInfo;
 import com.ustb.softverify.entity.po.SignFile;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import com.ustb.softverify.mapper.SoftInfoDAO;
+import com.ustb.softverify.service.FileHandler;
 import com.ustb.softverify.service.SoftInfoService;
+import com.ustb.softverify.utils.EnvUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -109,5 +114,25 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     @Override
     public void insertFingerCode(String pid, String fingerCode) {
         softInfoDAO.insertFingerCode(pid,fingerCode);
+    }
+
+    @Override
+    public String getExcel() {
+        List<SoftInfo> allSoft = softInfoDAO.getAllSoft();
+        List<FileEntity> fileEntityList = new ArrayList<>();
+        if (allSoft.size() == 0) return null;
+        //类型转换
+        int number = 1;
+        for (SoftInfo softInfo : allSoft) {
+            FileEntity fileEntity = new FileEntity();
+            BeanUtils.copyProperties(softInfo,fileEntity);
+            fileEntity.setNumber(number++);
+            fileEntityList.add(fileEntity);
+        }
+        //写入excel
+        FileHandler fileHandler = new FileHandlerImpl();
+        String filePath = EnvUtils.TmpExcelPath;
+        fileHandler.easyExcelWrite(filePath,fileEntityList);
+        return filePath;
     }
 }

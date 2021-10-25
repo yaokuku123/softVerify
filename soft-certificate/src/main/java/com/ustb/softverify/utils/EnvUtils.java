@@ -16,7 +16,7 @@ public class EnvUtils {
 
     public static final String TmpFile = System.getProperty("user.dir") + "/data/tmp/";
 
-
+    public static final String TmpExcelPath = System.getProperty("user.dir") + File.separator + "data" + File.separator + "tmp" + File.separator + "list.xls";
 
     public static final String CSVTmp = System.getProperty("user.dir") + "/data/csv/";
 

@@ -6,6 +6,7 @@ import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import org.apache.ibatis.annotations.Param;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -49,4 +50,10 @@ public interface SoftInfoService {
     List<SoftInfo> getAllSoft();
 
     void insertFingerCode(String pid,String fingerCode);
+
+    /**
+     * 获取excel文件
+     * @return 返回excel文件
+     */
+    String getExcel();
 }
