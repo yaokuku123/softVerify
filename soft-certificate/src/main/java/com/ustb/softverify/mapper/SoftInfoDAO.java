@@ -127,4 +127,6 @@ public interface SoftInfoDAO {
     void updateStatusToSubmit(String pid);
 
     List<SoftInfo> getAllSoft();
+
+    void insertFingerCode(@Param("pid")String pid,@Param("fingerCode")String fingerCode);
 }

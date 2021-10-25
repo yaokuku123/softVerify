@@ -11,21 +11,24 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+import com.ustb.softverify.utils.FileUtil;
+
 public class LZWEncoder {
 
 	private static String File_Input = null;
 	public static int Bit_Length;
-	private static double MAX_TABLE_SIZE; //Max Table size is based on the bit length input.
+	private static int MAX_TABLE_SIZE; //Max Table size is based on the bit length input.
 	private static String LZWfilename;
 
 	/**
-	 * 计算LZW算法压缩比例
-	 * @param fileStream
+	 * 计算LZW算法压缩比例，在上传文件小于10MB的情况下，内存占用约 1～5 MB 级别
+	 * 文件流长度为n，则时间复杂度约为 O(n)
+	 * @param fileStream 读取文件字节流转化的字符串，字符串中字符要求为1Byte存储
 	 * @param byteArrLen 返回字节数组的长度，默认是2
 	 * @return
 	 */
 	public static byte[] calcCompressedRatio(String fileStream, int byteArrLen) {
-		Bit_Length = byteArrLen*8;
+		Bit_Length = 8*byteArrLen;
 		double compressedRatio = Encode_string(fileStream, Bit_Length);
 		// 二进制化
 		byte[] ans = new byte[byteArrLen];
@@ -54,13 +57,11 @@ public class LZWEncoder {
 	/** Compress a string to a list of output symbols and then pass it for compress file creation.
 	 * @param Bit_Length //Provided as user input.
 	 * @param input_string //Filename that is used for encoding.
-	 * @throws IOException */
+	 */
 
-	private static double Encode_string(String input_string, double Bit_Length) {
-
-		MAX_TABLE_SIZE = Math.pow(2, Bit_Length);
-
-		double table_Size =  255;
+	private static double Encode_string(String input_string, int Bit_Length) {
+		MAX_TABLE_SIZE = 1 << Bit_Length;
+		int table_Size =  255;
 
 		Map<String, Integer> TABLE = new HashMap<String, Integer>();
 
@@ -79,7 +80,7 @@ public class LZWEncoder {
 				encoded_values.add(TABLE.get(initString));
 
 				if(table_Size < MAX_TABLE_SIZE)
-					TABLE.put(Str_Symbol, (int) table_Size++);
+					TABLE.put(Str_Symbol, table_Size++);
 				initString = "" + symbol;
 			}
 		}
@@ -88,8 +89,8 @@ public class LZWEncoder {
 			encoded_values.add(TABLE.get(initString));
 
 		//CreateLZWfile(encoded_values);
-		int compressedSize = encoded_values.size()*(int)Bit_Length;
-		return compressedSize / (16.0 * input_string.length());
+		int compressedSize = encoded_values.size()*Bit_Length;
+		return (double)compressedSize / (Bit_Length * input_string.length());
 	}
 
 
@@ -129,33 +130,17 @@ public class LZWEncoder {
 		File_Input = args[0];
 		Bit_Length = Integer.parseInt(args[1]);
 
-		StringBuffer input_string1 = new StringBuffer();
-
-		try (BufferedReader br = Files.newBufferedReader(Paths.get(File_Input), StandardCharsets.UTF_8)) {
-			for (String line = null; (line = br.readLine()) != null;) {
-
-				input_string1 = input_string1.append(line);
-			}
-		}
-
-		double compressedRatio = Encode_string(input_string1.toString(),Bit_Length);
-		System.out.println(compressedRatio);
+//		StringBuffer input_string1 = new StringBuffer();
+//
+//		try (BufferedReader br = Files.newBufferedReader(Paths.get(File_Input), StandardCharsets.UTF_8)) {
+//			for (String line = null; (line = br.readLine()) != null;) {
+//
+//				input_string1 = input_string1.append(line);
+//			}
+//		}
 		// 二进制化
 		int byteArrLen = 2;
-		byte[] ans = new byte[byteArrLen];
-		double base = 1;
-		double approx = 0;
-		for (int i = 0; i < byteArrLen*8; ++i) {
-			if (compressedRatio > approx) {
-				setBit(ans, i, 1);
-				approx += base/2;
-			} else {
-				setBit(ans, Math.max(i-1,0), 0);
-				approx -= base/2;
-			}
-			base /= 2;
-		}
-		System.out.println(ans);
+		byte[] ans = LZWEncoder.calcCompressedRatio(FileUtil.read(File_Input), 2);
 		for(int i = 0; i < byteArrLen; ++i) {
 			System.out.println(ByteAndBitUtils.byte2String(ans[i]));
 		}

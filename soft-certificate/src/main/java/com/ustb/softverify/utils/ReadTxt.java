@@ -53,8 +53,13 @@ public class ReadTxt {
 
         for(CompInfo comp : compInfoList) {
             for (String s : strList) {
+                if(s.equals(""))continue;
                 boolean flag1 = s.contains(comp.getOrgName());
-                boolean flag2 = s.contains(comp.getFileSize().toString());
+                String spString[] = s.split("\\s+");
+                if (spString.length <= 1) continue;
+                System.out.println(spString.length - 2);
+                spString[spString.length - 2] = spString[spString.length - 2].replace(",","");
+                boolean flag2 = spString[spString.length - 2].contains(comp.getFileSize().toString());
                 comp.setFlag(flag1 && flag2);
                 if (comp.isFlag()) {
                     break;

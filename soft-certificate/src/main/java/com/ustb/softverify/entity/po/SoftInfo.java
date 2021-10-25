@@ -40,8 +40,8 @@ public class SoftInfo implements Serializable {
     private String txid;
     /* 状态 */
     private Integer status;
-
-
+    /* 核验码 */
+    private String verificationCode;
 
     /* 标识 */
     private String pid;

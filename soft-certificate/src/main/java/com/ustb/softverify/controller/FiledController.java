@@ -22,6 +22,7 @@ import com.ustb.softverify.service.Impl.ChainService;
 import com.ustb.softverify.service.Impl.ShellTools;
 import com.ustb.softverify.service.SoftInfoService;
 import com.ustb.softverify.utils.*;
+import com.ustb.softverify.utils.checkcode.CheckCode;
 import edu.ustb.shellchainapi.shellchain.command.ShellChainException;
 import it.unisa.dia.gas.jpbc.Element;
 import org.apache.commons.csv.CSVFormat;
@@ -109,8 +110,15 @@ public class FiledController {
 
         // 根据pid  查询软件列表的路径
         List<SignFileInfo> signFileInfos = softInfoService.SignFileInfos(pid);
+
+
+
+
         String signFilePath = EnvUtils.TmpFile +softName + ".bin";
         File signFile = new File(signFilePath);
+        if (!signFile.getParentFile().exists()) { // 如果父目录不存在，创建父目录
+            signFile.getParentFile().mkdirs();
+        }
         try {
             signFile.createNewFile();
         } catch (IOException e) {
@@ -163,7 +171,49 @@ public class FiledController {
         String txid = upChain(certificateInfo);
         softInfoService.insertTxid(pid,txid);
 
+        // 生成核验码
+        String fingerCode = "";
+        if (signFileInfos.size() == 1){
+            fingerCode = CheckCode.getFingerCode(signFileInfos.get(0).getFilePath(), txid);
+        }else if(signFileInfos.size() == 2){
+            String firstPath = "";
+            String secondPath = "";
+            for (SignFileInfo signFileInfo :signFileInfos){
+                if (signFileInfo.getFileType().equals(1)){
+                    firstPath = signFileInfo.getFilePath();
+                }
+                if (!signFileInfo.getFileType().equals(1)){
+                    secondPath = signFileInfo.getFilePath();
+                }
+            }
+            fingerCode = CheckCode.getFingerCode(firstPath, secondPath, txid);
+
+        }else if(signFileInfos.size() == 3){
+            String firstPath = "";
+            String secondPath = "";
+            String thirdPath = "";
+            for (SignFileInfo signFileInfo :signFileInfos){
+                if (signFileInfo.getFileType().equals(1)){
+                    firstPath = signFileInfo.getFilePath();
+                }
+                if (signFileInfo.getFileType().equals(2)){
+                    secondPath = signFileInfo.getFilePath();
+                }
+                if (signFileInfo.getFileType().equals(3)){
+                    thirdPath = signFileInfo.getFilePath();
+                }
+            }
+
+            fingerCode = CheckCode.getFingerCode(firstPath, secondPath, thirdPath, txid);
+
+        }
+
+        softInfoService.insertFingerCode(pid,fingerCode);
+
+
+
         List<SignFileInfo> fileRecords = softInfoService.softFileRecords(pid);
+
         //根据pid创建文件夹 相应两个文件夹
         String localPath = EnvUtils.TmpSoftware + "/data/" + new SimpleDateFormat("yyyy").format(new Date()) + "/" + pid;
         String localOriginPath = localPath + "/original/";
@@ -210,7 +260,7 @@ public class FiledController {
         //改变status
         softInfoService.changeStatus(pid);
         softInfoService.insertPath(pid,zipPath +"/"+ zipOriginName,zipOriginName);
-        return ResponseResult.success().message("归档完成");
+        return ResponseResult.success().data("fingerCode",fingerCode);
     }
 
 
@@ -363,11 +413,10 @@ public class FiledController {
         SoftInfo soft = softInfoService.getSoftDetail(pid);
         PdfTemplete pdfTemplete = new PdfTemplete();
         Random random = new Random();
-
         pdfTemplete.setCertId(random.nextInt(10000))
                 .setAppName(soft.getComName()).setSoftName(soft.getProName())
                 .setSoftVersion("1.0").setDate(new SimpleDateFormat("yyyy 年 MM 月 dd 日").format(new Date()))
-                .setSoftUi(pid);
+                .setSoftUi(soft.getVerificationCode());
 
         String saveName = EnvUtils.CSVTmp;
         File file = new File(saveName);
@@ -409,8 +458,6 @@ public class FiledController {
                 os.write(buffer, 0, i);
                 i = bis.read(buffer);
             }
-
-            return ResponseResult.success().message("下载成功");
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -421,9 +468,8 @@ public class FiledController {
             }
             FileUtil.deleteDir(EnvUtils.CERT_PATH);
         }
-        return ResponseResult.error().message("下载失败");
 
-       // return ResponseResult.success();
+        return ResponseResult.success().data("data",1);
     }
 
 
