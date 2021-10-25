@@ -25,5 +25,21 @@ public class TextTest {
         System.out.println(ReadTxt.comp2txt(dirPath, compInfos));
     }
 
+    @Test
+    public void test1() {
+        String a = "2021/10/19  22:26                1,2 BAKA.txt";
+        String Str = new String("Runoob");
+        String spString[] = a.split("\\s+");
+        for(String ss : spString){
+            System.out.println(ss);
+        }
+
+
+        spString[2] = spString[2].replace(",", "");
+        System.out.println(spString[2]);
+
+        System.out.println(Str.replace('o', 'T'));
+    }
+
 
 }
