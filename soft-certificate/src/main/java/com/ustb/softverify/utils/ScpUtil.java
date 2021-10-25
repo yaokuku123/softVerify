@@ -19,6 +19,12 @@ public class ScpUtil {
     private static String PASSWORD = "chainNode202";//生成私钥的密码和登录密码，这两个共用这个密码
     private static String PRIVATEKEY = "C:\\Users\\mph\\.ssh\\id_rsa";// 本机的私钥文件
 
+//    private static String IP = "192.168.179.89";
+//    private static int PORT = 22;
+//    private static String USER = "root";//登录用户名
+//    private static String PASSWORD = "kingsoft";//生成私钥的密码和登录密码，这两个共用这个密码
+//    private static String PRIVATEKEY = "C:\\Users\\mph\\.ssh\\id_rsa";// 本机的私钥文件
+
     /**
      * 使用用户名和密码来进行登录验证。如果为true则通过用户名和密码登录，false则使用rsa免密码登录
      */

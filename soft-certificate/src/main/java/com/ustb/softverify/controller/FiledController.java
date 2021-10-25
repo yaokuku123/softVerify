@@ -425,11 +425,11 @@ public class FiledController {
         }
         FileOutputStream fos = new FileOutputStream(saveName+ "templetedata.csv");
         OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
-        CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader("cert-ID", "app-name","soft-name","soft-version","date","soft-ui");
+        CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader("cert-ID", "app-name","soft-name","date","soft-ui");
         CSVPrinter csvPrinter = new CSVPrinter(osw, csvFormat);
 
         csvPrinter.printRecord(pid, pdfTemplete.getAppName(),pdfTemplete.getSoftName()
-                ,pdfTemplete.getSoftVersion(),pdfTemplete.getDate(),pdfTemplete.getSoftUi());
+                ,pdfTemplete.getDate(),pdfTemplete.getSoftUi());
 
         csvPrinter.flush();
         csvPrinter.close();
