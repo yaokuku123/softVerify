@@ -27,6 +27,9 @@ public class CheckCode {
             //第三个文件转换
             byte[] file3 = HmacUtils.encryptHMAC(FileUtil.read(filePath3));
             byte[] fixBytesFile3 = ByteAndBitUtils.getFixBytes(file3, 2);
+            //计算香浓熵
+            byte[] entropy = ShannonEntropy.calculateShanonEntropy(filePath1);
+            byte[] fixBytesEntropy = ByteAndBitUtils.getFixBytes(entropy,2);
             //统计量转换
             byte[] lzwBytes = LZWEncoder.calcCompressedRatio(FileUtil.read(filePath1), 2);
             //txid交易地址转换
@@ -43,13 +46,13 @@ public class CheckCode {
             byte fileNumAndTxidVersionByte = (byte) (fileNumByte | txidVersionByte);
 
             //获取sm3 hash校验码 4位
-            byte[] unValid = CheckCode.getCheckCode3(fixBytesFile1, fixBytesFile2, fixBytesFile3, new byte[2], lzwBytes, fixBytesTxid,fileNumAndTxidVersionByte);
+            byte[] unValid = CheckCode.getCheckCode3(fixBytesFile1, fixBytesFile2, fixBytesFile3, fixBytesEntropy, lzwBytes, fixBytesTxid,fileNumAndTxidVersionByte);
             byte[] sm3EncryptByte = SM3Algorithm.SM3Encrypt(unValid);
             byte fixBytes = (byte) (ByteAndBitUtils.getFixBytes(sm3EncryptByte, 1)[0] & ByteAndBitUtils.bit2byte("00001111"));
             //拼接最后1个字节
             byte valid = (byte)(fixBytes | fileNumAndTxidVersionByte);
             //结果
-            byte[] res = CheckCode.getCheckCode3(fixBytesFile1, fixBytesFile2, fixBytesFile3, new byte[2], lzwBytes, fixBytesTxid,valid);
+            byte[] res = CheckCode.getCheckCode3(fixBytesFile1, fixBytesFile2, fixBytesFile3, fixBytesEntropy, lzwBytes, fixBytesTxid,valid);
             return HexUtils.bytes2Hex(res);
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,6 +75,9 @@ public class CheckCode {
             //第二个文件转换
             byte[] file2 = HmacUtils.encryptHMAC(FileUtil.read(filePath2));
             byte[] fixBytesFile2 = ByteAndBitUtils.getFixBytes(file2, 4);
+            //计算香浓熵
+            byte[] entropy = ShannonEntropy.calculateShanonEntropy(filePath1);
+            byte[] fixBytesEntropy = ByteAndBitUtils.getFixBytes(entropy,2);
             //统计量转换
             byte[] lzwBytes = LZWEncoder.calcCompressedRatio(FileUtil.read(filePath1), 2);
             //txid交易地址转换
@@ -89,13 +95,13 @@ public class CheckCode {
             System.out.println(fileNumAndTxidVersionByte);
 
             //获取sm3 hash校验码 4位
-            byte[] unValid = CheckCode.getCheckCode2(fixBytesFile1, fixBytesFile2, new byte[2], lzwBytes, fixBytesTxid,fileNumAndTxidVersionByte);
+            byte[] unValid = CheckCode.getCheckCode2(fixBytesFile1, fixBytesFile2, fixBytesEntropy, lzwBytes, fixBytesTxid,fileNumAndTxidVersionByte);
             byte[] sm3EncryptByte = SM3Algorithm.SM3Encrypt(unValid);
             byte fixBytes = (byte) (ByteAndBitUtils.getFixBytes(sm3EncryptByte, 1)[0] & ByteAndBitUtils.bit2byte("00001111"));
             //拼接第一个字节
             byte valid = (byte)(fixBytes | fileNumAndTxidVersionByte);
             //结果
-            byte[] res = CheckCode.getCheckCode2(fixBytesFile1, fixBytesFile2, new byte[2], lzwBytes, fixBytesTxid,valid);
+            byte[] res = CheckCode.getCheckCode2(fixBytesFile1, fixBytesFile2, fixBytesEntropy, lzwBytes, fixBytesTxid,valid);
             System.out.println(HexUtils.bytes2Hex(res));
             return HexUtils.bytes2Hex(res);
         } catch (Exception e) {
@@ -115,6 +121,9 @@ public class CheckCode {
             //第一个文件转换
             byte[] file1 = HmacUtils.encryptHMAC(FileUtil.read(filePath1));
             byte[] fixBytesFile1 = ByteAndBitUtils.getFixBytes(file1, 8);
+            //计算香浓熵
+            byte[] entropy = ShannonEntropy.calculateShanonEntropy(filePath1);
+            byte[] fixBytesEntropy = ByteAndBitUtils.getFixBytes(entropy,2);
             //统计量转换
             byte[] lzwBytes = LZWEncoder.calcCompressedRatio(FileUtil.read(filePath1), 2);
             //txid交易地址转换
@@ -132,13 +141,13 @@ public class CheckCode {
             System.out.println(fileNumAndTxidVersionByte);
 
             //获取sm3 hash校验码 4位
-            byte[] unValid = CheckCode.getCheckCode1(fixBytesFile1, new byte[2], lzwBytes, fixBytesTxid,fileNumAndTxidVersionByte);
+            byte[] unValid = CheckCode.getCheckCode1(fixBytesFile1, fixBytesEntropy, lzwBytes, fixBytesTxid,fileNumAndTxidVersionByte);
             byte[] sm3EncryptByte = SM3Algorithm.SM3Encrypt(unValid);
             byte fixBytes = (byte) (ByteAndBitUtils.getFixBytes(sm3EncryptByte, 1)[0] & ByteAndBitUtils.bit2byte("00001111"));
             //拼接第一个字节
             byte valid = (byte)(fixBytes | fileNumAndTxidVersionByte);
             //结果
-            byte[] res = CheckCode.getCheckCode1(fixBytesFile1, new byte[2], lzwBytes, fixBytesTxid,valid);
+            byte[] res = CheckCode.getCheckCode1(fixBytesFile1, fixBytesEntropy, lzwBytes, fixBytesTxid,valid);
             System.out.println(HexUtils.bytes2Hex(res));
             return HexUtils.bytes2Hex(res);
         } catch (Exception e) {
