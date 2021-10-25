@@ -11,8 +11,8 @@ import java.nio.charset.StandardCharsets;
 public class TestDemo {
     public static void main(String[] args) throws Exception {
 
-        String filePath1 = "/Users/yorick/Documents/work/project/softVerify/TempSoftwareLibrary/2021/20111/origin/version.bat";
-        String filePath2 = "/Users/yorick/Documents/work/project/softVerify/TempSoftwareLibrary/2021/20111/origin/CoreFiles.txt";
+        String filePath1 = "/Users/yorick/Documents/work/project/softVerify/TempSoftwareLibrary/2021/20111/origin/CoreFiles.txt";
+        String filePath2 = "/Users/yorick/Documents/work/project/softVerify/TempSoftwareLibrary/2021/20111/origin/version.bat";
         String filePath3 = "/Users/yorick/Documents/work/project/softVerify/TempSoftwareLibrary/2021/20111/origin/version.bat";
         String txid = "8bcd10cca9397fed79c5566b5921a531ea9c27d3a5031cb948ea7e23db0817b7";
         String fingerCode = CheckCode.getFingerCode(filePath1, filePath2, filePath3, txid);

@@ -34,23 +34,22 @@ public class CheckCode {
             byte[] fixBytesTxid = ByteAndBitUtils.getFixBytes(txid, 3);
 
             //文件3个 11
-            String fileNum = "00001100";
+            String fileNum = "11000000";
             byte fileNumByte = ByteAndBitUtils.bit2byte(fileNum);
             //txid版本 01
-            String txidVersion = "00000001";
+            String txidVersion = "00010000";
             byte txidVersionByte = ByteAndBitUtils.bit2byte(txidVersion);
             //拼接
             byte fileNumAndTxidVersionByte = (byte) (fileNumByte | txidVersionByte);
 
             //获取sm3 hash校验码 4位
-            byte[] unValid = CheckCode.getCheckCode3(fileNumAndTxidVersionByte,fixBytesFile1, fixBytesFile2, fixBytesFile3, new byte[2], lzwBytes, fixBytesTxid);
+            byte[] unValid = CheckCode.getCheckCode3(fixBytesFile1, fixBytesFile2, fixBytesFile3, new byte[2], lzwBytes, fixBytesTxid,fileNumAndTxidVersionByte);
             byte[] sm3EncryptByte = SM3Algorithm.SM3Encrypt(unValid);
-            byte fixBytes = (byte) (ByteAndBitUtils.getFixBytes(sm3EncryptByte, 1)[0] & ByteAndBitUtils.bit2byte("11110000"));
-            //拼接第一个字节
+            byte fixBytes = (byte) (ByteAndBitUtils.getFixBytes(sm3EncryptByte, 1)[0] & ByteAndBitUtils.bit2byte("00001111"));
+            //拼接最后1个字节
             byte valid = (byte)(fixBytes | fileNumAndTxidVersionByte);
             //结果
-            byte[] res = CheckCode.getCheckCode3(valid, fixBytesFile1, fixBytesFile2, fixBytesFile3, new byte[2], lzwBytes, fixBytesTxid);
-            System.out.println(HexUtils.bytes2Hex(res));
+            byte[] res = CheckCode.getCheckCode3(fixBytesFile1, fixBytesFile2, fixBytesFile3, new byte[2], lzwBytes, fixBytesTxid,valid);
             return HexUtils.bytes2Hex(res);
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,22 +79,23 @@ public class CheckCode {
             byte[] fixBytesTxid = ByteAndBitUtils.getFixBytes(txid, 3);
 
             //文件2个 10
-            String fileNum = "00001000";
+            String fileNum = "10000000";
             byte fileNumByte = ByteAndBitUtils.bit2byte(fileNum);
             //txid版本 01
-            String txidVersion = "00000001";
+            String txidVersion = "00010000";
             byte txidVersionByte = ByteAndBitUtils.bit2byte(txidVersion);
             //拼接
             byte fileNumAndTxidVersionByte = (byte) (fileNumByte | txidVersionByte);
+            System.out.println(fileNumAndTxidVersionByte);
 
             //获取sm3 hash校验码 4位
-            byte[] unValid = CheckCode.getCheckCode2(fileNumAndTxidVersionByte,fixBytesFile1, fixBytesFile2, new byte[2], lzwBytes, fixBytesTxid);
+            byte[] unValid = CheckCode.getCheckCode2(fixBytesFile1, fixBytesFile2, new byte[2], lzwBytes, fixBytesTxid,fileNumAndTxidVersionByte);
             byte[] sm3EncryptByte = SM3Algorithm.SM3Encrypt(unValid);
-            byte fixBytes = (byte) (ByteAndBitUtils.getFixBytes(sm3EncryptByte, 1)[0] & ByteAndBitUtils.bit2byte("11110000"));
+            byte fixBytes = (byte) (ByteAndBitUtils.getFixBytes(sm3EncryptByte, 1)[0] & ByteAndBitUtils.bit2byte("00001111"));
             //拼接第一个字节
             byte valid = (byte)(fixBytes | fileNumAndTxidVersionByte);
             //结果
-            byte[] res = CheckCode.getCheckCode2(valid, fixBytesFile1, fixBytesFile2, new byte[2], lzwBytes, fixBytesTxid);
+            byte[] res = CheckCode.getCheckCode2(fixBytesFile1, fixBytesFile2, new byte[2], lzwBytes, fixBytesTxid,valid);
             System.out.println(HexUtils.bytes2Hex(res));
             return HexUtils.bytes2Hex(res);
         } catch (Exception e) {
@@ -122,22 +122,23 @@ public class CheckCode {
             byte[] fixBytesTxid = ByteAndBitUtils.getFixBytes(txid, 3);
 
             //文件1个 01
-            String fileNum = "00000100";
+            String fileNum = "01000000";
             byte fileNumByte = ByteAndBitUtils.bit2byte(fileNum);
             //txid版本 01
-            String txidVersion = "00000001";
+            String txidVersion = "00010000";
             byte txidVersionByte = ByteAndBitUtils.bit2byte(txidVersion);
             //拼接
             byte fileNumAndTxidVersionByte = (byte) (fileNumByte | txidVersionByte);
+            System.out.println(fileNumAndTxidVersionByte);
 
             //获取sm3 hash校验码 4位
-            byte[] unValid = CheckCode.getCheckCode1(fileNumAndTxidVersionByte,fixBytesFile1, new byte[2], lzwBytes, fixBytesTxid);
+            byte[] unValid = CheckCode.getCheckCode1(fixBytesFile1, new byte[2], lzwBytes, fixBytesTxid,fileNumAndTxidVersionByte);
             byte[] sm3EncryptByte = SM3Algorithm.SM3Encrypt(unValid);
-            byte fixBytes = (byte) (ByteAndBitUtils.getFixBytes(sm3EncryptByte, 1)[0] & ByteAndBitUtils.bit2byte("11110000"));
+            byte fixBytes = (byte) (ByteAndBitUtils.getFixBytes(sm3EncryptByte, 1)[0] & ByteAndBitUtils.bit2byte("00001111"));
             //拼接第一个字节
             byte valid = (byte)(fixBytes | fileNumAndTxidVersionByte);
             //结果
-            byte[] res = CheckCode.getCheckCode1(valid, fixBytesFile1, new byte[2], lzwBytes, fixBytesTxid);
+            byte[] res = CheckCode.getCheckCode1(fixBytesFile1, new byte[2], lzwBytes, fixBytesTxid,valid);
             System.out.println(HexUtils.bytes2Hex(res));
             return HexUtils.bytes2Hex(res);
         } catch (Exception e) {
@@ -158,16 +159,16 @@ public class CheckCode {
      * @param valid 文件个数，版本号，奇偶校验 1B
      * @return 核验码
      */
-     private static byte[] getCheckCode3(byte valid,byte[] file1,byte[] file2,byte[] file3,byte[] entropy,
-                                       byte[] undefine,byte[] txid) {
+     private static byte[] getCheckCode3(byte[] file1,byte[] file2,byte[] file3,byte[] entropy,
+                                       byte[] undefine,byte[] txid,byte valid) {
         return ByteBuffer.allocate(16)
-                .put(valid)
                 .put(file1)
                 .put(file2)
                 .put(file3)
                 .put(entropy)
                 .put(undefine)
                 .put(txid)
+                .put(valid)
                 .array();
     }
 
@@ -181,15 +182,15 @@ public class CheckCode {
      * @param valid 文件个数，版本号，奇偶校验 1B
      * @return 核验码
      */
-    private static byte[] getCheckCode2(byte valid,byte[] file1,byte[] file2,byte[] entropy,
-                                      byte[] undefine,byte[] txid) {
+    private static byte[] getCheckCode2(byte[] file1,byte[] file2,byte[] entropy,
+                                      byte[] undefine,byte[] txid,byte valid) {
         return ByteBuffer.allocate(16)
-                .put(valid)
                 .put(file1)
                 .put(file2)
                 .put(entropy)
                 .put(undefine)
                 .put(txid)
+                .put(valid)
                 .array();
     }
 
@@ -202,14 +203,14 @@ public class CheckCode {
      * @param valid 文件个数，版本号，奇偶校验 1B
      * @return 核验码
      */
-    private static byte[] getCheckCode1(byte valid,byte[] file1,byte[] entropy,
-                                       byte[] undefine,byte[] txid) {
+    private static byte[] getCheckCode1(byte[] file1,byte[] entropy,
+                                       byte[] undefine,byte[] txid,byte valid) {
         return ByteBuffer.allocate(16)
-                .put(valid)
                 .put(file1)
                 .put(entropy)
                 .put(undefine)
                 .put(txid)
+                .put(valid)
                 .array();
     }
 
