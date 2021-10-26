@@ -157,4 +157,18 @@ public class UploadController {
         return ResponseResult.success().data("project",project);
 
     }
+
+
+    /**
+     * 接收全流程系统发送的数据
+     * @param pid
+     * @return
+     */
+    @PostMapping("/getProjectInfo")
+    public ResponseResult getinfo(String pid){
+
+        ProjectVo projectInfo = uploadService.getProjectInfo(pid);
+        return ResponseResult.success().data("softInfo",projectInfo);
+
+    }
 }

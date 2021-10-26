@@ -30,4 +30,8 @@
         insert into t_soft_join (project, sys_id, appliedinst, developinst, role, pid)
         values (#{project},#{sysId},#{appliedinst},#{developinst},#{role},#{pid})
     </insert>
+
+    <select id="getProjectInfo" resultType="ProjectVo">
+        select * from t_soft_join where pid = #{pid}
+    </select>
 </mapper>

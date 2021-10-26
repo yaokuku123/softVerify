@@ -268,4 +268,9 @@ public class UploadServiceImpl implements UploadService {
 
         return projectVo;
     }
+
+    @Override
+    public ProjectVo getProjectInfo(String pid) {
+        return fileUploadDAO.getProjectInfo(pid);
+    }
 }
