@@ -12,7 +12,85 @@ import static java.lang.Math.log;
  */
 public class ShannonEntropy {
 
-    private static final int bufSize = 512;
+    // 设置缓冲取大小
+    private static final int bufSize = 1024;
+    // 设置文件最大读取大小 10M
+    private static final int maxSize = 1024 * 1024 *10;
+
+    /**
+     * 以512字节为缓冲区读取二进制文件，计算缓冲区内样本数量
+     */
+    public static Map<String, Integer> byteFile2String(String fileName) throws Exception {
+        FileInputStream in = new FileInputStream(fileName);
+
+
+        Map<String, Integer> numberMap = new HashMap<>();
+
+        // 读取缓冲区
+        byte[] buffer = new byte[bufSize];
+        // 读取10M所需要的次数
+        int numberOfReader = maxSize / bufSize;
+
+        int len;
+        StringBuilder stringBuilder1 = new StringBuilder();
+        String bitString;
+        while ((len = in.read(buffer)) != -1) {
+            if (numberOfReader-- == 0)
+                break;
+            if (len == bufSize) {
+
+                for (byte b : buffer) {
+                    stringBuilder1.append(byte2String(b));
+                }
+                bitString = stringBuilder1.toString();
+                calNumberOfSimple(numberMap, bitString);
+                stringBuilder1 = stringBuilder1.delete(0, bitString.length() - 7);
+
+            } else {
+                for (byte b : buffer) {
+                    if (len == 0)
+                        break;
+                    stringBuilder1.append(byte2String(b));
+                    len--;
+                }
+                bitString = stringBuilder1.toString();
+                calNumberOfSimple(numberMap, bitString);
+            }
+        }
+        return numberMap;
+    }
+
+
+    /**
+     * 计算每类样本出现的次数
+     *
+     * @param numberMap
+     * @param bitString
+     */
+    public static void calNumberOfSimple(Map<String, Integer> numberMap, String bitString) {
+        String substring;
+        for (int i = 0; i < bitString.length() - 7; i++) {
+            substring = bitString.substring(i, i + 8);
+            if (numberMap.containsKey(substring)) {
+                numberMap.put(substring, numberMap.get(substring) + 1);
+            } else {
+                numberMap.put(substring, 1);
+            }
+        }
+    }
+
+    /**
+     * 将一个字节的二进制文件转化成字符串
+     */
+    public static String byte2String(byte b) {
+        String s = "";
+        for (int i = 0; i < 8; i++) {
+            byte temp = (byte) ((byte) (b >> 7 - i) & 1);
+            s += temp;
+        }
+        return s;
+    }
+
 
     // 计算概率和香农熵
     public static byte[] calculateShanonEntropy(String fileName) {
@@ -40,10 +118,15 @@ public class ShannonEntropy {
             e.printStackTrace();
         }
 
+        System.out.println(shanon);
+
         int res28 = (int) (shanon * 1024 * 1024 * 256);
         int res16 = (int) (shanon * 64 * 1024);
         String binaryString16 = Integer.toBinaryString(res16);
         String binaryString28 = Integer.toBinaryString(res28);
+
+        System.out.println("binaryString16 " + binaryString16);
+        System.out.println("binaryString28 " + binaryString28);
 
         String substring1 = binaryString28.substring(0, 8);
         String substring2 = binaryString28.substring(8, 16);
@@ -58,80 +141,13 @@ public class ShannonEntropy {
         return res;
     }
 
-
-    /**
-     * 以512字节为缓冲区读取二进制文件，计算缓冲区内样本数量
-     */
-    private static Map<String, Integer> byteFile2String(String fileName) throws Exception {
-        Map<String, Integer> numberMap = new HashMap<>();
-        FileInputStream in = new FileInputStream(fileName);
-        byte[] buffer = new byte[bufSize];
-        int len;
-        StringBuilder stringBuilder1 = new StringBuilder();
-        String bitString;
-        while ((len = in.read(buffer)) != -1) {
-
-            if (len == bufSize) {
-
-                for (byte b : buffer) {
-                    stringBuilder1.append(byte2String(b));
-                }
-                bitString = stringBuilder1.toString();
-                calNumberOfSimple(numberMap, bitString);
-                stringBuilder1 = stringBuilder1.delete(0, bitString.length() - 7);
-
-            } else {
-                for (byte b : buffer) {
-                    if (len == 0)
-                        break;
-                    stringBuilder1.append(byte2String(b));
-                    len--;
-                }
-                bitString = stringBuilder1.toString();
-                calNumberOfSimple(numberMap, bitString);
-            }
-        }
-        return numberMap;
-    }
-
-
-
-    /**
-     * 计算每类样本出现的次数
-     * @param numberMap
-     * @param bitString
-     */
-    private static void calNumberOfSimple(Map<String, Integer> numberMap, String bitString) {
-        String substring;
-        for (int i = 0; i < bitString.length() - 7; i++) {
-            substring = bitString.substring(i, i + 8);
-            if (numberMap.containsKey(substring)) {
-                numberMap.put(substring, numberMap.get(substring) + 1);
-            } else {
-                numberMap.put(substring, 1);
-            }
-        }
-    }
-
-    /**
-     * 将一个字节的二进制文件转化成字符串
-     */
-    private static String byte2String(byte b) {
-        String s = "";
-        for (int i = 0; i < 8; i++) {
-            byte temp = (byte) ((byte) (b >> 7 - i) & 1);
-            s += temp;
-        }
-        return s;
-    }
-
     /**
      * 将double转化成byte[4]数组
      *
      * @param d
      * @return
      */
-    private static byte[] double2Bytes(double d) {
+    public static byte[] double2Bytes(double d) {
         long value = Double.doubleToRawLongBits(d);
         byte[] byteRet = new byte[8];
         for (int i = 0; i < 8; i++) {
@@ -142,15 +158,24 @@ public class ShannonEntropy {
 
     /**
      * 将二进制字符串转换回字节
+     *
      * @param bString 二进制字符串
      * @return 对应的字节
      */
-    private static byte bit2byte(String bString) {
+    public static byte bit2byte(String bString) {
         byte result = 0;
         for (int i = bString.length() - 1, j = 0; i >= 0; i--, j++) {
             result += (Byte.parseByte(bString.charAt(i) + "") * Math.pow(2, j));
         }
         return result;
+    }
+
+    public static void main(String[] args) {
+        String filePath = args[0];
+        byte[] entropy = ShannonEntropy.calculateShanonEntropy(filePath);
+        for (int i = 0; i < entropy.length; ++i) {
+            System.out.println(ByteAndBitUtils.byte2String(entropy[i]));
+        }
     }
 
 }
