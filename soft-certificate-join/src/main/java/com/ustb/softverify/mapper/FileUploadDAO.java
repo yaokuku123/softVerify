@@ -1,7 +1,10 @@
 package com.ustb.softverify.mapper;
 
 import com.ustb.softverify.entity.po.FileUpload;
+import com.ustb.softverify.entity.po.SoftInfo;
+import com.ustb.softverify.entity.vo.ProjectVo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -42,5 +45,19 @@ public interface FileUploadDAO {
     void deleteFileUpload(@Param("pid") String pid, @Param("fileType") Integer fileType);
 
     void updateStatus(String pid);
+
+    /**
+     * 根据sysId查询是否存在数据
+     * @param sysId
+     * @return
+     */
+    SoftInfo findBySysId(@Param("sysId") String sysId);
+
+    /**
+     * 保存传递过来的信息
+     * @param projectVo
+     * @return
+     */
+    void insertProjectVo(ProjectVo projectVo);
 
 }

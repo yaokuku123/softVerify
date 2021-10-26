@@ -4,6 +4,7 @@ import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
 import com.ustb.softverify.entity.vo.BrowserInfoVo;
 import com.ustb.softverify.entity.vo.InfoBackVo;
+import com.ustb.softverify.entity.vo.ProjectVo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -91,4 +92,11 @@ public interface UploadService {
      * @return
      */
     String getUploadFilePath(String pid, Integer fileType);
+
+    /**
+     * 返回数据
+     * @param
+     * @return
+     */
+    ProjectVo getResponseInfo(ProjectVo projectVo);
 }
