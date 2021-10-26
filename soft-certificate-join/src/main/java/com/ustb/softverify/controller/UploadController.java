@@ -2,6 +2,7 @@ package com.ustb.softverify.controller;
 
 import com.ustb.softverify.domain.ResponseResult;
 import com.ustb.softverify.entity.vo.InfoBackVo;
+import com.ustb.softverify.entity.vo.ProjectVo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import com.ustb.softverify.exception.CompressNumException;
 import com.ustb.softverify.exception.CompressSizeException;
@@ -141,5 +142,19 @@ public class UploadController {
     public ResponseResult submit(@RequestBody SoftInfoVo softInfoVo) {
         boolean flag = uploadService.submitInfo(softInfoVo);
         return ResponseResult.success().data("flag",flag);
+    }
+
+
+    /**
+     * 接收全流程系统发送的数据
+     * @param projectVo
+     * @return
+     */
+    @PostMapping("/softwareaudit2")
+    public ResponseResult softwareaudit2(@RequestBody ProjectVo projectVo){
+
+        ProjectVo project = uploadService.getResponseInfo(projectVo);
+        return ResponseResult.success().data("project",project);
+
     }
 }

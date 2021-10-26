@@ -1,20 +1,19 @@
 package com.ustb.softverify.service.Impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ustb.softverify.domain.ResponseResult;
 import com.ustb.softverify.entity.dto.CertificateInfo;
 import com.ustb.softverify.entity.dto.CompInfo;
 import com.ustb.softverify.entity.po.FileTypeEnum;
 import com.ustb.softverify.entity.po.FileUpload;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.po.User;
-import com.ustb.softverify.entity.vo.BrowserInfoVo;
-import com.ustb.softverify.entity.vo.FileUploadVo;
-import com.ustb.softverify.entity.vo.InfoBackVo;
-import com.ustb.softverify.entity.vo.SoftInfoVo;
+import com.ustb.softverify.entity.vo.*;
 import com.ustb.softverify.exception.CertificateUpChainException;
 import com.ustb.softverify.exception.FileReadWriteException;
 import com.ustb.softverify.mapper.FileUploadDAO;
 import com.ustb.softverify.mapper.SoftInfoDAO;
+import com.ustb.softverify.mapper.UploadInfoDAO;
 import com.ustb.softverify.mapper.UserDAO;
 import com.ustb.softverify.service.UploadService;
 import com.ustb.softverify.utils.EnvUtils;
@@ -31,6 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UploadServiceImpl implements UploadService {
@@ -223,8 +223,8 @@ public class UploadServiceImpl implements UploadService {
         } else {
             //更新
             softInfoDb.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
-            softInfoDb.setComName(softInfoVo.getComName());
-            softInfoDb.setProName(softInfoVo.getProName());
+//            softInfoDb.setComName(softInfoVo.getComName());
+//            softInfoDb.setProName(softInfoVo.getProName());
             softInfoDAO.updateSoft(softInfoDb);
         }
         //验证路径信息
@@ -257,4 +257,15 @@ public class UploadServiceImpl implements UploadService {
         return fileUploadDAO.getFileUpload(pid,fileType).getFilePath();
     }
 
+    @Override
+    public ProjectVo getResponseInfo(ProjectVo projectVo) {
+        SoftInfo softInfoDB = fileUploadDAO.findBySysId(projectVo.getSysId());
+        if (softInfoDB == null){
+            String pid = UUID.randomUUID().toString();
+            projectVo.setPid(pid);
+            fileUploadDAO.insertProjectVo(projectVo);
+        }
+
+        return projectVo;
+    }
 }

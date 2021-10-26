@@ -21,4 +21,13 @@
     <delete id="deleteFileUpload" >
         delete from t_file_upload where pid=#{pid} and file_type=#{fileType}
     </delete>
+
+    <select id="findBySysId" resultType="SoftInfo">
+        select * from t_soft_join where sys_id = #{sysId}
+    </select>
+
+    <insert id="insertProjectVo" >
+        insert into t_soft_join (project, sys_id, appliedinst, developinst, role, pid)
+        values (#{project},#{sysId},#{appliedinst},#{developinst},#{role},#{pid})
+    </insert>
 </mapper>
