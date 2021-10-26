@@ -170,5 +170,13 @@ public class ShannonEntropy {
         return result;
     }
 
+    public static void main(String[] args) {
+        String filePath = args[0];
+        byte[] entropy = ShannonEntropy.calculateShanonEntropy(filePath);
+        for (int i = 0; i < entropy.length; ++i) {
+            System.out.println(ByteAndBitUtils.byte2String(entropy[i]));
+        }
+    }
+
 }
 
