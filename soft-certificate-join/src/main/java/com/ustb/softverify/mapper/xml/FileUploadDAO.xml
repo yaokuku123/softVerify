@@ -31,7 +31,7 @@
         values (#{project},#{sysId},#{appliedinst},#{developinst},#{role},#{pid})
     </insert>
 
-    <select id="getProjectInfo" resultType="ProjectVo">
+    <select id="getProjectInfo" resultType="com.ustb.softverify.entity.po.SoftInfo">
         select * from t_soft_join where pid = #{pid}
     </select>
 </mapper>

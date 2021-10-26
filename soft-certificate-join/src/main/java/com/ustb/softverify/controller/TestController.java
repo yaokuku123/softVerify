@@ -34,16 +34,16 @@ public class TestController {
         return new ModelAndView(url);
     }
 
-    /**
-     * 接收全流程系统发送的数据
-     * @param projectVo
-     * @return
-     */
-    @PostMapping("/softwareaudit")
-    public ModelAndView softwareaudit2(@RequestBody ProjectVo projectVo){
-        ProjectVo project = uploadService.getResponseInfo(projectVo);
-        String appliedinst = project.getAppliedinst();
-        String url = "redirect:http://110.43.204.211/#/soft/info?appliedinst="+appliedinst;
-        return new ModelAndView(url);
-    }
+        /**
+         * 接收全流程系统发送的数据
+         * @param projectVo
+         * @return
+         */
+//    @PostMapping("/softwareaudit")
+//    public ModelAndView softwareaudit2(@RequestBody ProjectVo projectVo){
+//        ProjectVo project = uploadService.getResponseInfo(projectVo);
+//        String appliedinst = project.getAppliedinst();
+//        String url = "redirect:http://110.43.204.211/#/soft/info?appliedinst="+appliedinst;
+//        return new ModelAndView(url);
+//    }
 }

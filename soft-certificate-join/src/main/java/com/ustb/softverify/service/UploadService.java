@@ -101,5 +101,5 @@ public interface UploadService {
      */
     ProjectVo getResponseInfo(ProjectVo projectVo);
 
-    ProjectVo getProjectInfo(String pid);
+    SoftInfo getProjectInfo(String pid);
 }
