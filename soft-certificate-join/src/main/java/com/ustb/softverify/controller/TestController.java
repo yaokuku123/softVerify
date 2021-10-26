@@ -23,14 +23,14 @@ public class TestController {
     @GetMapping("/visit")
     public void visit(@RequestParam("username") String username, HttpServletResponse resp) throws IOException {
         System.out.println(username);
-        resp.sendRedirect("redirect:http://localhost:9527/#/soft/info?username="+username);
+        resp.sendRedirect("redirect:http://110.43.204.211/#/soft/info");
     }
 
     @GetMapping("/alipayforward")
     public ModelAndView alipayforward(@RequestParam("username") String username,
                                       HttpServletRequest req, HttpServletResponse resp) throws Exception {
         System.out.println(username);
-        String url = "redirect:http://localhost:9527/#/soft/info?username="+username;
+        String url = "redirect:http://110.43.204.211/#/soft/info?username="+username;
         return new ModelAndView(url);
     }
 
@@ -43,7 +43,7 @@ public class TestController {
     public ModelAndView softwareaudit2(@RequestBody ProjectVo projectVo){
         ProjectVo project = uploadService.getResponseInfo(projectVo);
         String appliedinst = project.getAppliedinst();
-        String url = "redirect:http://localhost:9527/#/soft/info?appliedinst="+appliedinst;
+        String url = "redirect:http://110.43.204.211/#/soft/info?appliedinst="+appliedinst;
         return new ModelAndView(url);
     }
 }
