@@ -1,6 +1,7 @@
 package com.ustb.softverify.controller;
 
 import com.ustb.softverify.domain.ResponseResult;
+import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.InfoBackVo;
 import com.ustb.softverify.entity.vo.ProjectVo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
@@ -157,4 +158,19 @@ public class UploadController {
         return ResponseResult.success().data("project",project);
 
     }
+
+
+    /**
+     * 接收全流程系统发送的数据
+     * @param pid
+     * @return
+     */
+    @PostMapping("/getProjectInfo")
+    public ResponseResult getinfo(String pid){
+
+        SoftInfo projectInfo = uploadService.getProjectInfo(pid);
+        return ResponseResult.success().data("softInfo",projectInfo);
+
+    }
+
 }

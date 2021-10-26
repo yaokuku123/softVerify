@@ -60,4 +60,7 @@ public interface FileUploadDAO {
      */
     void insertProjectVo(ProjectVo projectVo);
 
+
+    SoftInfo getProjectInfo(@Param("pid") String pid);
+
 }

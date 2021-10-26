@@ -6,6 +6,7 @@ import com.ustb.softverify.entity.vo.BrowserInfoVo;
 import com.ustb.softverify.entity.vo.InfoBackVo;
 import com.ustb.softverify.entity.vo.ProjectVo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -99,4 +100,6 @@ public interface UploadService {
      * @return
      */
     ProjectVo getResponseInfo(ProjectVo projectVo);
+
+    SoftInfo getProjectInfo(String pid);
 }

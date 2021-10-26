@@ -146,28 +146,6 @@ public class UploadServiceImpl implements UploadService {
         fileUploadDAO.deleteFileUpload(pid,fileType);
     }
 
-    @Override
-    public InfoBackVo getInfo(String pid) {
-        InfoBackVo res = new InfoBackVo();
-        //获取软件信息
-        SoftInfo softInfo = softInfoDAO.getSoftInfo(pid);
-        if (softInfo != null) {
-            BeanUtils.copyProperties(softInfo,res);
-        }
-        //获取文档列表信息
-        List<FileUpload> fileUploadList = fileUploadDAO.listFileUpload(pid);
-        List<FileUploadVo> fileUploadVoList = new ArrayList<>();
-        if (fileUploadList.size() != 0) {
-            for (FileUpload fileUpload : fileUploadList) {
-                FileUploadVo fileUploadVo = new FileUploadVo();
-                BeanUtils.copyProperties(fileUpload,fileUploadVo);
-                fileUploadVoList.add(fileUploadVo);
-            }
-        }
-        res.setFileUploadVoList(fileUploadVoList);
-        return res;
-    }
-
     /**
      * 保存上传文档
      *
@@ -265,7 +243,32 @@ public class UploadServiceImpl implements UploadService {
             projectVo.setPid(pid);
             fileUploadDAO.insertProjectVo(projectVo);
         }
-
         return projectVo;
+    }
+
+
+    @Override
+    public InfoBackVo getInfo(String pid) {
+        InfoBackVo res = new InfoBackVo();
+        SoftInfo softInfo = fileUploadDAO.getProjectInfo(pid);
+        BeanUtils.copyProperties(softInfo,res);
+        //获取文档列表信息
+        List<FileUpload> fileUploadList = fileUploadDAO.listFileUpload(softInfo.getPid());
+        List<FileUploadVo> fileUploadVoList = new ArrayList<>();
+        if (fileUploadList.size() != 0) {
+            for (FileUpload fileUpload : fileUploadList) {
+                FileUploadVo fileUploadVo = new FileUploadVo();
+                BeanUtils.copyProperties(fileUpload,fileUploadVo);
+                fileUploadVoList.add(fileUploadVo);
+            }
+        }
+        res.setFileUploadVoList(fileUploadVoList);
+
+        return res;
+    }
+
+    @Override
+    public SoftInfo getProjectInfo(String pid) {
+        return fileUploadDAO.getProjectInfo(pid);
     }
 }
