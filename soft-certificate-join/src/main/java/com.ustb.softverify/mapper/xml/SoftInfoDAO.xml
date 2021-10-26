@@ -1,0 +1,128 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ustb.softverify.mapper.SoftInfoDAO">
+    
+    <resultMap id="UserSoftInfoResult" type="com.ustb.softverify.entity.vo.SoftInfoVo">
+        <result property="softName" column="soft_name"/>
+        <result property="softDesc" column="soft_desc"/>
+        <result property="status" column="status"/>
+        <result property="pid" column="pid"/>
+        <collection property="signFileList" resultMap="signFileListMap"/>
+    </resultMap>
+
+    <resultMap id="signFileListMap" type="FileRecord">
+        <result property="serverLocalName" column="server_local_name"/>
+    </resultMap>
+
+    <select id="getUploadInfo" resultMap="UserSoftInfoResult">
+        select s.soft_name, s.soft_desc, s.status,s.gov_user_id,s.sid, f.server_local_name
+         from t_soft s, sys_file_record f
+        where  s.gov_user_id = f.gov_user_id and s.gov_user_id = #{govUserId} and s.status = 3
+    </select>
+
+    <select id="getUnFiledSoftInfo" resultMap="UserSoftInfoResult">
+        select s.soft_name, s.soft_desc, s.status, s.gov_user_id, f.server_local_name
+         from  t_soft s, sys_file_record f
+        where s.gov_user_id = f.gov_user_id and s.status = 2
+    </select>
+
+    <select id="getAllUploadInfo" resultMap="UserSoftInfoResult">
+    select * from t_soft s where s.status = 2
+    </select>
+    
+    <select id="SignFileInfos" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
+        select file_name, file_path,file_type from t_file_upload
+        where pid=#{pid} and file_type in (1,2,3)
+    </select>
+
+    <select id="listSoft"  resultType="com.ustb.softverify.entity.po.SoftInfo">
+        select * from t_soft where gov_user_id=#{govUserId}
+    </select>
+
+
+    <insert id="insertSoft" useGeneratedKeys="true" keyProperty="sid">
+        insert into t_soft (com_name,pro_name,status,upload_password,pid) values (#{comName},#{proName},1,#{uploadPassword},#{pid})
+    </insert>
+
+    <update id="updateSoft" >
+        update t_soft set com_name=#{comName},pro_name=#{proName},upload_password=#{uploadPassword} where pid=#{pid}
+    </update>
+
+
+    <select id="findSoftName" resultType="String">
+        select pro_name from t_soft
+        where pid = #{pid} and status = 1
+    </select>
+
+    <update id="changeStatus" >
+        update t_soft set status = 2
+        where pid = #{pid} and status = 1
+    </update>
+
+    <select id="findSoftId" resultType="Integer">
+        select sid from t_soft
+        where gov_user_id = #{govUserId} and status = 2
+    </select>
+
+    <insert id="insertSignFile">
+        insert into t_signfile (file_name,txid,sid) values (#{fileName},#{txid},#{sid});
+    </insert>
+
+    <select id="getTxid" resultType="SignFile" >
+        select * from t_signfile where sid = #{sid}
+    </select>
+
+    <select id="getSoftInfo" resultType="SoftInfo">
+        select * from t_soft where pid = #{pid};
+    </select>
+
+    <update id="updateStatus" >
+        update t_soft set status=#{status}+1 where gov_user_id=#{govUserId} and status=#{status}
+    </update>
+
+    <update id="insertPath">
+        update t_soft set soft_remote_path = #{path},zip_name = #{zipName}
+        where pid = #{pid}
+    </update>
+
+
+    <select id="getSoftInfoByGovUserId" resultType="com.ustb.softverify.entity.po.SoftInfo">
+        select * from t_soft where gov_user_id = #{govUserId} and status = #{status}
+    </select>
+
+    <select id="getSoftDetail" resultType="SoftInfo">
+        select * from t_soft where pid = #{pid}
+    </select>
+
+    <update id="insertTxid">
+        update t_soft set txid = #{txid} where pid=#{pid}
+    </update>
+
+    <select id="softFileRecords" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
+        select file_name, file_path, file_type from t_file_upload
+        where pid=#{pid}
+    </select>
+
+    <select id="getSid" resultType="Integer">
+        select sid from t_soft where pid = #{pid}
+    </select>
+
+    <update id="insertZipPwd" >
+        update t_soft set zip_password = #{zipPassword}
+        where pid = #{pid}
+    </update>
+
+    <update id="updateStatusToSubmit" >
+        update t_soft set status = 2 where pid = #{pid}
+    </update>
+
+    <select id="getAllSoft" resultType="SoftInfo">
+        select * from t_soft where status = 2
+    </select>
+
+    <update id="insertFingerCode" >
+        update t_soft set verification_code = #{fingerCode} where pid = #{pid}
+    </update>
+
+</mapper>
