@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,6 +133,10 @@ public class SoftInfoServiceImpl implements SoftInfoService {
         //写入excel
         FileHandler fileHandler = new FileHandlerImpl();
         String filePath = EnvUtils.TmpExcelPath;
+        File f = new File(filePath);
+        if (!f.getParentFile().exists()) { // 如果父目录不存在，创建父目录
+            f.getParentFile().mkdirs();
+        }
         fileHandler.easyExcelWrite(filePath,fileEntityList);
         return filePath;
     }

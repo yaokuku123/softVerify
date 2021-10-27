@@ -54,17 +54,6 @@ public class FiledController {
     private ShellTools shellTools;
 
 
-    /**
-     * 用户上传软件已归档列表
-     * @param govUserId
-     * @return
-     */
-    @GetMapping("/userFileInfo")
-    public ResponseResult getUserUploadInfo(@RequestParam("govUserId") Integer govUserId){
-        List<SoftInfoVo> uploadInfo = softInfoService.getUploadInfo(govUserId);
-        return ResponseResult.success().data("softInfo",uploadInfo);
-
-    }
 
 
     /**
@@ -79,17 +68,6 @@ public class FiledController {
 
     }
 
-    /**
-     *
-     * @param
-     * @return
-     */
-    @GetMapping("/unFiledInfos")
-    public ResponseResult getAllUnFiledInfo(){
-        List<SoftInfoVo> uploadInfo = softInfoService.getUnFiledSoftInfo();
-        return ResponseResult.success().data("softInfo",uploadInfo);
-
-    }
 
     /**
      * 归档
@@ -104,9 +82,6 @@ public class FiledController {
 
         // 根据pid  查询软件列表的路径
         List<SignFileInfo> signFileInfos = softInfoService.SignFileInfos(pid);
-
-
-
 
         String signFilePath = EnvUtils.TmpFile +softName + ".bin";
         File signFile = new File(signFilePath);
@@ -134,7 +109,6 @@ public class FiledController {
         ArrayList<Element> signList = algorithm.sign(signFilePath, publicKey,
                 (Element) keyMap.get(BlindAlgorithm.PRIVATE_KEY));
 
-        //signFile.delete();
 
         //保存签名文件   签名列表格式转换
         List<String> signStringList = new ArrayList<>();
@@ -145,6 +119,10 @@ public class FiledController {
         }
         // 指定文件路径
         String signFileName = pid + ".sign";
+        File rootPath = new File(EnvUtils.ROOT_PATH);
+        if (!rootPath.exists()){
+            rootPath.mkdirs();
+        }
         String signFilePathDes = EnvUtils.ROOT_PATH + signFileName;
         //将list集合变为String字符串后存储至指定路径下
         try {
@@ -275,66 +253,6 @@ public class FiledController {
         }
     }
 
-//    @GetMapping(value = "/getInfo", produces = "application/json;charset=UTF-8")
-//    public ResponseResult getInfo(@RequestParam("govUserId")Integer govUserId, HttpServletResponse response){
-//        Integer sid = softInfoService.getSid(govUserId);
-//        List<SignFile> signFiles = softInfoService.getTxid(sid);
-//
-//        JSONObject jsonObject = new JSONObject();
-//        for (SignFile signFile : signFiles){
-//            try {
-//                String fromObj = chainService.getFromObj(signFile.getTxid());
-//                int i= 1;
-//                String jsonString = JSONObject.parseObject(fromObj).get("certificateInfo").toString();
-//                jsonObject.put(signFile.getFileName(),jsonString);
-//            } catch (ShellChainException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        SoftInfo softInfo = softInfoService.getSoftInfo(sid);
-//        File fileP = new File(EnvUtils.CERT_PATH);
-//        if (!fileP.exists()){
-//            fileP.mkdirs();
-//        }
-//        String softPath = EnvUtils.CERT_PATH + softInfo.getGovUserId() + "-" + softInfo.getSoftName() +".txt";
-//        try {
-//            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(softPath));
-//            writer.write(jsonObject.toString());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        //下载软件
-//        File file = new File(softPath);
-//        // 设置下载软件文件名
-//        String fileName = softPath.substring(softPath.lastIndexOf("/") + 1);
-//        // response.setContentType("application/json");// 设置强制下载不打开
-//        response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
-//        OutputStream os = null;
-//        try (FileInputStream fis = new FileInputStream(file);
-//             BufferedInputStream bis = new BufferedInputStream(fis)) {
-//            os = response.getOutputStream();
-//            byte[] buffer = new byte[1024];
-//            int i = bis.read(buffer);
-//            while (i != -1) {
-//                os.write(buffer, 0, i);
-//                i = bis.read(buffer);
-//            }
-//            return ResponseResult.success().message("下载成功");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }finally {
-//            try {
-//                os.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return ResponseResult.error().message("下载失败");
-//
-//    }
-
 
     @GetMapping(value = "/zipSoftDownload",produces = "application/json;charset=UTF-8")
     public ResponseResult zipDownload(@RequestParam("pid")String pid, HttpServletResponse response){
@@ -344,9 +262,6 @@ public class FiledController {
         if (!fileP.exists()){
             fileP.mkdirs();
         }
-//        if (!MD5Utils.md5Hex(uploadPassword).equals(softInfo.getUploadPassword())){
-//            return ResponseResult.error().message("密码错误，请重新输入");
-//        }
 
 
         ScpUtil.getFile(softInfo.getSoftRemotePath() ,EnvUtils.CERT_PATH);
@@ -428,13 +343,11 @@ public class FiledController {
         csvPrinter.flush();
         csvPrinter.close();
 
-        //String csvTitle =
 
         ScpUtil.putFile(saveName+"templetedata.csv" ,"/root/Certificat/");
 
         RemoteUtil.generatePdf(pid);
 
-        //Thread.sleep(3000);
 
         ScpUtil.getFile("/root/Certificat/Certificat.pdf" ,EnvUtils.TmpFile);
 

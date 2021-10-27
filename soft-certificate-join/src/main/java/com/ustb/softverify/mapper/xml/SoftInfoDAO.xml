@@ -47,12 +47,12 @@
 
 
     <select id="findSoftName" resultType="String">
-        select pro_name from t_soft
+        select project from t_soft_join
         where pid = #{pid} and status = 1
     </select>
 
     <update id="changeStatus" >
-        update t_soft set status = 2
+        update t_soft_join set status = 2
         where pid = #{pid} and status = 1
     </update>
 
@@ -78,7 +78,7 @@
     </update>
 
     <update id="insertPath">
-        update t_soft set soft_remote_path = #{path},zip_name = #{zipName}
+        update t_soft_join set soft_remote_path = #{path},zip_name = #{zipName}
         where pid = #{pid}
     </update>
 
@@ -88,11 +88,11 @@
     </select>
 
     <select id="getSoftDetail" resultType="SoftInfo">
-        select * from t_soft where pid = #{pid}
+        select * from t_soft_join where pid = #{pid}
     </select>
 
     <update id="insertTxid">
-        update t_soft set txid = #{txid} where pid=#{pid}
+        update t_soft_join set txid = #{txid} where pid=#{pid}
     </update>
 
     <select id="softFileRecords" resultType="com.ustb.softverify.entity.dto.SignFileInfo">
@@ -114,11 +114,11 @@
     </update>
 
     <select id="getAllSoft" resultType="SoftInfo">
-        select * from t_soft where status = 2
+        select * from t_soft_join where status = 2
     </select>
 
     <update id="insertFingerCode" >
-        update t_soft set verification_code = #{fingerCode} where pid = #{pid}
+        update t_soft_join set verification_code = #{fingerCode} where pid = #{pid}
     </update>
 
 </mapper>
