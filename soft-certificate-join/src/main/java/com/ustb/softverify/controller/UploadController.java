@@ -1,7 +1,6 @@
 package com.ustb.softverify.controller;
 
 import com.ustb.softverify.domain.ResponseResult;
-import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.InfoBackVo;
 import com.ustb.softverify.entity.vo.ProjectVo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
@@ -12,6 +11,7 @@ import com.ustb.softverify.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -151,26 +151,12 @@ public class UploadController {
      * @param projectVo
      * @return
      */
-    @PostMapping("/softwareaudit2")
-    public ResponseResult softwareaudit2(@RequestBody ProjectVo projectVo){
-
-        ProjectVo project = uploadService.getResponseInfo(projectVo);
-        return ResponseResult.success().data("project",project);
-
-    }
-
-
-    /**
-     * 接收全流程系统发送的数据
-     * @param pid
-     * @return
-     */
-    @PostMapping("/getProjectInfo")
-    public ResponseResult getinfo(String pid){
-
-        SoftInfo projectInfo = uploadService.getProjectInfo(pid);
-        return ResponseResult.success().data("softInfo",projectInfo);
-
+    @PostMapping("/softwareaudit")
+    public ModelAndView softwareaudit(@RequestBody ProjectVo projectVo){
+        ProjectVo softInfo = uploadService.getResponseInfo(projectVo);
+        System.out.println(softInfo);
+        String url = "redirect:http://110.43.204.211/#/soft/info?appliedinst=";
+        return new ModelAndView(url);
     }
 
 }
