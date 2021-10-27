@@ -2,6 +2,7 @@ package com.ustb.softverify.controller;
 
 import com.ustb.softverify.entity.po.Mobile;
 import com.ustb.softverify.entity.vo.ProjectVo;
+import com.ustb.softverify.entity.vo.SoftInfoVo;
 import com.ustb.softverify.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,7 +42,7 @@ public class TestController {
      */
     @PostMapping("/softwareaudit")
     public ModelAndView softwareaudit2(@RequestBody ProjectVo projectVo){
-        ProjectVo project = uploadService.getResponseInfo(projectVo);
+        SoftInfoVo project = uploadService.getResponseInfo(projectVo);
         String appliedinst = project.getAppliedinst();
         String url = "redirect:http://110.43.204.211/#/soft/info?appliedinst="+appliedinst;
         return new ModelAndView(url);

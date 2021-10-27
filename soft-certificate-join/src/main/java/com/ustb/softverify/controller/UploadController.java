@@ -24,19 +24,9 @@ public class UploadController {
     @Autowired
     private UploadService uploadService;
 
-    /**
-     * 插入填写的软件信息
-     * @param softInfoVo
-     * @return
-     */
-    @PostMapping("/insertInfo")
-    public ResponseResult insertInfo(@RequestBody SoftInfoVo softInfoVo) {
-        Integer sid = uploadService.insertSoft(softInfoVo);
-        return ResponseResult.success().data("sid",sid);
-    }
 
     /**
-     * 更新用户和软件数据信息
+     * 更新用户的口令和状态信息
      * @param softInfoVo
      * @return
      */
@@ -142,11 +132,10 @@ public class UploadController {
      * @return
      */
     @PostMapping("/softwareaudit")
-    public ProjectVo softwareaudit(@RequestBody ProjectVo projectVo){
-        ProjectVo softInfo = uploadService.getResponseInfo(projectVo);
+    public ResponseResult softwareaudit(@RequestBody ProjectVo projectVo){
+        SoftInfoVo softInfo = uploadService.getResponseInfo(projectVo);
         System.out.println(softInfo);
-//        String url = "redirect:http://localhost:9527/#/soft/info/"+softInfo.getPid();
-        return softInfo;
+        return ResponseResult.success().data("softInfo",softInfo);
     }
 
 

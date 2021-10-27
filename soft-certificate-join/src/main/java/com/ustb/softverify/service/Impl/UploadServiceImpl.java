@@ -63,15 +63,6 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public Integer insertSoft(SoftInfoVo softInfoVo) {
-        softInfoVo.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
-        SoftInfo softInfo = new SoftInfo();
-        BeanUtils.copyProperties(softInfoVo,softInfo);
-        softInfoDAO.insertSoft(softInfo);
-        return softInfo.getSid();
-    }
-
-    @Override
     public void updateSoft(SoftInfoVo softInfoVo) {
         softInfoVo.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
         SoftInfo softInfo = new SoftInfo();
@@ -191,20 +182,10 @@ public class UploadServiceImpl implements UploadService {
     public boolean submitInfo(SoftInfoVo softInfoVo) {
         //插入或更新数据
         SoftInfo softInfoDb = softInfoDAO.getSoftInfo(softInfoVo.getPid());
+        //更新口令和状态信息
+        softInfoDb.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
+        softInfoDAO.updateSoft(softInfoDb);
 
-        if (softInfoDb == null) {
-            //插入
-            softInfoVo.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
-            SoftInfo softInfo = new SoftInfo();
-            BeanUtils.copyProperties(softInfoVo,softInfo);
-            softInfoDAO.insertSoft(softInfo);
-        } else {
-            //更新
-            softInfoDb.setUploadPassword(MD5Utils.code(softInfoVo.getUploadPassword()));
-//            softInfoDb.setComName(softInfoVo.getComName());
-//            softInfoDb.setProName(softInfoVo.getProName());
-            softInfoDAO.updateSoft(softInfoDb);
-        }
         //验证路径信息
         String filePath = null;
         List<FileUpload> fileUploadList = fileUploadDAO.listFileUpload(softInfoVo.getPid());
@@ -236,17 +217,23 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public ProjectVo getResponseInfo(ProjectVo projectVo) {
+    public SoftInfoVo getResponseInfo(ProjectVo projectVo) {
+        //查找sysid对应的记录是否存在
         SoftInfo softInfoDB = fileUploadDAO.findBySysId(projectVo.getSysId());
         if (softInfoDB == null){
+            //不存在插入
+            SoftInfoVo softInfoVo = new SoftInfoVo();
+            BeanUtils.copyProperties(projectVo,softInfoVo);
+            softInfoVo.setStatus(1);
             String pid = UUID.randomUUID().toString();
-            projectVo.setPid(pid);
-            fileUploadDAO.insertProjectVo(projectVo);
-            return projectVo;
+            softInfoVo.setPid(pid);
+            fileUploadDAO.insertSoftInfo(softInfoVo);
+            return softInfoVo;
         } else {
-            ProjectVo projectVoDb = new ProjectVo();
-            BeanUtils.copyProperties(softInfoDB,projectVoDb);
-            return projectVoDb;
+            //存在直接返回
+            SoftInfoVo softInfoVo = new SoftInfoVo();
+            BeanUtils.copyProperties(softInfoDB,softInfoVo);
+            return softInfoVo;
         }
     }
 

@@ -3,6 +3,7 @@ package com.ustb.softverify.mapper;
 import com.ustb.softverify.entity.po.FileUpload;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.ProjectVo;
+import com.ustb.softverify.entity.vo.SoftInfoVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -55,10 +56,10 @@ public interface FileUploadDAO {
 
     /**
      * 保存传递过来的信息
-     * @param projectVo
+     * @param softInfoVo
      * @return
      */
-    void insertProjectVo(ProjectVo projectVo);
+    void insertSoftInfo(SoftInfoVo softInfoVo);
 
 
     SoftInfo getProjectInfo(@Param("pid") String pid);

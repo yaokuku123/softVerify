@@ -27,7 +27,4 @@ public class ProjectVo {
 
     /* 角色 */
     private Integer role;
-
-    /* 标识 */
-    private String pid;
 }

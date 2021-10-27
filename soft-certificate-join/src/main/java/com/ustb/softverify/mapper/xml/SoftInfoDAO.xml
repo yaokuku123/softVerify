@@ -41,12 +41,8 @@
     </select>
 
 
-    <insert id="insertSoft" useGeneratedKeys="true" keyProperty="sid">
-        insert into t_soft (com_name,pro_name,status,upload_password,pid) values (#{comName},#{proName},1,#{uploadPassword},#{pid})
-    </insert>
-
     <update id="updateSoft" >
-        update t_soft set com_name=#{comName},pro_name=#{proName},upload_password=#{uploadPassword} where pid=#{pid}
+        update t_soft_join set upload_password=#{uploadPassword},status=1 where pid=#{pid}
     </update>
 
 
@@ -74,7 +70,7 @@
     </select>
 
     <select id="getSoftInfo" resultType="SoftInfo">
-        select * from t_soft where pid = #{pid};
+        select * from t_soft_join where pid = #{pid};
     </select>
 
     <update id="updateStatus" >

@@ -24,8 +24,10 @@ public class InfoBackVo implements Serializable {
     private Integer role;
     /* 标识 */
     private String pid;
+    /* 核验码*/
     private String verificationCode;
+    /* 状态 */
     private Integer status;
-
+    /* 关联的文档列表 */
     private List<FileUploadVo> fileUploadVoList;
 }

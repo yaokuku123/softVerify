@@ -50,11 +50,6 @@ public interface SoftInfoDAO {
      */
     List<SoftInfo> listSoft(@Param("govUserId") Integer govUserId);
 
-    /**
-     * 插入软件信息
-     * @param softInfo
-     */
-    Integer insertSoft(SoftInfo softInfo);
 
     /**
      * 根据用户标识获取

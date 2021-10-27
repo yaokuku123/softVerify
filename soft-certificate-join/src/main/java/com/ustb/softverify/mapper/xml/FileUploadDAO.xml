@@ -26,9 +26,9 @@
         select * from t_soft_join where sys_id = #{sysId}
     </select>
 
-    <insert id="insertProjectVo" >
-        insert into t_soft_join (project, sys_id, appliedinst, developinst, role, pid)
-        values (#{project},#{sysId},#{appliedinst},#{developinst},#{role},#{pid})
+    <insert id="insertSoftInfo" >
+        insert into t_soft_join (project, sys_id, appliedinst, developinst,status, role, pid)
+        values (#{project},#{sysId},#{appliedinst},#{developinst},#{status},#{role},#{pid})
     </insert>
 
     <select id="getProjectInfo" resultType="com.ustb.softverify.entity.po.SoftInfo">

@@ -33,11 +33,6 @@ public interface UploadService {
      */
     void insertUser(User user);
 
-    /**
-     * 插入软件信息
-     * @param softInfo
-     */
-    Integer insertSoft(SoftInfoVo softInfo);
 
     void updateUser(User user);
 
@@ -99,7 +94,7 @@ public interface UploadService {
      * @param
      * @return
      */
-    ProjectVo getResponseInfo(ProjectVo projectVo);
+    SoftInfoVo getResponseInfo(ProjectVo projectVo);
 
     SoftInfo getProjectInfo(String pid);
 }
