@@ -121,4 +121,8 @@
         update t_soft_join set verification_code = #{fingerCode} where pid = #{pid}
     </update>
 
+    <select id="getPidList" resultType="String">
+        select pid from t_soft_join where developinst=#{developinst} and status = 2
+    </select>
+
 </mapper>

@@ -65,8 +65,20 @@ public class FiledController {
     public ResponseResult getAllUploadInfo(){
         List<SoftInfo> allSoft = softInfoService.getAllSoft();
         return ResponseResult.success().data("softInfo",allSoft);
-
     }
+
+    /**
+     * 根据条件获取软件信息列表
+     * @param
+     * @return
+     */
+    @GetMapping("/uploadInfo")
+    public ResponseResult getUploadInfo(@RequestParam("developinst") String developinst){
+        List<SoftInfo> softInfo = softInfoService.getUploadList(developinst);
+        return ResponseResult.success().data("softInfo",softInfo);
+    }
+
+
 
 
     /**

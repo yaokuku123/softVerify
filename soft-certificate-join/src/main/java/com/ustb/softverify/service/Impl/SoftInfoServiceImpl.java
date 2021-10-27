@@ -140,4 +140,15 @@ public class SoftInfoServiceImpl implements SoftInfoService {
         fileHandler.easyExcelWrite(filePath,fileEntityList);
         return filePath;
     }
+
+    @Override
+    public List<SoftInfo> getUploadList(String developinst, Integer status) {
+        List<String> pidList = softInfoDAO.getPidList(developinst, status);
+        List<SoftInfo> softInfos = new ArrayList<>();
+        for (String pid : pidList){
+            SoftInfo soft = softInfoDAO.getSoftInfo(pid);
+            softInfos.add(soft);
+        }
+        return softInfos;
+    }
 }

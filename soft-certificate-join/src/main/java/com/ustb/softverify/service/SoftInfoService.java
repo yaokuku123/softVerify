@@ -54,4 +54,6 @@ public interface SoftInfoService {
      * @return 返回excel文件
      */
     String getExcel();
+
+    List<SoftInfo> getUploadList(String developinst);
 }

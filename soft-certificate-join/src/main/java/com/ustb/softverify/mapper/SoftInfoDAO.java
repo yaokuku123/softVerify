@@ -123,4 +123,8 @@ public interface SoftInfoDAO {
     List<SoftInfo> getAllSoft();
 
     void insertFingerCode(@Param("pid") String pid, @Param("fingerCode") String fingerCode);
+
+    List<String> getPidList(@Param("developinst")String developinst);
+
+
 }
