@@ -142,8 +142,8 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     }
 
     @Override
-    public List<SoftInfo> getUploadList(String developinst, Integer status) {
-        List<String> pidList = softInfoDAO.getPidList(developinst, status);
+    public List<SoftInfo> getUploadList(String developinst) {
+        List<String> pidList = softInfoDAO.getPidList(developinst);
         List<SoftInfo> softInfos = new ArrayList<>();
         for (String pid : pidList){
             SoftInfo soft = softInfoDAO.getSoftInfo(pid);
