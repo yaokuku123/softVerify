@@ -46,16 +46,6 @@ public class UploadController {
         return ResponseResult.success();
     }
 
-    /**
-     * 获取数据信息
-     * @param pid
-     * @return
-     */
-    @GetMapping("/getInfo")
-    public ResponseResult getInfo(@RequestParam("pid") String pid) {
-        InfoBackVo infoBackVo = uploadService.getInfo(pid);
-        return ResponseResult.success().data("softInfo",infoBackVo);
-    }
 
     /**
      * 文件文档上传
@@ -152,11 +142,23 @@ public class UploadController {
      * @return
      */
     @PostMapping("/softwareaudit")
-    public ModelAndView softwareaudit(@RequestBody ProjectVo projectVo){
+    public ProjectVo softwareaudit(@RequestBody ProjectVo projectVo){
         ProjectVo softInfo = uploadService.getResponseInfo(projectVo);
         System.out.println(softInfo);
-        String url = "redirect:http://110.43.204.211/#/soft/info?appliedinst=";
-        return new ModelAndView(url);
+//        String url = "redirect:http://localhost:9527/#/soft/info/"+softInfo.getPid();
+        return softInfo;
+    }
+
+
+    /**
+     * 获取数据信息
+     * @param pid
+     * @return
+     */
+    @GetMapping("/getInfo")
+    public ResponseResult getInfo(@RequestParam("pid") String pid) {
+        InfoBackVo infoBackVo = uploadService.getInfo(pid);
+        return ResponseResult.success().data("softInfo",infoBackVo);
     }
 
 }

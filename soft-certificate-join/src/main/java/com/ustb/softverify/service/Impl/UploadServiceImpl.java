@@ -242,8 +242,12 @@ public class UploadServiceImpl implements UploadService {
             String pid = UUID.randomUUID().toString();
             projectVo.setPid(pid);
             fileUploadDAO.insertProjectVo(projectVo);
+            return projectVo;
+        } else {
+            ProjectVo projectVoDb = new ProjectVo();
+            BeanUtils.copyProperties(softInfoDB,projectVoDb);
+            return projectVoDb;
         }
-        return projectVo;
     }
 
 
