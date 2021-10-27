@@ -218,8 +218,9 @@ public class FiledController {
         String zipArchiveName = pid + "_a.zip";
         Random random = new Random();
         int math = random.nextInt(1000000);
-        //System.out.println(math);
+        System.out.println(math);
         int i = math ^ 1010;
+        System.out.println(i);
         String password = String.valueOf(i);
         softInfoService.insertZipPwd(pid,password);
 
@@ -270,6 +271,7 @@ public class FiledController {
         File file = new File(EnvUtils.CERT_PATH + softInfo.getZipName() );
 
         int decode = Integer.parseInt(softInfo.getZipPassword()) ^ 1010;
+        System.out.println(decode);
         ZipDe.unZipFile(EnvUtils.CERT_PATH + softInfo.getZipName(),EnvUtils.CERT_PATH,String.valueOf(decode));
         file.delete();
         ZipDe.zip(EnvUtils.CERT_PATH,EnvUtils.CERT_PATH + softInfo.getZipName());

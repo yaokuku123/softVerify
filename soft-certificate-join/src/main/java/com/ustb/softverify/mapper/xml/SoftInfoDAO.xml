@@ -105,7 +105,7 @@
     </select>
 
     <update id="insertZipPwd" >
-        update t_soft set zip_password = #{zipPassword}
+        update t_soft_join set zip_password = #{zipPassword}
         where pid = #{pid}
     </update>
 
