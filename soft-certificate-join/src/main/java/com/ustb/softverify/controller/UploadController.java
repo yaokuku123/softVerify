@@ -52,7 +52,7 @@ public class UploadController {
         if (file.isEmpty()) {
             throw new CompressNumException();
         }
-        if (file.getSize() > 1024 * 1024 * 512) {
+        if (file.getSize() > 1024 * 1024 * 200) {
             throw new CompressSizeException();
         }
         //文档信息插入数据库与文档保存
