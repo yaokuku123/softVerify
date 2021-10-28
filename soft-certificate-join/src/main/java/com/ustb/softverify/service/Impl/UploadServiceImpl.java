@@ -47,20 +47,12 @@ public class UploadServiceImpl implements UploadService {
     @Autowired
     private ChainService chainService;
 
-    @Override
-    public User getUser(Integer govUserId) {
-        return userDAO.getUser(govUserId);
-    }
 
     @Override
     public List<SoftInfo> listSoft(Integer govUserId) {
         return softInfoDAO.listSoft(govUserId);
     }
 
-    @Override
-    public void insertUser(User user) {
-        userDAO.insertUser(user);
-    }
 
     @Override
     public void updateSoft(SoftInfoVo softInfoVo) {
@@ -70,32 +62,12 @@ public class UploadServiceImpl implements UploadService {
         softInfoDAO.updateSoft(softInfo);
     }
 
-    @Override
-    public void updateUser(User user) {
-        userDAO.updateUser(user);
-    }
 
     @Override
     public void updateStatus(Integer govUserId, Integer status) {
         softInfoDAO.updateStatus(govUserId,status);
     }
 
-
-
-    @Override
-    public BrowserInfoVo getBrowseInfo(Integer govUserId, Integer status) {
-        //获取用户信息
-        User user = userDAO.getUser(govUserId);
-        //获取软件信息
-        SoftInfo softInfo = softInfoDAO.getSoftInfoByGovUserId(govUserId, status);
-        //获取文档信息
-
-        //获取链上信息
-        CertificateInfo certificateInfo = getChainInfo(softInfo.getTxid());
-        //设置数据
-
-        return null;
-    }
 
 
 

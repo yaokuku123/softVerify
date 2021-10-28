@@ -15,4 +15,5 @@ public class UserVo implements Serializable {
 
     private String username;
     private String password;
+    private Integer role;
 }

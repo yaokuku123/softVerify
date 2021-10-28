@@ -1,5 +1,7 @@
 package com.ustb.softverify.utils.checkcode;
 
+import com.ustb.softverify.utils.MD5Utils;
+
 public class TestDemo {
     public static void main(String[] args) throws Exception {
 

@@ -21,17 +21,9 @@ public class User implements Serializable {
 
     /* 用户标识 */
     private Integer uid;
-
-    /* 用户名称 */
-    private String uname;
-
-    /* 用户所属公司信息 */
-    private String company;
-
-    /* 用户联系方式 */
-    private String phone;
-
-    /* 评审平台用户标识 */
-    private Integer govUserId;
+    /* 用户名 */
+    private String username;
+    /* 密码 */
+    private String password;
 
 }

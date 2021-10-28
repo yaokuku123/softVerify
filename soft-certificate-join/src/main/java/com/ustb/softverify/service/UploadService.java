@@ -13,12 +13,7 @@ import java.util.List;
 
 public interface UploadService {
 
-    /**
-     * 根据用户标识获取用户对象信息
-     * @param govUserId 用户标识
-     * @return 对象信息，没有获取到则为null
-     */
-    User getUser(Integer govUserId);
+
 
     /**
      * 根据用户标识获取软件列表
@@ -27,14 +22,7 @@ public interface UploadService {
      */
     List<SoftInfo> listSoft(Integer govUserId);
 
-    /**
-     * 插入用户信息
-     * @param user 用户信息
-     */
-    void insertUser(User user);
 
-
-    void updateUser(User user);
 
     void updateSoft(SoftInfoVo softInfo);
 
@@ -45,15 +33,6 @@ public interface UploadService {
      */
     void updateStatus(Integer govUserId, Integer status);
 
-
-
-    /**
-     * 获取浏览页面信息对象
-     * @param govUserId 用户标识
-     * @param status 状态
-     * @return 浏览对象信息
-     */
-    BrowserInfoVo getBrowseInfo(Integer govUserId, Integer status);
 
     /**
      * 保存上传文档和信息

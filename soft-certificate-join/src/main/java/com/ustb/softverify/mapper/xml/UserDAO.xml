@@ -2,16 +2,9 @@
 
 
 <mapper namespace="com.ustb.softverify.mapper.UserDAO">
-    <insert id="insertUser" useGeneratedKeys="true" keyProperty="uid">
-        insert into t_user (uname,company,phone,gov_user_id) values (#{uname},#{company},#{phone},#{govUserId})
-    </insert>
 
-    <select id="getUser" resultType="User">
-        select * from t_user where gov_user_id = #{govUserId}
+    <select id="getUser" resultType="com.ustb.softverify.entity.po.User">
+        select * from t_admin where username = #{username}
     </select>
-
-    <update id="updateUser" >
-        update t_user set uname=#{uname},company=#{company},phone=#{phone} where uid=#{uid}
-    </update>
 
 </mapper>

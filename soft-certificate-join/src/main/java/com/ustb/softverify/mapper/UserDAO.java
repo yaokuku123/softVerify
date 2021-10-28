@@ -9,16 +9,10 @@ import com.ustb.softverify.entity.po.User;
 public interface UserDAO {
 
     /**
-     * 插入用户信息
-     * @param user 用户信息
+     * 根据用户名获取User对象
+     * @param username 用户名
+     * @return 用户对象
      */
-    void insertUser(User user);
+    User getUser(String username);
 
-    /**
-     * 更新用户信息
-     * @param user 用户信息
-     */
-    void updateUser(User user);
-
-    User getUser(Integer govUserId);
 }
