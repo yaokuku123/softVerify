@@ -337,7 +337,7 @@ public class FiledController {
         PdfTemplete pdfTemplete = new PdfTemplete();
         Random random = new Random();
         pdfTemplete.setCertId(random.nextInt(10000))
-                .setAppName(soft.getComName()).setSoftName(soft.getProName())
+                .setProject(soft.getProject()).setAppliedinst(soft.getAppliedinst())
                 .setSoftVersion("1.0").setDate(new SimpleDateFormat("yyyy 年 MM 月 dd 日").format(new Date()))
                 .setSoftUi(soft.getVerificationCode());
 
@@ -351,7 +351,7 @@ public class FiledController {
         CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader("cert-ID", "app-name","soft-name","date","soft-ui");
         CSVPrinter csvPrinter = new CSVPrinter(osw, csvFormat);
 
-        csvPrinter.printRecord(pid, pdfTemplete.getAppName(),pdfTemplete.getSoftName()
+        csvPrinter.printRecord(pid, pdfTemplete.getProject(),pdfTemplete.getAppliedinst()
                 ,pdfTemplete.getDate(),pdfTemplete.getSoftUi());
 
         csvPrinter.flush();

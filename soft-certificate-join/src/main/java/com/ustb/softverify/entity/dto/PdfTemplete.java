@@ -16,8 +16,10 @@ import lombok.experimental.Accessors;
 public class PdfTemplete {
 
     private Integer certId;
-    private String appName;
-    private String softName;
+    /* 項目信息 */
+    private String project;
+    /* 申报单位 */
+    private String appliedinst;
     private String softVersion;
     private String date;
     private String softUi;
