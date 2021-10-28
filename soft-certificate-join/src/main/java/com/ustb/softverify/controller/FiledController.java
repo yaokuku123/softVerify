@@ -150,6 +150,7 @@ public class FiledController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         SoftInfo softDetail = softInfoService.getSoftDetail(pid);
         CertificateInfo certificateInfo = new CertificateInfo(publicKeyStr, softDetail);
         String txid = upChain(certificateInfo);
@@ -170,7 +171,9 @@ public class FiledController {
                     secondPath = signFileInfo.getFilePath();
                 }
             }
+
             fingerCode = CheckCode.getFingerCode(firstPath, secondPath, txid);
+
 
         }else if(signFileInfos.size() == 3){
             String firstPath = "";
@@ -188,11 +191,14 @@ public class FiledController {
                 }
             }
 
+
+
             fingerCode = CheckCode.getFingerCode(firstPath, secondPath, thirdPath, txid);
 
         }
 
-        softInfoService.insertFingerCode(pid,fingerCode);
+        softInfoService.insertFingerCode(pid,fingerCode,new Date());
+
 
 
 
@@ -338,7 +344,7 @@ public class FiledController {
         Random random = new Random();
         pdfTemplete.setCertId(random.nextInt(10000))
                 .setProject(soft.getProject()).setAppliedinst(soft.getAppliedinst())
-                .setSoftVersion("1.0").setDate(new SimpleDateFormat("yyyy 年 MM 月 dd 日").format(new Date()))
+                .setSoftVersion("1.0").setDate(new SimpleDateFormat("yyyy 年 MM 月 dd 日").format(soft.getGenerateTime()))
                 .setSoftUi(soft.getVerificationCode());
 
         String saveName = EnvUtils.CSVTmp;

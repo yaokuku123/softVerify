@@ -6,6 +6,7 @@ import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -122,7 +123,7 @@ public interface SoftInfoDAO {
 
     List<SoftInfo> getAllSoft();
 
-    void insertFingerCode(@Param("pid") String pid, @Param("fingerCode") String fingerCode);
+    void insertFingerCode(@Param("pid") String pid, @Param("fingerCode") String fingerCode,@Param("generateTime") Date generateTime);
 
     List<String> getPidList(@Param("developinst")String developinst);
 

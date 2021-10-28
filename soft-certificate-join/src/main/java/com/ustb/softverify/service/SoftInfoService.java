@@ -5,6 +5,7 @@ import com.ustb.softverify.entity.po.SignFile;
 import com.ustb.softverify.entity.po.SoftInfo;
 import com.ustb.softverify.entity.vo.SoftInfoVo;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,7 +48,7 @@ public interface SoftInfoService {
 
     List<SoftInfo> getAllSoft();
 
-    void insertFingerCode(String pid, String fingerCode);
+    void insertFingerCode(String pid, String fingerCode, Date generateTime);
 
     /**
      * 获取excel文件

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author WYP
@@ -60,6 +61,8 @@ public class SoftInfo implements Serializable {
 
     /* 标识 */
     private String pid;
+
+    private Date generateTime;
 
 
     private String comName;
