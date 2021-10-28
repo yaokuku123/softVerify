@@ -127,4 +127,10 @@ public interface SoftInfoDAO {
     List<String> getPidList(@Param("developinst")String developinst);
 
 
+    /**
+     * 根据建设单位查询软件列表
+     * @param developinst
+     * @return
+     */
+    List<SoftInfo> listSoftByDevelopinst(String developinst);
 }

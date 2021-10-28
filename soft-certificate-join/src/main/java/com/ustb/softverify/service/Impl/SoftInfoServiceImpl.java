@@ -142,6 +142,30 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     }
 
     @Override
+    public String getExcel(String developinst) {
+        List<SoftInfo> allSoft = softInfoDAO.listSoftByDevelopinst(developinst);
+        List<FileEntity> fileEntityList = new ArrayList<>();
+        if (allSoft.size() == 0) return null;
+        //类型转换
+        int number = 1;
+        for (SoftInfo softInfo : allSoft) {
+            FileEntity fileEntity = new FileEntity();
+            BeanUtils.copyProperties(softInfo,fileEntity);
+            fileEntity.setNumber(number++);
+            fileEntityList.add(fileEntity);
+        }
+        //写入excel
+        FileHandler fileHandler = new FileHandlerImpl();
+        String filePath = EnvUtils.TmpExcelPath;
+        File f = new File(filePath);
+        if (!f.getParentFile().exists()) { // 如果父目录不存在，创建父目录
+            f.getParentFile().mkdirs();
+        }
+        fileHandler.easyExcelWrite(filePath,fileEntityList);
+        return filePath;
+    }
+
+    @Override
     public List<SoftInfo> getUploadList(String developinst) {
         List<String> pidList = softInfoDAO.getPidList(developinst);
         List<SoftInfo> softInfos = new ArrayList<>();

@@ -55,5 +55,12 @@ public interface SoftInfoService {
      */
     String getExcel();
 
+    /**
+     * 根据建设单位获取excel文件
+     * @param developinst
+     * @return
+     */
+    String getExcel(String developinst);
+
     List<SoftInfo> getUploadList(String developinst);
 }

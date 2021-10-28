@@ -125,4 +125,8 @@
         select pid from t_soft_join where developinst=#{developinst} and status = 2
     </select>
 
+    <select id="listSoftByDevelopinst" resultType="SoftInfo">
+        select * from t_soft_join where status = 2 and developinst = #{developinst}
+    </select>
+
 </mapper>
