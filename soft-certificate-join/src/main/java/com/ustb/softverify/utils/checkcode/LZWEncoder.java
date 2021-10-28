@@ -1,9 +1,17 @@
 package com.ustb.softverify.utils.checkcode;
 
-import com.ustb.softverify.utils.FileUtil;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+
+import com.ustb.softverify.utils.FileUtil;
 
 public class LZWEncoder {
 
@@ -11,6 +19,7 @@ public class LZWEncoder {
 	public static int Bit_Length;
 	private static int MAX_TABLE_SIZE; //Max Table size is based on the bit length input.
 	private static String LZWfilename;
+	private static int MAX_STRING_SIZE = 10*1024*1024;
 
 	/**
 	 * 计算LZW算法压缩比例，在上传文件小于10MB的情况下，内存占用约 1～5 MB 级别
@@ -21,9 +30,13 @@ public class LZWEncoder {
 	 */
 	public static byte[] calcCompressedRatio(String fileStream, int byteArrLen) {
 		Bit_Length = 8*byteArrLen;
+		byte[] ans = new byte[byteArrLen];
+		if(fileStream == null) return ans;
+		if(fileStream.length() > MAX_STRING_SIZE) {
+			fileStream = fileStream.substring(0, MAX_STRING_SIZE);
+		}
 		double compressedRatio = Encode_string(fileStream, Bit_Length);
 		// 二进制化
-		byte[] ans = new byte[byteArrLen];
 		double base = 1;
 		double approx = 0;
 		for (int i = 0; i < byteArrLen*8; ++i) {
