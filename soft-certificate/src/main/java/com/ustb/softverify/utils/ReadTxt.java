@@ -57,7 +57,6 @@ public class ReadTxt {
                 boolean flag1 = s.contains(comp.getOrgName());
                 String spString[] = s.split("\\s+");
                 if (spString.length <= 1) continue;
-                System.out.println(spString.length - 2);
                 spString[spString.length - 2] = spString[spString.length - 2].replace(",","");
                 boolean flag2 = spString[spString.length - 2].contains(comp.getFileSize().toString());
                 comp.setFlag(flag1 && flag2);
