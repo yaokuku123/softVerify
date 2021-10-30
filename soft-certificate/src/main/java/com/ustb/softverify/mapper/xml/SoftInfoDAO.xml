@@ -122,7 +122,7 @@
     </select>
 
     <update id="insertFingerCode" >
-        update t_soft set verification_code = #{fingerCode} where pid = #{pid}
+        update t_soft set verification_code = #{fingerCode},generate_time = #{generateTime} where pid = #{pid}
     </update>
 
 </mapper>

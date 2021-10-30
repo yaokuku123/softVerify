@@ -7,6 +7,7 @@ import com.ustb.softverify.entity.vo.SoftInfoVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,7 +50,7 @@ public interface SoftInfoService {
 
     List<SoftInfo> getAllSoft();
 
-    void insertFingerCode(String pid,String fingerCode);
+    void insertFingerCode(String pid, String fingerCode, Date generateTime);
 
     /**
      * 获取excel文件

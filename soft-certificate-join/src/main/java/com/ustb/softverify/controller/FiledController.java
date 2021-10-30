@@ -148,7 +148,7 @@ public class FiledController {
 
         //将签名文件保存至远端
         RemoteUtil.makeDir(pid);
-        String remoteSignPath = "/root/Expansion/TempSoftwareLibrary/" +new SimpleDateFormat("yyyy").format(new Date()) +"/signFile/";
+        String remoteSignPath = EnvUtils.REMOTE_PATH + new SimpleDateFormat("yyyy").format(new Date()) +"/signFile/";
         ScpUtil.putFile(signFilePathDes, remoteSignPath);
 
         //构造证书对象
@@ -217,7 +217,7 @@ public class FiledController {
         }
 
 
-        String path = "/root/Expansion/TempSoftwareLibrary/";
+        String path = EnvUtils.REMOTE_PATH;
         String zipPath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid;
         //String remoteOriginPath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid + "/original/";
         //String remoteArchivePath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid + "/archive/";
@@ -233,16 +233,21 @@ public class FiledController {
         // 根据pid
         String zipOriginName = pid + "_o.zip";
         String zipArchiveName = pid + "_a.zip";
-        Random random = new Random();
-        int math = random.nextInt(1000000);
-        System.out.println(math);
-        int i = math ^ 699050;
-        System.out.println(i);
-        String password = String.valueOf(i);
-        softInfoService.insertZipPwd(pid,password);
+//        Random random = new Random();
+//        int math = random.nextInt(1000000);
 
-        ZipDe.zipFile(localOriginPath,localPath+"/"+zipOriginName,String.valueOf(math));
-        ZipDe.zipFile(localArchivePath,localPath+"/"+zipArchiveName,String.valueOf(math));
+//        long math = 473359145438L;
+//        long i = math ^ 699050;
+//        System.out.println(i);
+//        String password = String.valueOf(i);
+        String password = "btsu_202";
+        softInfoService.insertZipPwd(pid,MD5Utils.code(password));
+
+//        ZipDe.zipFile(localOriginPath,localPath+"/"+zipOriginName,String.valueOf(math));
+//        ZipDe.zipFile(localArchivePath,localPath+"/"+zipArchiveName,String.valueOf(math));
+        ZipDe.zipFile(localOriginPath,localPath+"/"+zipOriginName,String.valueOf(password));
+        ZipDe.zipFile(localArchivePath,localPath+"/"+zipArchiveName,String.valueOf(password));
+
 
         ScpUtil.putFile(localPath+"/"+zipOriginName ,zipPath);
         ScpUtil.putFile(localPath+"/"+zipArchiveName ,zipPath);
@@ -287,9 +292,9 @@ public class FiledController {
         //下载软件
         File file = new File(EnvUtils.CERT_PATH + softInfo.getZipName() );
 
-        int decode = Integer.parseInt(softInfo.getZipPassword()) ^ 699050;
-        System.out.println(decode);
-        ZipDe.unZipFile(EnvUtils.CERT_PATH + softInfo.getZipName(),EnvUtils.CERT_PATH,String.valueOf(decode));
+//        long decode = Long.parseLong(softInfo.getZipPassword()) ^ 699050;
+//        System.out.println(decode);
+        ZipDe.unZipFile(EnvUtils.CERT_PATH + softInfo.getZipName(),EnvUtils.CERT_PATH,"btsu_202");
         file.delete();
         ZipDe.zip(EnvUtils.CERT_PATH,EnvUtils.CERT_PATH + softInfo.getZipName());
 

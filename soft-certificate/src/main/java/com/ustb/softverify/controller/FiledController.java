@@ -111,9 +111,6 @@ public class FiledController {
         // 根据pid  查询软件列表的路径
         List<SignFileInfo> signFileInfos = softInfoService.SignFileInfos(pid);
 
-
-
-
         String signFilePath = EnvUtils.TmpFile +softName + ".bin";
         File signFile = new File(signFilePath);
         if (!signFile.getParentFile().exists()) { // 如果父目录不存在，创建父目录
@@ -151,6 +148,10 @@ public class FiledController {
         }
         // 指定文件路径
         String signFileName = pid + ".sign";
+        File rootPath = new File(EnvUtils.ROOT_PATH);
+        if (!rootPath.exists()){
+            rootPath.mkdirs();
+        }
         String signFilePathDes = EnvUtils.ROOT_PATH + signFileName;
         //将list集合变为String字符串后存储至指定路径下
         try {
@@ -159,6 +160,11 @@ public class FiledController {
         } catch (IOException e) {
             throw new FileReadWriteException();
         }
+        //将签名文件保存至远端
+        RemoteUtil.makeDir(pid);
+        String remoteSignPath = EnvUtils.REMOTE_PATH + new SimpleDateFormat("yyyy").format(new Date()) +"/signFile/";
+        ScpUtil.putFile(signFilePathDes, remoteSignPath);
+
         //构造证书对象
         PublicKeyStr publicKeyStr = null;
         try {
@@ -208,8 +214,7 @@ public class FiledController {
 
         }
 
-        softInfoService.insertFingerCode(pid,fingerCode);
-
+        softInfoService.insertFingerCode(pid,fingerCode,new Date());
 
 
         List<SignFileInfo> fileRecords = softInfoService.softFileRecords(pid);
@@ -227,32 +232,33 @@ public class FiledController {
             archiveFile.mkdirs();
         }
 
-        RemoteUtil.makeDir(pid);
-        String path = "/root/TmpSoftware/";
+
+        String path = EnvUtils.REMOTE_PATH;
         String zipPath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid;
-        String remoteOriginPath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid + "/original/";
-        String remoteArchivePath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid + "/archive/";
+//        String remoteOriginPath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid + "/original/";
+//        String remoteArchivePath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid + "/archive/";
 
         for (SignFileInfo signFileInfo : fileRecords ){
-            ScpUtil.putFile(signFileInfo.getFilePath() ,remoteOriginPath);
+            //ScpUtil.putFile(signFileInfo.getFilePath() ,remoteOriginPath);
             FileUtil.copyFile(signFileInfo.getFilePath(), localOriginPath + signFileInfo.getFileName());
-            String archiveName = pid + "type" + signFileInfo.getFileType();
+            String archiveName = pid + "type" + signFileInfo.getFileType() + ".bin";
             FileUtil.copyFile(signFileInfo.getFilePath(), localArchivePath + archiveName);
-            ScpUtil.putFile(localArchivePath + archiveName ,remoteArchivePath);
+            //ScpUtil.putFile(localArchivePath + archiveName ,remoteArchivePath);
         }
 
         // 根据pid
         String zipOriginName = pid + "_o.zip";
         String zipArchiveName = pid + "_a.zip";
-        Random random = new Random();
-        int math = random.nextInt(1000000);
-        //System.out.println(math);
-        int i = math ^ 1010;
-        String password = String.valueOf(i);
-        softInfoService.insertZipPwd(pid,password);
+//        Random random = new Random();
+//        int math = random.nextInt(1000000);
+//        //System.out.println(math);
+//        int i = math ^ 1010;
+//        String password = String.valueOf(i);
+        String password = "btsu_202";
+        softInfoService.insertZipPwd(pid,MD5Utils.code(password));
 
-        ZipDe.zipFile(localOriginPath,localPath+"/"+zipOriginName,String.valueOf(math));
-        ZipDe.zipFile(localArchivePath,localPath+"/"+zipArchiveName,String.valueOf(math));
+        ZipDe.zipFile(localOriginPath,localPath+"/"+zipOriginName,password);
+        ZipDe.zipFile(localArchivePath,localPath+"/"+zipArchiveName,password);
 
         ScpUtil.putFile(localPath+"/"+zipOriginName ,zipPath);
         ScpUtil.putFile(localPath+"/"+zipArchiveName ,zipPath);
@@ -281,65 +287,6 @@ public class FiledController {
         }
     }
 
-//    @GetMapping(value = "/getInfo", produces = "application/json;charset=UTF-8")
-//    public ResponseResult getInfo(@RequestParam("govUserId")Integer govUserId, HttpServletResponse response){
-//        Integer sid = softInfoService.getSid(govUserId);
-//        List<SignFile> signFiles = softInfoService.getTxid(sid);
-//
-//        JSONObject jsonObject = new JSONObject();
-//        for (SignFile signFile : signFiles){
-//            try {
-//                String fromObj = chainService.getFromObj(signFile.getTxid());
-//                int i= 1;
-//                String jsonString = JSONObject.parseObject(fromObj).get("certificateInfo").toString();
-//                jsonObject.put(signFile.getFileName(),jsonString);
-//            } catch (ShellChainException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        SoftInfo softInfo = softInfoService.getSoftInfo(sid);
-//        File fileP = new File(EnvUtils.CERT_PATH);
-//        if (!fileP.exists()){
-//            fileP.mkdirs();
-//        }
-//        String softPath = EnvUtils.CERT_PATH + softInfo.getGovUserId() + "-" + softInfo.getSoftName() +".txt";
-//        try {
-//            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(softPath));
-//            writer.write(jsonObject.toString());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        //下载软件
-//        File file = new File(softPath);
-//        // 设置下载软件文件名
-//        String fileName = softPath.substring(softPath.lastIndexOf("/") + 1);
-//        // response.setContentType("application/json");// 设置强制下载不打开
-//        response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
-//        OutputStream os = null;
-//        try (FileInputStream fis = new FileInputStream(file);
-//             BufferedInputStream bis = new BufferedInputStream(fis)) {
-//            os = response.getOutputStream();
-//            byte[] buffer = new byte[1024];
-//            int i = bis.read(buffer);
-//            while (i != -1) {
-//                os.write(buffer, 0, i);
-//                i = bis.read(buffer);
-//            }
-//            return ResponseResult.success().message("下载成功");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }finally {
-//            try {
-//                os.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return ResponseResult.error().message("下载失败");
-//
-//    }
 
 
     @GetMapping(value = "/zipSoftDownload",produces = "application/json;charset=UTF-8")
@@ -350,21 +297,16 @@ public class FiledController {
         if (!fileP.exists()){
             fileP.mkdirs();
         }
-//        if (!MD5Utils.md5Hex(uploadPassword).equals(softInfo.getUploadPassword())){
-//            return ResponseResult.error().message("密码错误，请重新输入");
-//        }
-
 
         ScpUtil.getFile(softInfo.getSoftRemotePath() ,EnvUtils.CERT_PATH);
 
         //下载软件
         File file = new File(EnvUtils.CERT_PATH + softInfo.getZipName() );
 
-        int decode = Integer.parseInt(softInfo.getZipPassword()) ^ 1010;
-        ZipDe.unZipFile(EnvUtils.CERT_PATH + softInfo.getZipName(),EnvUtils.CERT_PATH,String.valueOf(decode));
+//        int decode = Integer.parseInt(softInfo.getZipPassword()) ^ 1010;
+        ZipDe.unZipFile(EnvUtils.CERT_PATH + softInfo.getZipName(),EnvUtils.CERT_PATH,"btsu_202");
         file.delete();
         ZipDe.zip(EnvUtils.CERT_PATH,EnvUtils.CERT_PATH + softInfo.getZipName());
-
 
 
         // 设置下载软件文件名
@@ -415,7 +357,7 @@ public class FiledController {
         Random random = new Random();
         pdfTemplete.setCertId(random.nextInt(10000))
                 .setAppName(soft.getComName()).setSoftName(soft.getProName())
-                .setSoftVersion("1.0").setDate(new SimpleDateFormat("yyyy 年 MM 月 dd 日").format(new Date()))
+                .setSoftVersion("1.0").setDate(new SimpleDateFormat("yyyy 年 MM 月 dd 日").format(soft.getGenerateTime()))
                 .setSoftUi(soft.getVerificationCode());
 
         String saveName = EnvUtils.CSVTmp;

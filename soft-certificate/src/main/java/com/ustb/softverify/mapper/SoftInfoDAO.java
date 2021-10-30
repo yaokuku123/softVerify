@@ -7,6 +7,7 @@ import com.ustb.softverify.entity.vo.SoftInfoVo;
 import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -128,5 +129,5 @@ public interface SoftInfoDAO {
 
     List<SoftInfo> getAllSoft();
 
-    void insertFingerCode(@Param("pid")String pid,@Param("fingerCode")String fingerCode);
+    void insertFingerCode(@Param("pid")String pid,@Param("fingerCode")String fingerCode, @Param("generateTime") Date generateTime);
 }

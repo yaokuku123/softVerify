@@ -28,7 +28,7 @@ public class RemoteUtil {
 //    private static String dataServerUsername = "root";
 //    private static String dataServerPassword = "kingsoft";
 
-    private static String dataServerDestDir = "/root/Expansion/TempSoftwareLibrary/" +new SimpleDateFormat("yyyy").format(new Date());
+    private static String dataServerDestDir = EnvUtils.REMOTE_PATH +new SimpleDateFormat("yyyy").format(new Date());
 
     public static void makeDir(String pid){
         //文件scp到数据服务器

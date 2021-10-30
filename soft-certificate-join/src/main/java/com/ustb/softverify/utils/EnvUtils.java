@@ -21,6 +21,9 @@ public class EnvUtils {
     public static final String CSVTmp = System.getProperty("user.dir") + "/data/csv/";
 
 
+    public static final String REMOTE_PATH = "/root/Expansion/TempSoftwareLibraryV2/";
+
+
 
 
 

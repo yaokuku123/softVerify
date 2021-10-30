@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -112,8 +113,8 @@ public class SoftInfoServiceImpl implements SoftInfoService {
     }
 
     @Override
-    public void insertFingerCode(String pid, String fingerCode) {
-        softInfoDAO.insertFingerCode(pid,fingerCode);
+    public void insertFingerCode(String pid, String fingerCode, Date generateTime) {
+        softInfoDAO.insertFingerCode(pid,fingerCode,generateTime);
     }
 
     @Override

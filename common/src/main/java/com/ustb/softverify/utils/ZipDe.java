@@ -9,12 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 
 public class ZipDe {
-    public static void main(String[] args) {
-        //zipFile("D:\\file","D:\\file\\a.zip","123456");
-        unZipFile("D:\\file\\a.zip","D:\\file","123456");
 
-
-    }
     public void unzipWithPassword(String zipPath, String destPath, String password){
         // 先判断zip源文件是否存在，不存在退出
         if (StringUtils.isBlank(zipPath)){
@@ -116,5 +111,12 @@ public class ZipDe {
             e.printStackTrace();
             return false;
         }
+    }
+
+    // 口令 -》hash
+
+    public static void main(String[] args) {
+        //zipFile("D:\\file","D:\\file\\a.zip","btsu_202");
+        unZipFile("D:\\file\\a.zip","D:\\file\\tmp","btsu_202");
     }
 }
