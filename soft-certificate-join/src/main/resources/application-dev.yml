@@ -1,12 +1,12 @@
 server:
-  port: 8080
+  port: 9004
 spring:
   profiles: dev
   application:
     name: soft-certificate
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://123.56.246.148:3306/softverify?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://123.56.246.148:3306/softverify_join?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: root
     password: 123456
   servlet:
