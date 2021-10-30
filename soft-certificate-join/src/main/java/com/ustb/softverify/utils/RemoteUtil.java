@@ -28,7 +28,7 @@ public class RemoteUtil {
 //    private static String dataServerUsername = "root";
 //    private static String dataServerPassword = "kingsoft";
 
-    private static String dataServerDestDir = "/root/TmpSoftware/" +new SimpleDateFormat("yyyy").format(new Date());
+    private static String dataServerDestDir = "/root/Expansion/TempSoftwareLibrary/" +new SimpleDateFormat("yyyy").format(new Date());
 
     public static void makeDir(String pid){
         //文件scp到数据服务器
@@ -43,7 +43,8 @@ public class RemoteUtil {
             //执行远程命令，成功
             session = conn.openSession();
             //session.execCommand("cd "+dataServerDestDir+" ; mkdir 10092 ; cd 10092 ; mkdir input ;mkdir output ");//分号隔开执行多条指令
-            session.execCommand("cd "+dataServerDestDir+" ; mkdir -p " +pid+ "; cd " +pid+"; mkdir -p original ;mkdir -p archive ");//分号隔开执行多条指令
+            //session.execCommand("cd "+dataServerDestDir+" ; mkdir -p " +pid+ "; cd " +pid+"; mkdir -p original ;mkdir -p archive ");//分号隔开执行多条指令
+            session.execCommand("cd "+dataServerDestDir+" ; mkdir -p " +pid+ "; mkdir -p signFile ;");//分号隔开执行多条指令
 
 //            }
             //获得退出状态

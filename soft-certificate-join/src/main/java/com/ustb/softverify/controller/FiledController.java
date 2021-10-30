@@ -136,6 +136,8 @@ public class FiledController {
             rootPath.mkdirs();
         }
         String signFilePathDes = EnvUtils.ROOT_PATH + signFileName;
+
+
         //将list集合变为String字符串后存储至指定路径下
         try {
             String str = ListStringUtils.listToString(signStringList);
@@ -143,6 +145,12 @@ public class FiledController {
         } catch (IOException e) {
             throw new FileReadWriteException();
         }
+
+        //将签名文件保存至远端
+        RemoteUtil.makeDir(pid);
+        String remoteSignPath = "/root/Expansion/TempSoftwareLibrary/" +new SimpleDateFormat("yyyy").format(new Date()) +"/signFile/";
+        ScpUtil.putFile(signFilePathDes, remoteSignPath);
+
         //构造证书对象
         PublicKeyStr publicKeyStr = null;
         try {
@@ -171,9 +179,7 @@ public class FiledController {
                     secondPath = signFileInfo.getFilePath();
                 }
             }
-
             fingerCode = CheckCode.getFingerCode(firstPath, secondPath, txid);
-
 
         }else if(signFileInfos.size() == 3){
             String firstPath = "";
@@ -190,17 +196,10 @@ public class FiledController {
                     thirdPath = signFileInfo.getFilePath();
                 }
             }
-
-
-
             fingerCode = CheckCode.getFingerCode(firstPath, secondPath, thirdPath, txid);
 
         }
-
         softInfoService.insertFingerCode(pid,fingerCode,new Date());
-
-
-
 
         List<SignFileInfo> fileRecords = softInfoService.softFileRecords(pid);
 
@@ -217,18 +216,18 @@ public class FiledController {
             archiveFile.mkdirs();
         }
 
-        RemoteUtil.makeDir(pid);
-        String path = "/root/TmpSoftware/";
+
+        String path = "/root/Expansion/TempSoftwareLibrary/";
         String zipPath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid;
-        String remoteOriginPath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid + "/original/";
-        String remoteArchivePath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid + "/archive/";
+        //String remoteOriginPath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid + "/original/";
+        //String remoteArchivePath = path + new SimpleDateFormat("yyyy").format(new Date()) + "/" +pid + "/archive/";
 
         for (SignFileInfo signFileInfo : fileRecords ){
-            ScpUtil.putFile(signFileInfo.getFilePath() ,remoteOriginPath);
+            //ScpUtil.putFile(signFileInfo.getFilePath() ,remoteOriginPath);
             FileUtil.copyFile(signFileInfo.getFilePath(), localOriginPath + signFileInfo.getFileName());
-            String archiveName = pid + "type" + signFileInfo.getFileType();
+            String archiveName = pid + "type" + signFileInfo.getFileType() + ".bin";
             FileUtil.copyFile(signFileInfo.getFilePath(), localArchivePath + archiveName);
-            ScpUtil.putFile(localArchivePath + archiveName ,remoteArchivePath);
+            //ScpUtil.putFile(localArchivePath + archiveName ,remoteArchivePath);
         }
 
         // 根据pid
@@ -237,7 +236,7 @@ public class FiledController {
         Random random = new Random();
         int math = random.nextInt(1000000);
         System.out.println(math);
-        int i = math ^ 1010;
+        int i = math ^ 699050;
         System.out.println(i);
         String password = String.valueOf(i);
         softInfoService.insertZipPwd(pid,password);
@@ -288,7 +287,7 @@ public class FiledController {
         //下载软件
         File file = new File(EnvUtils.CERT_PATH + softInfo.getZipName() );
 
-        int decode = Integer.parseInt(softInfo.getZipPassword()) ^ 1010;
+        int decode = Integer.parseInt(softInfo.getZipPassword()) ^ 699050;
         System.out.println(decode);
         ZipDe.unZipFile(EnvUtils.CERT_PATH + softInfo.getZipName(),EnvUtils.CERT_PATH,String.valueOf(decode));
         file.delete();
