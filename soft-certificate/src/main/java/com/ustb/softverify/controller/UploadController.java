@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +105,7 @@ public class UploadController {
         //下载软件
         File file = new File(filePath);
         // 设置下载软件文件名
-        response.addHeader("Content-Disposition", "attachment;fileName=" + file.getName());// 设置文件名
+        response.addHeader("Content-Disposition", "attachment;fileName=" + new String(file.getName().getBytes(StandardCharsets.UTF_8),StandardCharsets.ISO_8859_1));// 设置文件名
         OutputStream os = null;
         try (FileInputStream fis = new FileInputStream(file);
              BufferedInputStream bis = new BufferedInputStream(fis)) {
