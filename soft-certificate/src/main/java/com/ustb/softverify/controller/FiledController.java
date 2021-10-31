@@ -376,13 +376,11 @@ public class FiledController {
         csvPrinter.flush();
         csvPrinter.close();
 
-        //String csvTitle =
+        synchronized (this) {
+            ScpUtil.putFile(saveName+"templetedata.csv" ,"/root/Certificat/");
+            RemoteUtil.generatePdf(pid);
+        }
 
-        ScpUtil.putFile(saveName+"templetedata.csv" ,"/root/Certificat/");
-
-        RemoteUtil.generatePdf(pid);
-
-        //Thread.sleep(3000);
 
         ScpUtil.getFile("/root/Certificat/Certificat.pdf" ,EnvUtils.TmpFile);
 
