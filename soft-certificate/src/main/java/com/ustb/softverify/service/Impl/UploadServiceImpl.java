@@ -114,9 +114,10 @@ public class UploadServiceImpl implements UploadService {
 
 
     @Override
-    public void uploadFile(MultipartFile file,String pid,Integer fileType) {
+    public void uploadFile(MultipartFile file,String pid,Integer fileType,String suffix) {
         //文档保存
-        String originFileName = file.getOriginalFilename();
+        String originFileName = file.getOriginalFilename() + "." + suffix;
+        System.out.println(originFileName);
         File tmpFile = uploadFile(originFileName,pid,file);
         //数据信息插入表中
         FileUpload fileUploadDb = fileUploadDAO.getFileUpload(pid,fileType);

@@ -64,7 +64,7 @@ public interface UploadService {
      * 保存上传文档和信息
      * @return
      */
-     void uploadFile(MultipartFile file,String pid,Integer fileType);
+     void uploadFile(MultipartFile file,String pid,Integer fileType,String suffix);
 
     /**
      * 获取回显信息

@@ -76,7 +76,10 @@ public class UploadController {
     @PostMapping("/upload")
     public ResponseResult upload(@RequestParam("file") MultipartFile file,
                                  @RequestParam("pid") String pid,
-                                 @RequestParam("fileType") Integer fileType)  {
+                                 @RequestParam("fileType") Integer fileType,
+                                 @RequestParam("suffix") String suffix)  {
+        System.out.println(file.getOriginalFilename());
+        System.out.println(suffix);
         //边界判定
         if (file.isEmpty()) {
             throw new CompressNumException();
@@ -85,7 +88,7 @@ public class UploadController {
             throw new CompressSizeException();
         }
         //文档信息插入数据库与文档保存
-        uploadService.uploadFile(file,pid,fileType);
+        uploadService.uploadFile(file,pid,fileType,suffix);
         return ResponseResult.success();
     }
 
