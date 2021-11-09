@@ -18,11 +18,11 @@ public class GlobalExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler(Exception.class)
-    public ResponseResult exceptionHandler(Exception e){
-        e.printStackTrace();
-        return ResponseResult.error();
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseResult exceptionHandler(Exception e){
+//        e.printStackTrace();
+//        return ResponseResult.error();
+//    }
 
     /**
      * 参数传递为空或Null错误异常处理
