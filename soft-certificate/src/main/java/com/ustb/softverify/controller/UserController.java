@@ -13,7 +13,16 @@ public class UserController {
     @PostMapping("login")
     public ResponseResult login(@RequestBody UserVo userVo) {
         System.out.println(userVo);
-        return ResponseResult.success().data("token","admin");
+        if ("admin".equals(userVo.getUsername()) && "bjsjxj-bjkjdx-admin".equals(userVo.getPassword())) {
+            return ResponseResult.success().data("token","admin");
+        }
+        if ("guest".equals(userVo.getUsername()) && "bjsjxj-bjkjdx-guest".equals(userVo.getPassword())) {
+            return ResponseResult.success().data("token","admin");
+        }
+        if ("manager".equals(userVo.getUsername()) && "bjsjxj-bjkjdx-manager".equals(userVo.getPassword())) {
+            return ResponseResult.success().data("token","admin");
+        }
+        throw new RuntimeException("error login");
     }
 
     //info
